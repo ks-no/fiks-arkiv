@@ -1,0 +1,29 @@
+{
+  "referanseSaksmappe": {
+    "saksaar": "2019",
+    "sakssekvensnummer": "1234678"
+  },
+  "nyUtgaaendeJournalpost": {
+    "tittel": "Tillatelse til ....",
+    "dokumentetsDato": "2019-06-05",
+    "sendtDato": "2019-06-05",
+    "internAvsender": "Saksbehandler...",
+    "eksternMottaker": "Arkitekt Flink ...",
+    "avskrivning": {
+      "avskrivningsmaate": "BU",
+      "referanseAvskriverJournalpost":  "9b5cd164-d638-4c6b-bf29-dcdfddce3f0e"
+    },
+    "dokument": [
+      {
+        "dokumenttype": "VEDTAK",
+        "tittel": "Tillatelse til ....",
+        "variantformat": "A",
+        "format": "PDF/A",
+        "tilknyttetRegistreringSom": "H",
+        "dokumentnummer":  1,
+        "filnavn": "K-sak 112-12.pdf",
+        "mimeType":  "application/pdf"
+      }
+    ]
+  }
+}
