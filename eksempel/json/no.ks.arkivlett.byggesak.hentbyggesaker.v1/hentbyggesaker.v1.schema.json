@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fiks.ks.no/no.ks.arkivlett.byggesak.hentbyggesaker.v1.schema.json",
+  "title": "no.ks.arkivlett.byggesak.hentbyggesaker.v1",
+  "description": "Hent byggesaker for eiendom",
+  "type": "object",
+  "properties": {
+    "matrikkelnummer": {
+      "description": "Matrikkelnummer",
+      "type": "object",
+      "properties": {
+        "kommunenummer": {
+          "type": "string"
+        },
+        "gaardsnummer": {
+          "type": "string"
+        },
+        "bruksnummer": {
+          "type": "string"
+        },
+        "festenummer": {
+          "type": "string"
+        },
+        "seksjonsnummer": {
+          "type": "string"
+        }
+      }
+    }
+
+  }
+
+}
+   

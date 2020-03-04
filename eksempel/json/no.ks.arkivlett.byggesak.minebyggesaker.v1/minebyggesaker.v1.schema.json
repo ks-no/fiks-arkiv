@@ -1,0 +1,190 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://fiks.ks.no/no.ks.arkivlett.byggesak.minebyggesaker.v1.schema.json",
+    "title": "MineByggesaker",
+    "definitions": {
+      "Dokument": {
+        "required": [ "tittel" ],
+        "properties": {
+          "tittel": {
+            "description": "Beskrivende tittel på dokumentet",
+            "type": "string"
+          },
+          "dokumenttype": {
+            "description": "Navn på type dokument",
+            "$comment": "ref kodeliste fra Arkivlett prosjektet...",
+            "type": "object",
+            "properties": {
+              "kodeverdi": {
+                "type": "string"
+              },
+              "kodebeskrivelse": {
+                "type": "string"
+              }
+            },
+            "referanseDokumentfil": {
+              "description": "Referanse til dokument med uri",
+              "format": "uri",
+              "type": "string"
+            },
+            "filstoerrelse": {
+              "description": "Størrelsen på fila i antall bytes oppgitt med desimaltall",
+              "type": "string"
+            },
+            "mimeType": {
+              "type": "string"
+            },
+            "versjon": {
+              "type": "string"
+            },
+            "dokumentetsdato": {
+              "description": "Dato som er påført selve dokumentet",
+              "format": "date",
+              "type": "string"
+            },
+            "vedtaksstatus": {
+              "description": "Status på vedtak knyttet til dokumentet",
+              "$comment": "ref kodeliste fra eByggesak datamodell http://kommit.metakat.no/Objekttype/Index/EAID_5B465D32_D2CA_4c3b_84C1_334D7D4072A5",
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              },
+              "vedtaksdato": {
+                "type": "string",
+                "format": "date"
+              },
+              "SystemId": {
+                "type": "string"
+              },
+              "ErstatterTidligereSystemId": {
+                "type": "string"
+              }
+            }
+  
+        }
+      },
+      "type": "array",
+      "byggesak": {
+        "required": [ "tittel" ],
+        "properties": {
+          "tittel": {
+            "type": "string"
+          },
+          "beskrivelse": {
+            "type": "string"
+          },
+          "mappeId": {
+            "description": "\"Entydig identifikasjon av mappen innenfor det arkivet mappen tilhører.  Andre arkiver innenfor samme arkivsystem, kan inneholde en eller flere av de samme kodene.  Koden kan være rent nummerisk, men kan også ha en logisk oppbygning.  Merk at mappeID er identisk med kombinasjonen saksår og sekvensnummer (oftest bare kalt \"saksnummer\") i Noark\"",
+            "type": "string"
+          },
+          "saksstatus": {
+            "description": "Status til saksmappen, dvs. hvor langt saksbehandlingen har kommet.",
+            "$comment": "ref kodeliste http://arkivverket.metakat.no/Objekttype/Index/EAID_5A2D09FE_5CB2_49d3_915A_A7C5A2FD15A0",
+            "type": "object",
+            "properties": {
+              "kodeverdi": {
+                "type": "string"
+              },
+              "kodebeskrivelse": {
+                "type": "string"
+              }
+            },
+            "saksdato": {
+              "description": "Datoen saken er opprettet",
+              "format": "date",
+              "type": "string"
+            },
+            "saksansvarlig": {
+              "description": "Saksbehandler som er ansvarlig for saken",
+              "type": "string"
+            },
+            "administrativEnhet": {
+              "description": "Avdeling, team eller etat som behandler saken",
+              "type": "string"
+            },
+            "adresse": {
+              "description": "Adresse til tiltaket",
+              "type": "string"
+            },
+            "avsluttetDato": {
+              "description": "Dato hvor saken er avsluttet",
+              "format": "date",
+              "type": "string"
+            },
+            "saksnummer": {
+              "description": "Saksnummer",
+              "$comment": "brukes isteden for mappeid eller samme som (lettere med videre integrasjoner som krever 2 separate felt), som mappeid formateres det som saksaar/sekvensnummer",
+              "type": "object",
+              "properties": {
+                "saksaar": {
+                  "type": "string"
+                },
+                "sakssekvensnummer": {
+                  "type": "string"
+                }
+              },
+              "tiltakstype": {
+                "description": "Tiltakstype",
+                "$comment": "ref kodeliste https://register.geonorge.no/byggesoknad/tiltaktype",
+                "type": "object",
+                "properties": {
+                  "kodeverdi": {
+                    "type": "string"
+                  },
+                  "kodebeskrivelse": {
+                    "type": "string"
+                  }
+                },
+                "tiltakshaver": {
+                  "description": "Navn på tiltakshaver. Tiltakshaver er eier av søknaden og har et overordnet ansvar for det som bygges.",
+                  "$comment": "Tidligere også kalt byggherre",
+                  "type": "string"
+                },
+                "ansvarligS�ker": {
+                  "description": "Navn på ansvarlig søker. Ansvarlig søker har påtatt seg ansvaret for byggesøknaden og all kommunikasjon med kommunens byggesaksavdeling.",
+                  "type": "string"
+                },
+                "matrikkelnummer": {
+                  "description": "Matrikkelnummer",
+                  "$comment": "Når den formateres som en streng brukes formatet knr-gnr/bnr/fnr/snr",
+                  "type": "object",
+                  "properties": {
+                    "kommunenummer": {
+                      "type": "string"
+                    },
+                    "gaardsnummer": {
+                      "type": "string"
+                    },
+                    "bruksnummer": {
+                      "type": "string"
+                    },
+                    "festenummer": {
+                      "type": "string"
+                    },
+                    "seksjonsnummer": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "dokumentlisteBeskrivelse": {
+                  "description": "En beskrivelse av hva dokumentlisten inneholder. Feks om det er utvalge dokumenter i en sak eller alle dokumenter.",
+                  "type": "string"
+                },
+                "dokumenter": {
+                  "description": "Liste med dokumenter",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Dokument"
+                  }
+                }
+              }
+            }
+          }
+      }
+    }
+  }
