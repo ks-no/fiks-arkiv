@@ -1,0 +1,21 @@
+{
+  "nyInngaaendeJournalpost": {
+    "tittel": "Rekvisjon av oppmålingsforretning",
+    "dokumentetsDato": "2019-06-03",
+    "mottattDato": "2019-06-03",
+    "internMottaker": "Saksbehandler...",
+    "eksternAvsender": "Arkitekt Flink ...",
+    "dokument": [
+      {
+        "dokumenttype": "SOKNAD",
+        "tittel": "Rekvisjon av oppmålingsforretning",
+        "variantformat": "A",
+        "format": "PDF/A",
+        "tilknyttetRegistreringSom": "H",
+        "dokumentnummer": 1,
+        "filnavn": "rekvisisjon.pdf",
+        "mimeType": "application/pdf"
+      }
+    ]
+  }
+}

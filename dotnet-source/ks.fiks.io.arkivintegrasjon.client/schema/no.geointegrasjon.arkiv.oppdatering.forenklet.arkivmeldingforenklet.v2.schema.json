@@ -1,0 +1,665 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://no.geointegrasjon.arkiv.oppdatering.forenklet/ArkivmeldingForenklet.v2.schema.json",
+  "title": "ArkivmeldingForenklet",
+  "definitions": {
+    "KorrespondansepartIntern": {
+      "type": "object",
+      "properties": {
+        "administrativEnhet": {
+          "type": "string"
+        },
+        "referanseAdministrativEnhet": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "saksbehandler": {
+          "type": "string"
+        },
+        "referanseSaksbehandler": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    },
+    "ForenkletDokument": {
+      "type": "object",
+      "properties": {
+        "dokumenttype": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "tittel": {
+          "type": "string"
+        },
+        "variantformat": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "format": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "tilknyttetRegistreringSom": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "dokumentnummer": {
+          "type": "integer"
+        },
+        "filnavn": {
+          "type": "string"
+        },
+        "mimeType": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dokumenttype",
+        "tittel",
+        "variantformat",
+        "tilknyttetRegistreringSom",
+        "dokumentnummer",
+        "filnavn"
+      ]
+    },
+    "Korrespondansepart": {
+      "type": "object",
+      "properties": {
+        "enhetsidentifikator": {
+          "type": "object",
+          "properties": {
+            "organisasjonsnummer": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "organisasjonsnummer"
+          ]
+        },
+        "systemID": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "korrespondanseparttype": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "navn": {
+          "type": "string"
+        },
+        "forretningsadresse": {
+          "type": "object",
+          "properties": {
+            "adresselinje1": {
+              "type": "string"
+            },
+            "adresselinje2": {
+              "type": "string"
+            },
+            "adresselinje3": {
+              "type": "string"
+            },
+            "postnr": {
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              }
+            },
+            "poststed": {
+              "type": "string"
+            },
+            "landkode": {
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "poststed"
+          ]
+        },
+        "skjermetKorrespondansepart": {
+          "type": "boolean"
+        },
+        "postadresse": {
+          "type": "object",
+          "properties": {
+            "adresselinje1": {
+              "type": "string"
+            },
+            "adresselinje2": {
+              "type": "string"
+            },
+            "adresselinje3": {
+              "type": "string"
+            },
+            "postnr": {
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              }
+            },
+            "poststed": {
+              "type": "string"
+            },
+            "landkode": {
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "poststed"
+          ]
+        },
+        "bostedsadresse": {
+          "type": "object",
+          "properties": {
+            "adresselinje1": {
+              "type": "string"
+            },
+            "adresselinje2": {
+              "type": "string"
+            },
+            "adresselinje3": {
+              "type": "string"
+            },
+            "postnr": {
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              }
+            },
+            "poststed": {
+              "type": "string"
+            },
+            "landkode": {
+              "type": "object",
+              "properties": {
+                "kodeverdi": {
+                  "type": "string"
+                },
+                "kodebeskrivelse": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "poststed"
+          ]
+        },
+        "kontaktinformasjon": {
+          "type": "object",
+          "properties": {
+            "epostadresse": {
+              "type": "string"
+            },
+            "mobiltelefon": {
+              "type": "string"
+            },
+            "telefon": {
+              "type": "string"
+            }
+          }
+        },
+        "kontaktperson": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "korrespondanseparttype",
+        "navn"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "referanseSaksmappe": {
+      "type": "object",
+      "properties": {
+        "saksaar": {
+          "type": "integer"
+        },
+        "sakssekvensnummer": {
+          "type": "integer"
+        },
+        "mappetype": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "saksdato": {
+          "type": "string",
+          "format": "date"
+        },
+        "tittel": {
+          "type": "string"
+        },
+        "administrativEnhet": {
+          "type": "string"
+        },
+        "offentligTittel": {
+          "type": "string"
+        },
+        "referanseAdministrativEnhet": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "saksansvarlig": {
+          "type": "string"
+        },
+        "referanseSaksansvarlig": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "saksstatus": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "avsluttetAv": {
+          "type": "string"
+        },
+        "skjermetTittel": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tittel"
+      ]
+    },
+    "nyInnkommendeJournalpost": {
+      "type": "object",
+      "properties": {
+        "journalaar": {
+          "type": "integer"
+        },
+        "journalsekvensnummer": {
+          "type": "integer"
+        },
+        "journalpostnummer": {
+          "type": "integer"
+        },
+        "internMottaker": {
+          "type": "object",
+          "properties": {
+            "administrativEnhet": {
+              "type": "string"
+            },
+            "referanseAdministrativEnhet": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            },
+            "saksbehandler": {
+              "type": "string"
+            },
+            "referanseSaksbehandler": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          }
+        },
+        "journalstatus": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "journaldato": {
+          "type": "string",
+          "format": "date"
+        },
+        "avskriving": {
+          "type": "string"
+        },
+        "dokumentetsDato": {
+          "type": "string",
+          "format": "date"
+        },
+        "mottattDato": {
+          "type": "string",
+          "format": "date"
+        },
+        "forfallsdato": {
+          "type": "string",
+          "format": "date"
+        },
+        "offentlighetsvurdertDato": {
+          "type": "string",
+          "format": "date"
+        },
+        "dokument": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ForenkletDokument"
+          }
+        },
+        "eksternAvsender": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Korrespondansepart"
+          }
+        }
+      },
+      "required": [
+        "journalaar",
+        "journalsekvensnummer",
+        "journalpostnummer",
+        "journalstatus"
+      ]
+    },
+    "nyUtgaaendeJournalpost": {
+      "type": "object",
+      "properties": {
+        "internAvsender": {
+          "type": "object",
+          "properties": {
+            "administrativEnhet": {
+              "type": "string"
+            },
+            "referanseAdministrativEnhet": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            },
+            "saksbehandler": {
+              "type": "string"
+            },
+            "referanseSaksbehandler": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          }
+        },
+        "avskrivning": {
+          "type": "integer"
+        },
+        "journalaar": {
+          "type": "integer"
+        },
+        "journalsekvensnummer": {
+          "type": "integer"
+        },
+        "journalpostnummer": {
+          "type": "integer"
+        },
+        "journalstatus": {
+          "type": "object",
+          "properties": {
+            "kodeverdi": {
+              "type": "string"
+            },
+            "kodebeskrivelse": {
+              "type": "string"
+            }
+          }
+        },
+        "journaldato": {
+          "type": "string",
+          "format": "date"
+        },
+        "dokumentetsDato": {
+          "type": "string",
+          "format": "date"
+        },
+        "forfallsdato": {
+          "type": "string",
+          "format": "date"
+        },
+        "sendtDato": {
+          "type": "string",
+          "format": "date"
+        },
+        "offentlighetsvurdertDato": {
+          "type": "string",
+          "format": "date"
+        },
+        "dokument": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ForenkletDokument"
+          }
+        },
+        "eksternMottaker": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Korrespondansepart"
+          }
+        }
+      },
+      "required": [
+        "avskrivning",
+        "journalaar",
+        "journalsekvensnummer",
+        "journalpostnummer",
+        "journalstatus"
+      ]
+    },
+    "nyttArkivnotat": {
+      "type": "object",
+      "properties": {
+        "internMottaker": {
+          "type": "object",
+          "properties": {
+            "administrativEnhet": {
+              "type": "string"
+            },
+            "referanseAdministrativEnhet": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            },
+            "saksbehandler": {
+              "type": "string"
+            },
+            "referanseSaksbehandler": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          }
+        },
+        "internAvsender": {
+          "type": "object",
+          "properties": {
+            "administrativEnhet": {
+              "type": "string"
+            },
+            "referanseAdministrativEnhet": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            },
+            "saksbehandler": {
+              "type": "string"
+            },
+            "referanseSaksbehandler": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          }
+        },
+        "internMottaker2": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KorrespondansepartIntern"
+          }
+        },
+        "dokument": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ForenkletDokument"
+          }
+        }
+      }
+    }
+  }
+}

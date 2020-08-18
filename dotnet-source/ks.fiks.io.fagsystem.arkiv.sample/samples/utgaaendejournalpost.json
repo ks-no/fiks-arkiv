@@ -1,0 +1,29 @@
+{
+  "referanseSaksmappe": {
+    "saksaar": "2019",
+    "sakssekvensnummer": "1234678"
+  },
+  "nyUtgaaendeJournalpost": {
+    "tittel": "Tillatelse til deling....",
+    "dokumentetsDato": "2019-06-05",
+    "sendtDato": "2019-06-05",
+    "internAvsender": "Saksbehandler...",
+    "eksternMottaker": "Arkitekt Flink ...",
+    "avskrivning": {
+      "avskrivningsmaate": "BU",
+      "referanseAvskriverJournalnummer":  23456
+    },
+    "dokument": [
+      {
+        "dokumenttype": "VEDTAK",
+        "tittel": "Tillatelse til deling....",
+        "variantformat": "A",
+        "format": "PDF/A",
+        "tilknyttetRegistreringSom": "H",
+        "dokumentnummer":  1,
+        "filnavn": "vedtak.pdf",
+        "mimeType":  "application/pdf"
+      }
+    ]
+  }
+}
