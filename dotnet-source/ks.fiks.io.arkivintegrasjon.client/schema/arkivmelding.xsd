@@ -48,6 +48,8 @@
 
 			<xs:element name="klasse" type="klasse" minOccurs="0" maxOccurs="unbounded"/>
 
+      <xs:element name="referanseEksternNoekkel" type="eksternNoekkel" minOccurs="1" maxOccurs="1"/>
+      
 			<!-- Tillater mapper uten forekomster av (under)mappe og registrering -->
 			<xs:choice>
 				<xs:element name="mappe" type="mappe" minOccurs="0" maxOccurs="unbounded"/>
@@ -126,6 +128,9 @@
 			<xs:element name="merknad" type="merknad" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="kryssreferanse" type="kryssreferanse" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="korrespondansepart" type="korrespondansepart" minOccurs="0" maxOccurs="unbounded"/>
+
+      <xs:element name="referanseEksternNoekkel" type="eksternNoekkel" minOccurs="1" maxOccurs="1"/>
+      
 		</xs:sequence>
 	</xs:complexType>
 
@@ -176,6 +181,9 @@
 			<xs:element name="kontaktperson" type="n5mdk:kontaktperson" minOccurs="0"/>
 			<xs:element name="administrativEnhet" type="n5mdk:administrativEnhet" minOccurs="0"/>
 			<xs:element name="saksbehandler" type="n5mdk:saksbehandler" minOccurs="0"/>
+      
+      <xs:element name="deresReferanse" type="xs:string" minOccurs="0"/>
+      <xs:element name="forsendelsesmaate" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -266,7 +274,7 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:complexType name="merknad">
+  	<xs:complexType name="merknad">
 		<xs:sequence>
 			<xs:element name="merknadstekst" type="n5mdk:merknadstekst"/>
 			<xs:element name="merknadstype" type="n5mdk:merknadstype" minOccurs="0"/>
@@ -325,6 +333,15 @@
 
 		</xs:sequence>
 	</xs:complexType>
+
+  <xs:complexType name="eksternNoekkel">
+    <xs:sequence>
+      <xs:element name="fagsystem" type = "xs:string"/>
+      <xs:element name="noekkel" type = "xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
 	<xs:simpleType name="GUID">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})|(\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\})"/>

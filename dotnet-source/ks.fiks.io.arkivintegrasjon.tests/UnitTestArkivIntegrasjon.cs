@@ -303,8 +303,8 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             utg.nyUtgaaendeJournalpost.tittel = "Vedtak og vedtaksgrunnlag for vedtaket(Ref=e4reke, SakId=e4reke)";
             utg.nyUtgaaendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
             {
-                fagsystem = "Fagsystem X",
-                nøkkel = "e4reke"
+                fagsystem = "SvarUt.forsendelseId",
+                nøkkel = "BBBBBB-BBBB-CCCC-BBBB-BBBBBBBBB"
             };
 
             utg.nyUtgaaendeJournalpost.internAvsender = new List<KorrespondansepartIntern>
@@ -319,10 +319,15 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             {
                 new Korrespondansepart() {
                     navn = "Mons Mottaker",
+                    personid = new Personidentifikator() { personidentifikatorType = "F",  personidentifikatorNr = "12345678901"},
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Gate 1",
+                        adresselinje2 = "Andre adresselinje",
+                        adresselinje3 = "Tredje adresselinje",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "Bø" },
+                    forsendelsemåte = "SvarUt",
+                    deresReferanse = "SvarUt.forsendelseId - BBBBBB-BBBB-CCCC-BBBB-BBBBBBBBBB"
                 },
                 new Korrespondansepart() {
                     navn = "Foretak Mottaker",
@@ -333,7 +338,9 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Forretningsgate 1",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "Bø" },
+                    forsendelsemåte = "SvarUt",
+                    deresReferanse = "SvarUt.forsendelseId - AAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"
                 }
             };
 

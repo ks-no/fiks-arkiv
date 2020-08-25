@@ -56,6 +56,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                     journalpst.offentlighetsvurdertDatoSpecified = true;
                 }
                 
+                journalpst.opprettetAv = input.sluttbrukerIdentifikator;
+                journalpst.arkivertAv = input.sluttbrukerIdentifikator; //TODO ?????
+                
                 //skjerming
                 if (input.nyUtgaaendeJournalpost.skjermetTittel)
                 {
@@ -150,6 +153,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 journalpst.korrespondansepart = partsListe.ToArray();
 
+                if (input.nyUtgaaendeJournalpost.referanseEksternNøkkel != null)
+                {
+                    journalpst.referanseEksternNoekkel = new eksternNoekkel();
+                    journalpst.referanseEksternNoekkel.fagsystem = input.nyUtgaaendeJournalpost.referanseEksternNøkkel.fagsystem;
+                    journalpst.referanseEksternNoekkel.noekkel = input.nyUtgaaendeJournalpost.referanseEksternNøkkel.nøkkel;
+                }
 
                 List<journalpost> jliste = new List<journalpost>
                 {
@@ -202,8 +211,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 telefonnummer = (new List<string>() {
                     mottaker.kontaktinformasjon?.mobiltelefon,
                     mottaker.kontaktinformasjon?.telefon
-                }).ToArray()
-                 
+                }).ToArray(),
+                deresReferanse = mottaker.deresReferanse,
+                forsendelsesmaate = mottaker.forsendelsemåte
+
             };
 
             if (mottaker.enhetsidentifikator?.organisasjonsnummer != null) {
@@ -291,7 +302,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 }
 
                 journalpst.offentligTittel = input.nyInnkommendeJournalpost.offentligTittel;
-                
+                journalpst.opprettetAv = input.sluttbrukerIdentifikator;
+                journalpst.arkivertAv = input.sluttbrukerIdentifikator; //TODO ?????
                 //skjerming
                 if (input.nyInnkommendeJournalpost.skjermetTittel)
                 {
@@ -376,6 +388,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 journalpst.korrespondansepart = partsListe.ToArray();
 
+                if (input.nyInnkommendeJournalpost.referanseEksternNøkkel != null)
+                {
+                    journalpst.referanseEksternNoekkel = new eksternNoekkel();
+                    journalpst.referanseEksternNoekkel.fagsystem = input.nyInnkommendeJournalpost.referanseEksternNøkkel.fagsystem;
+                    journalpst.referanseEksternNoekkel.noekkel = input.nyInnkommendeJournalpost.referanseEksternNøkkel.nøkkel;
+                }
+
 
                 List<journalpost> jliste = new List<journalpost>
                 {
@@ -422,8 +441,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 var journalpst = new journalpost();
                 journalpst.tittel = input.nyttNotat.tittel;
 
+                journalpst.opprettetAv = input.sluttbrukerIdentifikator;
+                journalpst.arkivertAv = input.sluttbrukerIdentifikator; //TODO ?????
 
-                journalpst.journalposttype = "I";
+                journalpst.journalposttype = "N";
                 //if (input.nyttNotat.mottattDato != null)
                 //{
                 //    journalpst.mottattDato = input.nyttNotat.mottattDato.Value;
@@ -520,6 +541,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 journalpst.korrespondansepart = partsListe.ToArray();
 
+                if (input.nyttNotat.referanseEksternNøkkel != null)
+                {
+                    journalpst.referanseEksternNoekkel = new eksternNoekkel();
+                    journalpst.referanseEksternNoekkel.fagsystem = input.nyttNotat.referanseEksternNøkkel.fagsystem;
+                    journalpst.referanseEksternNoekkel.noekkel = input.nyttNotat.referanseEksternNøkkel.nøkkel;
+                }
 
                 List<journalpost> jliste = new List<journalpost>
                 {
@@ -577,7 +604,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
             }
             if (input.referanseEksternNøkkel != null)
             {
-                //TODO mappe.
+                mappe.referanseEksternNoekkel = new eksternNoekkel();
+                mappe.referanseEksternNoekkel.fagsystem = input.referanseEksternNøkkel.fagsystem;
+                mappe.referanseEksternNoekkel.noekkel = input.referanseEksternNøkkel.nøkkel;
             }
 
 

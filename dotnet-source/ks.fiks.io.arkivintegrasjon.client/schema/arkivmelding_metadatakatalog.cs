@@ -142,6 +142,8 @@ namespace no.ks.fiks.io.arkivmelding {
         
         private klasse[] klasseField;
         
+        private eksternNoekkel referanseEksternNoekkelField;
+        
         private object[] itemsField;
         
         /// <remarks/>
@@ -380,6 +382,16 @@ namespace no.ks.fiks.io.arkivmelding {
             }
             set {
                 this.klasseField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public eksternNoekkel referanseEksternNoekkel {
+            get {
+                return this.referanseEksternNoekkelField;
+            }
+            set {
+                this.referanseEksternNoekkelField = value;
             }
         }
         
@@ -840,6 +852,39 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    public partial class eksternNoekkel {
+        
+        private string fagsystemField;
+        
+        private string noekkelField;
+        
+        /// <remarks/>
+        public string fagsystem {
+            get {
+                return this.fagsystemField;
+            }
+            set {
+                this.fagsystemField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string noekkel {
+            get {
+                return this.noekkelField;
+            }
+            set {
+                this.noekkelField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
     public partial class korrespondansepart {
         
         private string korrespondanseparttypeField;
@@ -865,6 +910,10 @@ namespace no.ks.fiks.io.arkivmelding {
         private string administrativEnhetField;
         
         private string saksbehandlerField;
+        
+        private string deresReferanseField;
+        
+        private string forsendelsesmaateField;
         
         /// <remarks/>
         public string korrespondanseparttype {
@@ -988,6 +1037,26 @@ namespace no.ks.fiks.io.arkivmelding {
             }
             set {
                 this.saksbehandlerField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string deresReferanse {
+            get {
+                return this.deresReferanseField;
+            }
+            set {
+                this.deresReferanseField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string forsendelsesmaate {
+            get {
+                return this.forsendelsesmaateField;
+            }
+            set {
+                this.forsendelsesmaateField = value;
             }
         }
     }
@@ -2090,6 +2159,8 @@ namespace no.ks.fiks.io.arkivmelding {
         
         private korrespondansepart[] korrespondansepartField;
         
+        private eksternNoekkel referanseEksternNoekkelField;
+        
         /// <remarks/>
         public systemID systemID {
             get {
@@ -2351,6 +2422,16 @@ namespace no.ks.fiks.io.arkivmelding {
             }
             set {
                 this.korrespondansepartField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public eksternNoekkel referanseEksternNoekkel {
+            get {
+                return this.referanseEksternNoekkelField;
+            }
+            set {
+                this.referanseEksternNoekkelField = value;
             }
         }
     }

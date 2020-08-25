@@ -63,6 +63,14 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 		public EnkelAdresse postadresse;
 		public Kontaktinformasjon kontaktinformasjon;
 		public string kontaktperson;
+		/// <summary>
+		/// amRef i n4
+		/// </summary>
+		public string deresReferanse;
+		/// <summary>
+		/// amForsend i n4
+		/// </summary>
+		public string forsendelsemåte;
 
 		public Korrespondansepart(){
 
