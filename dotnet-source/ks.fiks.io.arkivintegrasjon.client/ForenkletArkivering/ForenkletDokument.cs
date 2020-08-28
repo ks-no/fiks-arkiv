@@ -26,7 +26,7 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 		/// 
 		/// M083
 		/// </summary>
-		//public Kodelister.Dokumenttype dokumenttype;
+		public Kode dokumenttype;
 		/// <summary>
 		/// veFilnavn i n4
 		/// </summary>

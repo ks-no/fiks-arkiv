@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ks.fiks.io.arkivintegrasjon.client.ForenkletArkivering
+namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv
 {
     public class Kode
     {

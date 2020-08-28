@@ -8,14 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-
-
-
-
-using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
-using ks.fiks.io.arkivintegrasjon.client.ForenkletArkivering;
 
 namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 	public class Saksmappe {
