@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/sok"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:n5mdk="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
+	targetNamespace="http://www.arkivverket.no/standarder/noark5/sok" elementFormDefault="qualified">
+	<xs:import namespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
+		schemaLocation="./metadatakatalog.xsd"/>
+
+	<xs:element name="sok" type="sok"/>
+	<xs:complexType name="sok">
+		<xs:sequence>
+			<xs:element name="system" type="xs:string"/>
+			<xs:element name="meldingId" type="xs:string"/>
+			<xs:element name="tidspunkt" type="xs:dateTime"/>
+			<xs:element name="take" type="xs:int"/>
+			<xs:element name="skip" type="xs:int"/>
+			<xs:element name="parametre" type="parameter"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="parameter">
+		<xs:sequence>
+			<xs:element name="felt" type="xs:string"/>
+			<xs:element name="operator" type="operator_type"/>
+			<xs:element name="parameterverdier" type="parameterverdier" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="parameterverdier">
+		<xs:choice minOccurs="0" maxOccurs="1">
+			<xs:element name="stringvalues" type="stringvalues"/>
+			<xs:element name="datevalues" type="datevalues"/>
+			<xs:element name="intvalues" type="intvalues"/>
+		</xs:choice>
+	</xs:complexType>
+
+
+	<xs:complexType name="stringvalues">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="datevalues">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="value" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="intvalues">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="value" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="operator_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="equal" />
+			<xs:enumeration value="between" />
+			<xs:enumeration value="lessthan" />
+			<xs:enumeration value="greaterthan" />
+			<xs:enumeration value="inlist" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
+

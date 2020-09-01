@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ar:sok xmlns:ar="http://www.arkivverket.no/standarder/noark5/sok"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.arkivverket.no/standarder/noark5/arkivmelding file:./sok.xsd">
+    <ar:system>system0</ar:system>
+    <ar:meldingId>meldingId0</ar:meldingId>
+    <ar:tidspunkt>2006-05-04T18:13:51.0</ar:tidspunkt>
+    <ar:take>100</ar:take>
+    <ar:skip>0</ar:skip>
+    <ar:parametre>
+        <ar:felt>sakstittel</ar:felt>
+        <ar:operator>inlist</ar:operator>
+        <ar:parameterverdier>
+            <ar:stringvalues>
+                <ar:value>Test1</ar:value>
+                <ar:value>Test2</ar:value>
+                <ar:value>Test3</ar:value>
+            </ar:stringvalues>
+        </ar:parameterverdier>
+    </ar:parametre>
+</ar:sok>
