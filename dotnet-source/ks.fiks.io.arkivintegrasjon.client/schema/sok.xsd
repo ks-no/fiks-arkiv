@@ -14,7 +14,8 @@
 			<xs:element name="tidspunkt" type="xs:dateTime"/>
 			<xs:element name="take" type="xs:int"/>
 			<xs:element name="skip" type="xs:int"/>
-			<xs:element name="parametre" type="parameter"/>
+			<xs:element name="respons" type="respons_type"/>
+			<xs:element name="parameter" type="parameter" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -31,9 +32,9 @@
 			<xs:element name="stringvalues" type="stringvalues"/>
 			<xs:element name="datevalues" type="datevalues"/>
 			<xs:element name="intvalues" type="intvalues"/>
+			<xs:element name="klassifikasjonvalues" type="klassifikasjonvalues"/>
 		</xs:choice>
 	</xs:complexType>
-
 
 	<xs:complexType name="stringvalues">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -52,7 +53,12 @@
 			<xs:element name="value" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+	<xs:complexType name="klassifikasjonvalues">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="klassifikasjonssystem" type="xs:string"/>
+			<xs:element name="klasse" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:simpleType name="operator_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="equal" />
@@ -62,6 +68,24 @@
 			<xs:enumeration value="inlist" />
 		</xs:restriction>
 	</xs:simpleType>
-
+	
+	<xs:simpleType name="field_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="mappe.tittel" />
+			<xs:enumeration value="sak.saksdato" />
+			<xs:enumeration value="registrering.tittel" />
+			<xs:enumeration value="journalpost.journaldato" />
+			<xs:enumeration value="sak.klasse" />
+			<xs:enumeration value="sak.klassifikasjonssystem" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="respons_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="mappe" />
+			<xs:enumeration value="registrering" />
+			<xs:enumeration value="dokument" />
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
 

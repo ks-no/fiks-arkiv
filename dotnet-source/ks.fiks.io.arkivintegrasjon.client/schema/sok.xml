@@ -7,7 +7,8 @@
     <ar:tidspunkt>2006-05-04T18:13:51.0</ar:tidspunkt>
     <ar:take>100</ar:take>
     <ar:skip>0</ar:skip>
-    <ar:parametre>
+    <ar:respons>mappe</ar:respons>
+    <ar:parameter>
         <ar:felt>sakstittel</ar:felt>
         <ar:operator>inlist</ar:operator>
         <ar:parameterverdier>
@@ -17,5 +18,5 @@
                 <ar:value>Test3</ar:value>
             </ar:stringvalues>
         </ar:parameterverdier>
-    </ar:parametre>
+    </ar:parameter>
 </ar:sok>

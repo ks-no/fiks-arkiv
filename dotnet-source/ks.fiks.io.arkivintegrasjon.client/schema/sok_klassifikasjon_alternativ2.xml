@@ -9,13 +9,13 @@
     <ar:skip>10</ar:skip>
     <ar:respons>mappe</ar:respons>
     <ar:parameter>
-        <ar:felt>saksdato</ar:felt>
-        <ar:operator>between</ar:operator>
+        <ar:felt>sak.klassifikasjonssystem</ar:felt>
+        <ar:operator>equal</ar:operator>
         <ar:parameterverdier>
-            <ar:datevalues>
-                <ar:value>2006-05-04T18:13:51.0</ar:value>
-                <ar:value>2016-05-04T18:13:51.0</ar:value>
-            </ar:datevalues>
+            <ar:klassifikasjonvalues>
+                <ar:klassifikasjonssystem>GBNR</ar:klassifikasjonssystem>
+                <ar:klasse>21/400</ar:klasse>
+            </ar:klassifikasjonvalues>
         </ar:parameterverdier>
-    </ar:parameter>
+    </ar:parameter>    
 </ar:sok>
