@@ -2,8 +2,7 @@
 <xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/sok"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.arkivverket.no/standarder/noark5/sok" elementFormDefault="qualified">
-	<xs:import namespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
-		schemaLocation="./metadatakatalog.xsd"/>
+	
 
 	<xs:element name="sok" type="sok"/>
 	<xs:complexType name="sok">

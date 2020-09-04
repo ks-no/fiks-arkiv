@@ -120,10 +120,16 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         mappe,
         
         /// <remarks/>
+        saksmappe,
+        
+        /// <remarks/>
         registrering,
         
         /// <remarks/>
-        dokument,
+        journalpost,
+        
+        /// <remarks/>
+        dokumentbeskrivelse,
     }
     
     /// <remarks/>
@@ -134,14 +140,14 @@ namespace no.ks.fiks.io.arkivmelding.sok {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/sok")]
     public partial class parameter {
         
-        private string feltField;
+        private field_type feltField;
         
         private operator_type operatorField;
         
         private parameterverdier parameterverdierField;
         
         /// <remarks/>
-        public string felt {
+        public field_type felt {
             get {
                 return this.feltField;
             }
@@ -169,6 +175,145 @@ namespace no.ks.fiks.io.arkivmelding.sok {
                 this.parameterverdierField = value;
             }
         }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/sok")]
+    public enum field_type {
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.tittel")]
+        mappetittel,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.skjerming")]
+        mappeskjerming,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.OpprettetDato")]
+        mappeOpprettetDato,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.beskrivelse")]
+        mappebeskrivelse,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.noekkelord")]
+        mappenoekkelord,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.AvsluttetDato")]
+        mappeAvsluttetDato,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.virksomhetsspesifikkeMetadata")]
+        mappevirksomhetsspesifikkeMetadata,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.saksdato")]
+        saksaksdato,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.saksaar")]
+        saksaksaar,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.saksekvensnummer")]
+        saksaksekvensnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.saksstatus")]
+        saksaksstatus,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.partNavn")]
+        mappepartpartNavn,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.partRolle")]
+        mappepartpartRolle,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.postadresse")]
+        mappepartpostadresse,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.postnummer")]
+        mappepartpostnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.poststed")]
+        mappepartpoststed,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.epostadresse")]
+        mappepartepostadresse,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.part.virksomhetsspesifikkeMetadata")]
+        mappepartvirksomhetsspesifikkeMetadata,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.tittel")]
+        registreringtittel,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.skjerming")]
+        registreringskjerming,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.partNavn")]
+        registreringpartpartNavn,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.partRolle")]
+        registreringpartpartRolle,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.postadresse")]
+        registreringpartpostadresse,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.postnummer")]
+        registreringpartpostnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.poststed")]
+        registreringpartpoststed,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.epostadresse")]
+        registreringpartepostadresse,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.part.virksomhetsspesifikkeMetadata")]
+        registreringpartvirksomhetsspesifikkeMetadata,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalaar")]
+        journalpostjournalaar,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalsekvensnummer")]
+        journalpostjournalsekvensnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalpostnummer")]
+        journalpostjournalpostnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalposttype")]
+        journalpostjournalposttype,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalstatus")]
+        journalpostjournalstatus,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.journaldato")]
+        journalpostjournaldato,
     }
     
     /// <remarks/>
@@ -208,6 +353,7 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         [System.Xml.Serialization.XmlElementAttribute("intvalues", typeof(intvalues))]
         [System.Xml.Serialization.XmlElementAttribute("klassifikasjonvalues", typeof(klassifikasjonvalues))]
         [System.Xml.Serialization.XmlElementAttribute("stringvalues", typeof(stringvalues))]
+        [System.Xml.Serialization.XmlElementAttribute("virksomhetsspesifikkemetadata", typeof(vsmetadata))]
         public object Item {
             get {
                 return this.itemField;
@@ -231,6 +377,41 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("value")]
         public System.DateTime[] value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/sok")]
+    public partial class vsmetadata {
+        
+        private string[] keyField;
+        
+        private string[] valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("key")]
+        public string[] key {
+            get {
+                return this.keyField;
+            }
+            set {
+                this.keyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("value")]
+        public string[] value {
             get {
                 return this.valueField;
             }

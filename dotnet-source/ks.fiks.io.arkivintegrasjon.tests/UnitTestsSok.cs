@@ -23,6 +23,9 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             arkivmeldingsok.respons = respons_type.mappe;
             arkivmeldingsok.meldingId = Guid.NewGuid().ToString();
             arkivmeldingsok.system = "Fagsystem X";
+            arkivmeldingsok.tidspunkt = DateTime.Now;
+            arkivmeldingsok.skip = 0;
+            arkivmeldingsok.take = 100;
             //TODO lage list på parameter i steden for []
 
             string payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
