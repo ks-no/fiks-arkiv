@@ -9,22 +9,13 @@
     <ar:skip>10</ar:skip>
     <ar:respons>mappe</ar:respons>
     <ar:parameter>
-        <ar:felt>sak.klassifikasjonssystem</ar:felt>
+        <ar:felt>mappe.virksomhetsspesifikkeMetadata</ar:felt>
         <ar:operator>equal</ar:operator>
         <ar:parameterverdier>
-            <ar:stringvalues>
-                <ar:value>GBNR</ar:value>
-            </ar:stringvalues>
+            <ar:virksomhetsspesifikkemetadata>
+                <ar:key>Kaffetype</ar:key>
+                <ar:value>Arabica</ar:value>
+            </ar:virksomhetsspesifikkemetadata>
         </ar:parameterverdier>
-    </ar:parameter>
-    
-    <ar:parameter>
-        <ar:felt>sak.klasse</ar:felt>
-        <ar:operator>equal</ar:operator>
-        <ar:parameterverdier>
-            <ar:stringvalues>
-                <ar:value>21/400</ar:value>
-            </ar:stringvalues>
-        </ar:parameterverdier>
-    </ar:parameter>
+    </ar:parameter>    
 </ar:sok>

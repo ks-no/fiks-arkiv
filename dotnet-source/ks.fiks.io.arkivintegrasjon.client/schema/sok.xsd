@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/sok"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:n5mdk="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
 	targetNamespace="http://www.arkivverket.no/standarder/noark5/sok" elementFormDefault="qualified">
 	<xs:import namespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
 		schemaLocation="./metadatakatalog.xsd"/>
@@ -21,7 +20,7 @@
 
 	<xs:complexType name="parameter">
 		<xs:sequence>
-			<xs:element name="felt" type="xs:string"/>
+			<xs:element name="felt" type="field_type"/>
 			<xs:element name="operator" type="operator_type"/>
 			<xs:element name="parameterverdier" type="parameterverdier" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
@@ -33,6 +32,7 @@
 			<xs:element name="datevalues" type="datevalues"/>
 			<xs:element name="intvalues" type="intvalues"/>
 			<xs:element name="klassifikasjonvalues" type="klassifikasjonvalues"/>
+			<xs:element name="virksomhetsspesifikkemetadata" type="vsmetadata"/>
 		</xs:choice>
 	</xs:complexType>
 
@@ -53,12 +53,21 @@
 			<xs:element name="value" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
+	
 	<xs:complexType name="klassifikasjonvalues">
 		<xs:sequence minOccurs="1" maxOccurs="unbounded">
-			<xs:element name="klassifikasjonssystem" type="xs:string"/>
-			<xs:element name="klasse" type="xs:string"/>
+			<xs:element name="klassifikasjonssystem" type="xs:string" minOccurs="0"/>
+			<xs:element name="klasse" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+
+	<xs:complexType name="vsmetadata">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="key" type="xs:string" minOccurs="0"/>
+			<xs:element name="value" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:simpleType name="operator_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="equal" />
@@ -72,19 +81,53 @@
 	<xs:simpleType name="field_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mappe.tittel" />
+			<xs:enumeration value="mappe.skjerming" />
+			<xs:enumeration value="mappe.OpprettetDato" />
+			<xs:enumeration value="mappe.beskrivelse" />
+			<xs:enumeration value="mappe.noekkelord" />
+			<xs:enumeration value="mappe.AvsluttetDato" />
+			<xs:enumeration value="mappe.virksomhetsspesifikkeMetadata" />
+			
 			<xs:enumeration value="sak.saksdato" />
+			<xs:enumeration value="sak.saksaar" />
+			<xs:enumeration value="sak.saksekvensnummer" />
+			<xs:enumeration value="sak.saksstatus" />
+			
+			<xs:enumeration value="mappe.part.partNavn" />
+			<xs:enumeration value="mappe.part.partRolle" />
+			<xs:enumeration value="mappe.part.postadresse" />
+			<xs:enumeration value="mappe.part.postnummer" />
+			<xs:enumeration value="mappe.part.poststed" />
+			<xs:enumeration value="mappe.part.epostadresse" />
+			<xs:enumeration value="mappe.part.virksomhetsspesifikkeMetadata" />
+
 			<xs:enumeration value="registrering.tittel" />
+			<xs:enumeration value="registrering.skjerming" />
+
+			<xs:enumeration value="registrering.part.partNavn" />
+			<xs:enumeration value="registrering.part.partRolle" />
+			<xs:enumeration value="registrering.part.postadresse" />
+			<xs:enumeration value="registrering.part.postnummer" />
+			<xs:enumeration value="registrering.part.poststed" />
+			<xs:enumeration value="registrering.part.epostadresse" />
+			<xs:enumeration value="registrering.part.virksomhetsspesifikkeMetadata" />
+	
+			<xs:enumeration value="journalpost.journalaar" />
+			<xs:enumeration value="journalpost.journalsekvensnummer" />
+			<xs:enumeration value="journalpost.journalpostnummer" />
+			<xs:enumeration value="journalpost.journalposttype" />
+			<xs:enumeration value="journalpost.journalstatus" />
 			<xs:enumeration value="journalpost.journaldato" />
-			<xs:enumeration value="sak.klasse" />
-			<xs:enumeration value="sak.klassifikasjonssystem" />
 		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="respons_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mappe" />
+			<xs:enumeration value="saksmappe" />
 			<xs:enumeration value="registrering" />
-			<xs:enumeration value="dokument" />
+			<xs:enumeration value="journalpost" />
+			<xs:enumeration value="dokumentbeskrivelse" />
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
