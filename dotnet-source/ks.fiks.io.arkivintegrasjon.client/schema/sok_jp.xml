@@ -5,26 +5,35 @@
     <ar:system>system0</ar:system>
     <ar:meldingId>meldingId0</ar:meldingId>
     <ar:tidspunkt>2006-05-04T18:13:51.0</ar:tidspunkt>
-    <ar:take>10</ar:take>
-    <ar:skip>10</ar:skip>
-    <ar:respons>mappe</ar:respons>
+    <ar:take>100</ar:take>
+    <ar:skip>0</ar:skip>
+    <ar:respons>journalpost</ar:respons>
     <ar:parameter>
-        <ar:felt>sak.klassifikasjonssystem</ar:felt>
+        <ar:felt>registrering.tittel</ar:felt>
         <ar:operator>equal</ar:operator>
         <ar:parameterverdier>
             <ar:stringvalues>
-                <ar:value>GBNR</ar:value>
+                <ar:value>Kaffeavtale*</ar:value>
             </ar:stringvalues>
         </ar:parameterverdier>
     </ar:parameter>
-    
     <ar:parameter>
-        <ar:felt>sak.klasse</ar:felt>
+        <ar:felt>journalpost.journalposttype</ar:felt>
         <ar:operator>equal</ar:operator>
         <ar:parameterverdier>
             <ar:stringvalues>
-                <ar:value>21/400</ar:value>
+                <ar:value>I</ar:value>
             </ar:stringvalues>
+        </ar:parameterverdier>
+        </ar:parameter>
+    <ar:parameter>
+        <ar:felt>journalpost.journaldato</ar:felt>
+        <ar:operator>between</ar:operator>
+        <ar:parameterverdier>
+            <ar:datevalues>
+                <ar:value>2006-05-04T18:13:51.0</ar:value>
+                <ar:value>2016-05-04T18:13:51.0</ar:value>
+            </ar:datevalues>
         </ar:parameterverdier>
     </ar:parameter>
 </ar:sok>
