@@ -1,8 +1,9 @@
-﻿using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using no.ks.fiks.io.arkivmelding.sok;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace ks.fiks.io.arkivintegrasjon.tests
 {
@@ -27,21 +28,19 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 take = 100
             };
 
-            List<parameter> paramlist = new List<parameter>();
-            
-            paramlist.Add(
-                new parameter()
+            var paramlist = new List<parameter>
+            {
+                new parameter
                 {
                     felt = field_type.mappetittel,
                     @operator = operator_type.equal,
-                    parameterverdier = new parameterverdier() 
+                    parameterverdier = new parameterverdier
                     {
-                        Item = new stringvalues() 
-                        {
-                            value = new string[1] { "tittel*" } 
-                        } 
-                    } 
-                });
+                        Item = new stringvalues {value = new[] {"tittel*"}}
+                    }
+                }
+            };
+
 
             arkivmeldingsok.parameter = paramlist.ToArray();
 
@@ -50,6 +49,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             Assert.Pass();
         }
 
+        [Test]
         public void TestSokFlereFelt()
         {
 
@@ -63,40 +63,39 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 take = 100
             };
 
-            List<parameter> paramlist = new List<parameter>();
-
-            paramlist.Add(
-                new parameter()
+            var paramlist = new List<parameter>
+            {
+                new parameter
                 {
                     felt = field_type.mappetittel,
                     @operator = operator_type.equal,
-                    parameterverdier = new parameterverdier()
+                    parameterverdier = new parameterverdier
                     {
-                        Item = new stringvalues()
-                        {
-                            value = new string[1] { "tittel*" }
-                        }
+                        Item = new stringvalues {value = new[] {"tittel*"}}
                     }
-                });
-
-            paramlist.Add(
-                new parameter()
+                },
+                new parameter
                 {
                     felt = field_type.mappeOpprettetDato,
                     @operator = operator_type.equal,
-                    parameterverdier = new parameterverdier()
+                    parameterverdier = new parameterverdier
                     {
-                        Item = new datevalues()
+                        Item = new datevalues
                         {
-                                value = new DateTime[] { DateTime.ParseExact("2009-05-08", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)
+                            value = new[]
+                            {
+                                DateTime.ParseExact("2009-05-08", "yyyy-MM-dd", CultureInfo.InvariantCulture)
                             }
                         }
                     }
-                });
+                }
+            };
+
+
 
             arkivmeldingsok.parameter = paramlist.ToArray();
 
-            string payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
+            var payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
 
             Assert.Pass();
         }
@@ -116,27 +115,32 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 take = 100
             };
 
-            List<parameter> paramlist = new List<parameter>();
-
-            paramlist.Add(
-                new parameter()
+            var paramlist = new List<parameter>
+            {
+                new parameter
                 {
                     felt = field_type.journalpostjournaldato,
                     @operator = operator_type.between,
-                    parameterverdier = new parameterverdier()
+                    parameterverdier = new parameterverdier
                     {
-                        Item = new datevalues()
+                        Item = new datevalues
                         {
-                            value = new DateTime[] { DateTime.ParseExact("2009-05-08", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), 
-                                DateTime.ParseExact("2009-05-09", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)
+                            value = new[]
+                            {
+                                DateTime.ParseExact("2009-05-08", "yyyy-MM-dd",
+                                    CultureInfo.InvariantCulture),
+                                DateTime.ParseExact("2009-05-09", "yyyy-MM-dd",
+                                    CultureInfo.InvariantCulture)
                             }
                         }
                     }
-                });
+                }
+            };
+
 
             arkivmeldingsok.parameter = paramlist.ToArray();
 
-            string payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
+            var payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
 
             Assert.Pass();
         }
@@ -156,26 +160,26 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 take = 100
             };
 
-            List<parameter> paramlist = new List<parameter>();
-
-            paramlist.Add(
-                new parameter()
+            List<parameter> paramlist = new List<parameter>
+            {
+                new parameter
                 {
                     felt = field_type.mappetittel,
                     @operator = operator_type.equal,
-                    parameterverdier = new parameterverdier()
+                    parameterverdier = new parameterverdier
                     {
-                        Item = new klassifikasjonvalues()
+                        Item = new klassifikasjonvalues
                         {
-                            klassifikasjonssystem = new string[1] { "GBNR" },
-                            klasse = new string[1] { "21/400" }
+                            klassifikasjonssystem = new[] {"GBNR"},
+                            klasse = new[] {"21/400"}
                         }
                     }
-                }); ;
+                }
+            };
 
             arkivmeldingsok.parameter = paramlist.ToArray();
 
-            string payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
+            var payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
 
             Assert.Pass();
         }
@@ -195,26 +199,25 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 take = 100
             };
 
-            List<parameter> paramlist = new List<parameter>();
-
-            paramlist.Add(
-                new parameter()
+            List<parameter> paramlist = new List<parameter>
+            {
+                new parameter
                 {
                     felt = field_type.mappevirksomhetsspesifikkeMetadata,
                     @operator = operator_type.equal,
-                    parameterverdier = new parameterverdier()
+                    parameterverdier = new parameterverdier
                     {
-                        Item = new vsmetadata()
+                        Item = new vsmetadata
                         {
-                            key = new string[1] { "Kaffetype" },
-                            value = new string[1] { "arabica" }
+                            key = new[] {"Kaffetype"}, value = new[] {"arabica"}
                         }
                     }
-                }); ;
+                }
+            };
 
             arkivmeldingsok.parameter = paramlist.ToArray();
 
-            string payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
+            var payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
 
             Assert.Pass();
         }
