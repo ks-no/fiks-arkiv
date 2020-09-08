@@ -72,7 +72,9 @@
 			<xs:enumeration value="equal" />
 			<xs:enumeration value="between" />
 			<xs:enumeration value="lessthan" />
+			<xs:enumeration value="lessequal" />
 			<xs:enumeration value="greaterthan" />
+			<xs:enumeration value="greaterequal" />
 			<xs:enumeration value="inlist" />
 		</xs:restriction>
 	</xs:simpleType>
