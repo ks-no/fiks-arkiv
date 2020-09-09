@@ -103,7 +103,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         }
 
         [Test]
-        public void TestBrukerhistorie3_1()
+        public void TestnyInnkommendeJournalpostBrukerhistorie3_1()
         {
 
             //Fagsystem definerer ønsket struktur
@@ -190,7 +190,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         }
 
         [Test]
-        public void TestBrukerhistorie3_2()
+        public void TestnyInnkommendeJournalpostEttersendingBrukerhistorie3_2()
         {
 
             //Fagsystem definerer ønsket struktur
@@ -275,7 +275,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         }
 
         [Test]
-        public void TestBrukerhistorie3_3()
+        public void TestnyUtgaaendeJournalpostBrukerhistorie3_3()
         {
             //var messageRequest = new MeldingRequest(
             //                         mottakerKontoId: receiverId,
@@ -378,7 +378,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         }
 
         [Test]
-        public void TestBrukerhistorie3_4_notat()
+        public void TestnyttNotatBrukerhistorie3_4()
         {
             //var messageRequest = new MeldingRequest(
             //                         mottakerKontoId: receiverId,
