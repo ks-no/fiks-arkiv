@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -92,7 +93,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 {
                     "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletUtgaaende.v1",
                     "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletInnkommende.v1"
-                    
+
                 };
             
             List<string> kjenteMeldingerSok = new List<string>()
@@ -105,29 +106,46 @@ namespace ks.fiks.io.arkivsystem.sample
                     "no.geointegrasjon.arkiv.oppdatering.arkivmeldingUtgaaende.v1"
                 };
 
-            if (kjenteMeldingerForenklet.Equals(mottatt.Melding.MeldingType))
+            if (kjenteMeldingerForenklet.Contains(mottatt.Melding.MeldingType))
+            {
+                Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
+
+                //TODO håndtere meldingen med ønsket funksjonalitet
+                
+                var svarmsg = mottatt.SvarSender.Svar("no.geointegrasjon.arkiv.mottatt.v1").Result;
+                Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
+
+                Console.WriteLine("Melding er mottatt i arkiv ok ......");
+
+                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+
+                //
+
+                var svarmsg2 = mottatt.SvarSender.Svar("no.geointegrasjon.arkiv.kvittering.v1").Result;
+                Console.WriteLine("Svarmelding " + svarmsg2.MeldingId + " " + svarmsg2.MeldingType + " sendt...");
+
+                Console.WriteLine("Arkivering er ok ......");
+
+
+
+
+            }
+            else if (kjenteMeldingerSok.Contains(mottatt.Melding.MeldingType))
             {
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
 
-                Console.WriteLine("Melding er håndtert i arkiv ok ......");
-
-                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-
-            }
-            else if (kjenteMeldingerSok.Equals(mottatt.Melding.MeldingType))
-            {
-                Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
-
-                //TODO håndtere meldingen med ønsket funksjonalitet
+                var svarmsg = mottatt.SvarSender.Svar("no.geointegrasjon.arkiv.sok.resultat.v1","", "sok.xml").Result;
+                Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 
                 Console.WriteLine("Melding er håndtert i arkiv ok ......");
 
                 mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
 
+
             }
-            else if (kjenteMeldingerAvansert.Equals(mottatt.Melding.MeldingType))
+            else if (kjenteMeldingerAvansert.Contains(mottatt.Melding.MeldingType))
             {
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 

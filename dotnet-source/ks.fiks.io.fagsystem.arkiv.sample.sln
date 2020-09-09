@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ks.fiks.io.arkivintegrasjon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ks.fiks.io.arkivsystem.sample", "ks.fiks.io.arkivsystem.sample\ks.fiks.io.arkivsystem.sample.csproj", "{B026A3A8-C1D6-46E2-B8A3-D9EB295B0119}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ks.fiks.io.arkivintegrasjon.sample.messages", "ks.fiks.io.arkivintegrasjon.sample.messages\ks.fiks.io.arkivintegrasjon.sample.messages.csproj", "{B43C0114-DF34-4F59-938D-E04E76D51C1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B026A3A8-C1D6-46E2-B8A3-D9EB295B0119}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B026A3A8-C1D6-46E2-B8A3-D9EB295B0119}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B026A3A8-C1D6-46E2-B8A3-D9EB295B0119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B43C0114-DF34-4F59-938D-E04E76D51C1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B43C0114-DF34-4F59-938D-E04E76D51C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B43C0114-DF34-4F59-938D-E04E76D51C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B43C0114-DF34-4F59-938D-E04E76D51C1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

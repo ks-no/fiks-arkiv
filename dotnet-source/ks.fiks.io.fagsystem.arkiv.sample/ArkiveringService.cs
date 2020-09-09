@@ -34,7 +34,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Arkivering Service is starting.");
+            Console.WriteLine("Fagsystem Service is starting.");
 
             Console.WriteLine("Setter opp FIKS integrasjon for fagsystem...");
             Guid accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
@@ -84,7 +84,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             SendInngående();
 
-            SendUtgående();
+            //SendUtgående();
 
            
 
@@ -363,7 +363,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 new ForenkletDokument
                 {
                     tittel = "Vedlegg 1",
-                    filnavn = "vedlegg.pdf"
+                    filnavn = "vedlegg1.pdf"
                 }
             };
 
@@ -377,7 +377,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             List<IPayload> payloads = new List<IPayload>();
             payloads.Add(new StringPayload(payload, "utgaaendejournalpost.xml"));
             payloads.Add(new FilePayload(@"samples\vedtak.pdf"));
-            payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
+            payloads.Add(new FilePayload(@"samples\vedlegg1.pdf"));
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
@@ -476,7 +476,18 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // Process the message
 
 
-            if (fileArgs.Melding.MeldingType == "no.ks.geointegrasjon.ok.v1")
+            if (fileArgs.Melding.MeldingType == "no.geointegrasjon.arkiv.mottatt.v1")
+            {
+                Console.WriteLine("Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
+
+                //TODO håndtere meldingen med ønsket funksjonalitet
+
+                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
+
+                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
+
+            }
+            else if (fileArgs.Melding.MeldingType == "no.geointegrasjon.arkiv.kvittering.v1")
             {
                 Console.WriteLine("Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
