@@ -1,1 +1,5 @@
 .idea
+
+dotnet-source/ks.fiks.io.arkivsystem.sample/privkey.pem
+
+dotnet-source/ks.fiks.io.arkivsystem.sample/appsettings.development.json

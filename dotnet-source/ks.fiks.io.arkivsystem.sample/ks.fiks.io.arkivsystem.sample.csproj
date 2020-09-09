@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="KS.Fiks.IO.Client" Version="1.1.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.7" />
   </ItemGroup>
