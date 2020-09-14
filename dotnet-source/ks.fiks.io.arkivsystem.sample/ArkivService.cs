@@ -98,9 +98,14 @@ namespace ks.fiks.io.arkivsystem.sample
             
             List<string> kjenteMeldingerSok = new List<string>()
                 {
-                    "no.geointegrasjon.arkiv.sok.v1"
+                    "no.geointegrasjon.arkiv.innsyn.sok.v1"
                 };
-            
+
+            List<string> kjenteMeldingerFiks = new List<string>()
+                {
+                    "no.fiks.tidsavbrudd"
+                };
+
             List<string> kjenteMeldingerAvansert = new List<string>()
                 {
                     "no.geointegrasjon.arkiv.oppdatering.arkivmeldingUtgaaende.v1"
