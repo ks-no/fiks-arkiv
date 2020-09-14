@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.client\ks.fiks.io.arkivintegrasjon.client.csproj" />
+    <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.sample.messages\ks.fiks.io.arkivintegrasjon.sample.messages.csproj" />
   </ItemGroup>
 
   <ItemGroup>

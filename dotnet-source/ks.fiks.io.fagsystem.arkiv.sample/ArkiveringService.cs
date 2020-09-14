@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
+using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Ks.Fiks.Maskinporten.Client;
 using KS.Fiks.IO.Client;
@@ -84,12 +85,42 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             SendInngående();
 
-            //SendUtgående();
+            SendUtgående();
+
+            SendOppdatering();
 
            
 
 
             return Task.CompletedTask;
+        }
+
+        private void SendOppdatering()
+        {
+            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
+            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenklet.v1", 3)); //TODO for å finne receiverId
+            //Prosess også?
+
+            var messageRequest = new MeldingRequest(
+                                      mottakerKontoId: receiverId,
+                                      avsenderKontoId: senderId,
+                                      meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletoppdatersaksmappe.v1"); // Message type as string
+                                                                                                                               //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
+           
+            //Konverterer til arkivmelding xml
+            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPåFagsystemnøkkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
+            var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
+            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            //Lager FIKS IO melding
+            List<IPayload> payloads = new List<IPayload>();
+            payloads.Add(new StringPayload(payload, "oppdatersaksmappe.xml"));
+
+            //Sender til FIKS IO (arkiv løsning)
+            var msg = client.Send(messageRequest, payloads).Result;
+            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
+            Console.WriteLine(payload);
         }
 
         private void SendInngående()
@@ -478,7 +509,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             if (fileArgs.Melding.MeldingType == "no.geointegrasjon.arkiv.mottatt.v1")
             {
-                Console.WriteLine("Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
+                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
 
@@ -489,7 +520,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             }
             else if (fileArgs.Melding.MeldingType == "no.geointegrasjon.arkiv.kvittering.v1")
             {
-                Console.WriteLine("Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
+                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
 
