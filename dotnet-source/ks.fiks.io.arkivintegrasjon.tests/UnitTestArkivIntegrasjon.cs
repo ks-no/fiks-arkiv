@@ -14,6 +14,32 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void Setup()
         {
         }
+        [Test]
+        public void TestOppdaterSaksmappe1()
+        {
+
+            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPåSaksnummer(2020,1234,"Testing Testesen", "id343463346"  );
+
+            //Konverterer til arkivmelding xml
+            var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
+            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestOppdaterSaksmappe2()
+        {
+
+            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPåFagsystemnøkkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
+
+            //Konverterer til arkivmelding xml
+            var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
+            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+
+            Assert.Pass();
+        }
+
 
         [Test]
         public void TestSaksmappereferanse()

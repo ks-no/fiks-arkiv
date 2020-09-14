@@ -89,7 +89,49 @@ namespace ks.fiks.io.arkivintegrasjon.sample.messages
            
             return inng;
         }
-    
+
+        public static OppdaterSaksmappe GetOppdaterSaksmappeAnsvarligPåFagsystemnøkkel(string fagsystem, string nøkkel, string saksansvarlig, string idSaksansvarlig)
+        {
+            var saksmappe = new OppdaterSaksmappe
+            {
+                oppdaterSaksmappe = new Saksmappe()
+                {
+                    saksansvarlig = saksansvarlig,
+                    referanseSaksansvarlig = idSaksansvarlig,
+                    referanseEksternNøkkel = new EksternNøkkel
+                    {
+                        fagsystem = fagsystem,
+                        nøkkel = nøkkel
+                    }
+                }
+            };
+            
+            
+            return saksmappe;
+        }
+
+        public static OppdaterSaksmappe GetOppdaterSaksmappeAnsvarligPåSaksnummer(int saksaar, int sekvensnr, string saksansvarlig, string idSaksansvarlig)
+        {
+            var saksmappe = new OppdaterSaksmappe();
+
+            saksmappe.oppdaterSaksmappe = new Saksmappe
+            {
+                saksaar = saksaar,
+                sakssekvensnummer = sekvensnr,
+                saksansvarlig = saksansvarlig,
+                referanseSaksansvarlig = idSaksansvarlig
+            };
+
+            return saksmappe;
+        }
+
+
+        public static string GetOppdaterJournalpostAnsvarlig() {
+
+
+
+            return "";
+        }
 
     }
 }

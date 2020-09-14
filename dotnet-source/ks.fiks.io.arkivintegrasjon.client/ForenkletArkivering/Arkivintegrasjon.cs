@@ -14,6 +14,27 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
         const string _internavsenderKode = "IA";
         const string _internmottakerKode = "IM";
 
+        public static arkivmelding ConvertOppdaterSaksmappeToArkivmelding(OppdaterSaksmappe input)
+        {
+
+            if (input.oppdaterSaksmappe == null) throw new Exception("Badrequest - saksmappe må være angitt");
+
+            var arkivmld = new arkivmelding();
+            int antFiler = 0;
+            saksmappe mappe = null;
+            mappe = ConvertSaksmappe(input.oppdaterSaksmappe);
+            
+            var mappeliste = new List<saksmappe>();
+            mappeliste.Add(mappe);
+            arkivmld.Items = mappeliste.ToArray();
+
+            arkivmld.antallFiler = antFiler;
+            arkivmld.system = input.oppdaterSaksmappe.referanseEksternNøkkel?.fagsystem;
+            arkivmld.meldingId = input.oppdaterSaksmappe.referanseEksternNøkkel?.nøkkel;
+            arkivmld.tidspunkt = DateTime.Now;
+
+            return arkivmld;
+        }
         public static arkivmelding ConvertForenkletUtgaaendeToArkivmelding(ArkivmeldingForenkletUtgaaende input) {
 
             if (input.nyUtgaaendeJournalpost == null) throw new Exception("Badrequest - journalpost må være angitt");
