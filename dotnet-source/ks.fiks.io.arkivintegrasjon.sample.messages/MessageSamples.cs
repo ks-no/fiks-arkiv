@@ -1,5 +1,4 @@
 ﻿using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using System;
 using System.Collections.Generic;
 
