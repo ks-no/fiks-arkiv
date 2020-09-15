@@ -91,24 +91,25 @@ namespace ks.fiks.io.arkivsystem.sample
             // Process the message
             List<string> kjenteMeldingerForenklet = new List<string>()
                 {
-                    "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletUtgaaende.v1",
-                    "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletInnkommende.v1"
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingUtgaaende.v1",
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1",
+                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.oppdatersaksmappe.v1"
 
                 };
             
             List<string> kjenteMeldingerSok = new List<string>()
                 {
-                    "no.geointegrasjon.arkiv.innsyn.sok.v1"
+                    "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.v1"
                 };
 
             List<string> kjenteMeldingerFiks = new List<string>()
                 {
-                    "no.fiks.tidsavbrudd"
+                    "no.ks.fiks.kvittering.tidsavbrudd"
                 };
 
             List<string> kjenteMeldingerAvansert = new List<string>()
                 {
-                    "no.geointegrasjon.arkiv.oppdatering.arkivmeldingUtgaaende.v1"
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmeldingUtgaaende.v1"
                 };
 
             if (kjenteMeldingerForenklet.Contains(mottatt.Melding.MeldingType))
@@ -117,7 +118,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
                 
-                var svarmsg = mottatt.SvarSender.Svar("no.geointegrasjon.arkiv.mottatt.v1").Result;
+                var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.mottatt.v1").Result;
                 Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 
                 Console.WriteLine("Melding er mottatt i arkiv ok ......");
@@ -126,7 +127,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 //
 
-                var svarmsg2 = mottatt.SvarSender.Svar("no.geointegrasjon.arkiv.kvittering.v1").Result;
+                var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1").Result;
                 Console.WriteLine("Svarmelding " + svarmsg2.MeldingId + " " + svarmsg2.MeldingType + " sendt...");
 
                 Console.WriteLine("Arkivering er ok ......");
@@ -141,7 +142,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
 
-                var svarmsg = mottatt.SvarSender.Svar("no.geointegrasjon.arkiv.sok.resultat.v1","", "sok.xml").Result;
+                var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1", "", "sok.xml").Result;
                 Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 
                 Console.WriteLine("Melding er håndtert i arkiv ok ......");

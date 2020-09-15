@@ -100,13 +100,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
                                       mottakerKontoId: receiverId,
                                       avsenderKontoId: senderId,
-                                      meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletoppdatersaksmappe.v1"); // Message type as string
+                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.oppdatersaksmappe.v1"); // Message type as string
                                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
            
             //Konverterer til arkivmelding xml
@@ -128,13 +128,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
                                       mottakerKontoId: receiverId,
                                       avsenderKontoId: senderId,
-                                      meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletInnkommende.v1"); // Message type as string
+                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1"); // Message type as string
                                                                                                                               //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
 
@@ -329,13 +329,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
                                       mottakerKontoId: receiverId,
                                       avsenderKontoId: senderId,
-                                      meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletUtgaaende.v1"); // Message type as string
+                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingUtgaaende.v1"); // Message type as string
                                                                                                                              //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
 
@@ -507,7 +507,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // Process the message
 
 
-            if (fileArgs.Melding.MeldingType == "no.geointegrasjon.arkiv.mottatt.v1")
+            if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.mottatt.v1")
             {
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
@@ -518,7 +518,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
 
             }
-            else if (fileArgs.Melding.MeldingType == "no.geointegrasjon.arkiv.kvittering.v1")
+            else if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.kvittering.v1")
             {
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
