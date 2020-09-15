@@ -1,4 +1,5 @@
 ﻿using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
+using no.ks.fiks.io.arkivmelding.sok;
 using System;
 using System.Collections.Generic;
 
@@ -125,6 +126,37 @@ namespace ks.fiks.io.arkivintegrasjon.sample.messages
             return saksmappe;
         }
 
+        public static sok SokTittel(string tittel)
+        {
+            var arkivmeldingsok = new sok
+            {
+                respons = respons_type.mappe,
+                meldingId = Guid.NewGuid().ToString(),
+                system = "Fagsystem X",
+                tidspunkt = DateTime.Now,
+                skip = 0,
+                take = 100
+            };
+
+            var paramlist = new List<parameter>
+            {
+                new parameter
+                {
+                    felt = field_type.mappetittel,
+                    @operator = operator_type.equal,
+                    parameterverdier = new parameterverdier
+                    {
+                        Item = new stringvalues {value = new[] {tittel}}
+                    }
+                }
+            };
+
+
+            arkivmeldingsok.parameter = paramlist.ToArray();
+
+            return arkivmeldingsok;
+
+        }
 
         public static string GetOppdaterJournalpostAnsvarlig() {
 

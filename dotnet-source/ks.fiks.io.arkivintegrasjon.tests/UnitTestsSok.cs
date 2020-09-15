@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using no.ks.fiks.io.arkivmelding.sok;
 using NUnit.Framework;
@@ -18,32 +19,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestSok()
         {
 
-            var arkivmeldingsok = new sok
-            {
-                respons = respons_type.mappe,
-                meldingId = Guid.NewGuid().ToString(),
-                system = "Fagsystem X",
-                tidspunkt = DateTime.Now,
-                skip = 0,
-                take = 100
-            };
-
-            var paramlist = new List<parameter>
-            {
-                new parameter
-                {
-                    felt = field_type.mappetittel,
-                    @operator = operator_type.equal,
-                    parameterverdier = new parameterverdier
-                    {
-                        Item = new stringvalues {value = new[] {"tittel*"}}
-                    }
-                }
-            };
-
-
-            arkivmeldingsok.parameter = paramlist.ToArray();
-
+            var arkivmeldingsok = MessageSamples.SokTittel("tittel*");
             string payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
 
             Assert.Pass();
