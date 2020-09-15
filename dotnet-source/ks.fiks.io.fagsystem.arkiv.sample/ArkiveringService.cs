@@ -222,7 +222,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 1 vedlegg");
+            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
+                " vedlegg");
             Console.WriteLine(payload);
 
         }
@@ -412,7 +413,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 1 vedlegg");
+            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Console.WriteLine(payload);
 
         }

@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.sample.messages\ks.fiks.io.arkivintegrasjon.sample.messages.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="privkey.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

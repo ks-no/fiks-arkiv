@@ -1,4 +1,6 @@
-﻿using Ks.Fiks.Maskinporten.Client;
+﻿using ks.fiks.io.arkivintegrasjon.sample.messages;
+using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
+using Ks.Fiks.Maskinporten.Client;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
@@ -104,7 +106,8 @@ namespace ks.fiks.io.arkivsystem.sample
 
             List<string> kjenteMeldingerFiks = new List<string>()
                 {
-                    "no.ks.fiks.kvittering.tidsavbrudd"
+                    "no.ks.fiks.kvittering.tidsavbrudd",
+                    "no.ks.fiks.gi.arkivintegrasjon.feil.v1"
                 };
 
             List<string> kjenteMeldingerAvansert = new List<string>()
@@ -141,8 +144,17 @@ namespace ks.fiks.io.arkivsystem.sample
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
+                
+                //Konverterer til arkivmelding xml
+                var simulertSokeresultat = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
+                var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(simulertSokeresultat);
+                string payload = Arkivintegrasjon.Serialize(arkivmelding);
+                //Lager FIKS IO melding
+                List<IPayload> payloads = new List<IPayload>();
+                payloads.Add(new StringPayload(payload, "sok.xml"));
 
-                var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1", "", "sok.xml").Result;
+
+                var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1", payloads).Result;
                 Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 
                 Console.WriteLine("Melding er håndtert i arkiv ok ......");
