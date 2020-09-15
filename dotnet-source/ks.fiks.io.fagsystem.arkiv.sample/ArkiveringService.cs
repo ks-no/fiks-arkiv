@@ -89,10 +89,37 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             SendOppdatering();
 
-           
+            SendSok();
 
 
             return Task.CompletedTask;
+        }
+
+        private void SendSok()
+        {
+            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
+            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.innsyn.v1", 3)); //TODO for å finne receiverId
+            //Prosess også?
+
+            var messageRequest = new MeldingRequest(
+                                      mottakerKontoId: receiverId,
+                                      avsenderKontoId: senderId,
+                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.v1"); // Message type as string
+                                                                                                                                 //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
+
+            //Konverterer til arkivmelding xml
+            var sok = MessageSamples.SokTittel("tittel*");
+            string payload = Arkivintegrasjon.Serialize(sok);
+            //Lager FIKS IO melding
+            List<IPayload> payloads = new List<IPayload>();
+            payloads.Add(new StringPayload(payload, "sok.xml"));
+
+            //Sender til FIKS IO (arkiv løsning)
+            var msg = client.Send(messageRequest, payloads).Result;
+            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
+            Console.WriteLine(payload);
         }
 
         private void SendOppdatering()
@@ -110,7 +137,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
            
             //Konverterer til arkivmelding xml
-            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPåFagsystemnøkkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
+            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPaaFagsystemnoekkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
             var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
             string payload = Arkivintegrasjon.Serialize(arkivmelding);
             //Lager FIKS IO melding
@@ -150,10 +177,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 offentlighetsvurdertDato = DateTime.Today,
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4712424-883c-4068-9cb7-97ac679d7232"
+                noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
             };
             
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
@@ -255,10 +282,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 offentlighetsvurdertDato = DateTime.Today
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4reke"
+                noekkel = "e4reke"
             };
 
            
@@ -348,10 +375,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             };
 
             utg.nyUtgaaendeJournalpost.tittel = "Tillatelse til ...";
-            utg.nyUtgaaendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "759d7aab-6f41-487d-bdb9-dd177ee887c1"
+                noekkel = "759d7aab-6f41-487d-bdb9-dd177ee887c1"
             };
 
             utg.nyUtgaaendeJournalpost.internAvsender = new List<KorrespondansepartIntern>
@@ -437,9 +464,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             ArkivmeldingForenkletUtgaaende utg = new ArkivmeldingForenkletUtgaaende();
             utg.sluttbrukerIdentifikator = "Fagsystemets brukerid";
             utg.nyUtgaaendeJournalpost = new UtgaaendeJournalpost();
-            utg.nyUtgaaendeJournalpost.referanseEksternNøkkel = new EksternNøkkel();
-            utg.nyUtgaaendeJournalpost.referanseEksternNøkkel.fagsystem = "Fagsystem X";
-            utg.nyUtgaaendeJournalpost.referanseEksternNøkkel.nøkkel = Guid.NewGuid().ToString();
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel = new EksternNoekkel();
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel.fagsystem = "Fagsystem X";
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel.noekkel = Guid.NewGuid().ToString();
 
             utg.nyUtgaaendeJournalpost.tittel = "Tillatelse til ...";
 
@@ -524,6 +551,18 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
+
+                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
+
+                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
+
+            }
+            else if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1")
+            {
+                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
+
+                //TODO håndtere meldingen med ønsket funksjonalitet
+                //Console.WriteLine(fileArgs.Melding.);
 
                 Console.WriteLine("Melding er håndtert i fagsystem ok ......");
 

@@ -18,7 +18,7 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 	public class OrganinterntNotat {
 
 		public ForenkletDokument hoveddokument;
-		public EksternNøkkel referanseEksternNøkkel;
+		public EksternNoekkel referanseEksternNoekkel;
 		public string tittel;
 		public DateTime? dokumentetsDato;
 		public List<KorrespondansepartIntern> internMottaker;

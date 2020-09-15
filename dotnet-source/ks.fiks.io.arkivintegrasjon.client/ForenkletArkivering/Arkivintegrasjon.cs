@@ -29,8 +29,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
             arkivmld.Items = mappeliste.ToArray();
 
             arkivmld.antallFiler = antFiler;
-            arkivmld.system = input.oppdaterSaksmappe.referanseEksternNøkkel?.fagsystem;
-            arkivmld.meldingId = input.oppdaterSaksmappe.referanseEksternNøkkel?.nøkkel;
+            arkivmld.system = input.oppdaterSaksmappe.referanseEksternNoekkel?.fagsystem;
+            arkivmld.meldingId = input.oppdaterSaksmappe.referanseEksternNoekkel?.noekkel;
             arkivmld.tidspunkt = DateTime.Now;
 
             return arkivmld;
@@ -174,11 +174,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 journalpst.korrespondansepart = partsListe.ToArray();
 
-                if (input.nyUtgaaendeJournalpost.referanseEksternNøkkel != null)
+                if (input.nyUtgaaendeJournalpost.referanseEksternNoekkel != null)
                 {
                     journalpst.referanseEksternNoekkel = new eksternNoekkel();
-                    journalpst.referanseEksternNoekkel.fagsystem = input.nyUtgaaendeJournalpost.referanseEksternNøkkel.fagsystem;
-                    journalpst.referanseEksternNoekkel.noekkel = input.nyUtgaaendeJournalpost.referanseEksternNøkkel.nøkkel;
+                    journalpst.referanseEksternNoekkel.fagsystem = input.nyUtgaaendeJournalpost.referanseEksternNoekkel.fagsystem;
+                    journalpst.referanseEksternNoekkel.noekkel = input.nyUtgaaendeJournalpost.referanseEksternNoekkel.noekkel;
                 }
 
                 List<journalpost> jliste = new List<journalpost>
@@ -202,8 +202,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
             }
             arkivmld.antallFiler = antFiler;
-            arkivmld.system = input.nyUtgaaendeJournalpost.referanseEksternNøkkel?.fagsystem;
-            arkivmld.meldingId = input.nyUtgaaendeJournalpost.referanseEksternNøkkel?.nøkkel;
+            arkivmld.system = input.nyUtgaaendeJournalpost.referanseEksternNoekkel?.fagsystem;
+            arkivmld.meldingId = input.nyUtgaaendeJournalpost.referanseEksternNoekkel?.noekkel;
             arkivmld.tidspunkt = DateTime.Now;
 
             return arkivmld;
@@ -409,11 +409,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 journalpst.korrespondansepart = partsListe.ToArray();
 
-                if (input.nyInnkommendeJournalpost.referanseEksternNøkkel != null)
+                if (input.nyInnkommendeJournalpost.referanseEksternNoekkel != null)
                 {
                     journalpst.referanseEksternNoekkel = new eksternNoekkel();
-                    journalpst.referanseEksternNoekkel.fagsystem = input.nyInnkommendeJournalpost.referanseEksternNøkkel.fagsystem;
-                    journalpst.referanseEksternNoekkel.noekkel = input.nyInnkommendeJournalpost.referanseEksternNøkkel.nøkkel;
+                    journalpst.referanseEksternNoekkel.fagsystem = input.nyInnkommendeJournalpost.referanseEksternNoekkel.fagsystem;
+                    journalpst.referanseEksternNoekkel.noekkel = input.nyInnkommendeJournalpost.referanseEksternNoekkel.noekkel;
                 }
 
 
@@ -436,8 +436,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
             }
             arkivmld.antallFiler = antFiler;
-            arkivmld.system = input.nyInnkommendeJournalpost.referanseEksternNøkkel.fagsystem;
-            arkivmld.meldingId = input.nyInnkommendeJournalpost.referanseEksternNøkkel.nøkkel;
+            arkivmld.system = input.nyInnkommendeJournalpost.referanseEksternNoekkel.fagsystem;
+            arkivmld.meldingId = input.nyInnkommendeJournalpost.referanseEksternNoekkel.noekkel;
             arkivmld.tidspunkt = DateTime.Now;
 
             return arkivmld;
@@ -562,11 +562,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 journalpst.korrespondansepart = partsListe.ToArray();
 
-                if (input.nyttNotat.referanseEksternNøkkel != null)
+                if (input.nyttNotat.referanseEksternNoekkel != null)
                 {
                     journalpst.referanseEksternNoekkel = new eksternNoekkel();
-                    journalpst.referanseEksternNoekkel.fagsystem = input.nyttNotat.referanseEksternNøkkel.fagsystem;
-                    journalpst.referanseEksternNoekkel.noekkel = input.nyttNotat.referanseEksternNøkkel.nøkkel;
+                    journalpst.referanseEksternNoekkel.fagsystem = input.nyttNotat.referanseEksternNoekkel.fagsystem;
+                    journalpst.referanseEksternNoekkel.noekkel = input.nyttNotat.referanseEksternNoekkel.noekkel;
                 }
 
                 List<journalpost> jliste = new List<journalpost>
@@ -588,8 +588,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
             }
             arkivmld.antallFiler = antFiler;
-            arkivmld.system = input.nyttNotat.referanseEksternNøkkel.fagsystem;
-            arkivmld.meldingId = input.nyttNotat.referanseEksternNøkkel.nøkkel;
+            arkivmld.system = input.nyttNotat.referanseEksternNoekkel.fagsystem;
+            arkivmld.meldingId = input.nyttNotat.referanseEksternNoekkel.noekkel;
             arkivmld.tidspunkt = DateTime.Now;
 
             return arkivmld;
@@ -623,11 +623,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 }
                 mappe.klasse = klasser.ToArray();
             }
-            if (input.referanseEksternNøkkel != null)
+            if (input.referanseEksternNoekkel != null)
             {
                 mappe.referanseEksternNoekkel = new eksternNoekkel();
-                mappe.referanseEksternNoekkel.fagsystem = input.referanseEksternNøkkel.fagsystem;
-                mappe.referanseEksternNoekkel.noekkel = input.referanseEksternNøkkel.nøkkel;
+                mappe.referanseEksternNoekkel.fagsystem = input.referanseEksternNoekkel.fagsystem;
+                mappe.referanseEksternNoekkel.noekkel = input.referanseEksternNoekkel.noekkel;
             }
 
 

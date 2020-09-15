@@ -56,7 +56,7 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 		/// M110 offentlighetsvurdertDato
 		/// </summary>
 		public DateTime? offentlighetsvurdertDato;
-		public EksternNøkkel referanseEksternNøkkel;
+		public EksternNoekkel referanseEksternNoekkel;
 		public string tittel;
 		public List<ForenkletDokument> vedlegg;
 

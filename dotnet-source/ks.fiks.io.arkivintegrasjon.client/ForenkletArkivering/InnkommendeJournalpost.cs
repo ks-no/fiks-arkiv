@@ -80,7 +80,7 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 		public DateTime? offentlighetsvurdertDato;
 		public Skjerming skjerming;
 
-		public EksternNøkkel referanseEksternNøkkel;
+		public EksternNoekkel referanseEksternNoekkel;
 		public List<ForenkletDokument> vedlegg;
 
 		public List<Korrespondansepart> mottaker;

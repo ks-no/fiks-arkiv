@@ -29,19 +29,19 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 	/// den aktuelle saken.</font></li>
 	/// </ol>
 	/// </summary>
-	public class EksternNøkkel {
+	public class EksternNoekkel {
 
 		/// <summary>
 		/// eksternSystem i n4
 		/// </summary>
 		public string fagsystem;
-		public string nøkkel;
+		public string noekkel;
 
-		public EksternNøkkel(){
+		public EksternNoekkel(){
 
 		}
 
-		~EksternNøkkel(){
+		~EksternNoekkel(){
 
 		}
 

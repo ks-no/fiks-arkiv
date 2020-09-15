@@ -60,10 +60,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             
 
             utg.nyUtgaaendeJournalpost.tittel = "Vedtak etter tilsyn";
-            utg.nyUtgaaendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = new Guid().ToString()
+                noekkel = new Guid().ToString()
             };
 
             utg.nyUtgaaendeJournalpost.internAvsender = new List<KorrespondansepartIntern>

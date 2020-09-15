@@ -127,7 +127,7 @@ namespace FIKS.eMeldingArkiv.eMeldingForenkletArkiv {
 		/// saU1 i n4
 		/// </summary>
 		public Boolean skjermetTittel;
-		public EksternNøkkel referanseEksternNøkkel;
+		public EksternNoekkel referanseEksternNoekkel;
 
 		/// <summary>
 		/// 

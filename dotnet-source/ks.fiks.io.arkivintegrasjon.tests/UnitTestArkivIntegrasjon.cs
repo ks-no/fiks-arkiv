@@ -18,7 +18,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestOppdaterSaksmappe1()
         {
 
-            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPåSaksnummer(2020,1234,"Testing Testesen", "id343463346"  );
+            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPaaSaksnummer(2020,1234,"Testing Testesen", "id343463346"  );
 
             //Konverterer til arkivmelding xml
             var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
@@ -31,7 +31,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestOppdaterSaksmappe2()
         {
 
-            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPåFagsystemnøkkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
+            var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPaaFagsystemnoekkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
 
             //Konverterer til arkivmelding xml
             var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
@@ -65,10 +65,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             inng.referanseSaksmappe = new Saksmappe()
             {
                 tittel = "Tittel mappe",
-                referanseEksternNøkkel = new EksternNøkkel
+                referanseEksternNoekkel = new EksternNoekkel
                 {
                     fagsystem = "Fagsystem X",
-                    nøkkel = "e4reke"
+                    noekkel = "e4reke"
                 }
             };
 
@@ -82,10 +82,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 offentlighetsvurdertDato = DateTime.Today
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4reke"
+                noekkel = "e4reke"
             };
 
 
@@ -151,10 +151,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             inng.referanseSaksmappe = new Saksmappe()
             {
-                referanseEksternNøkkel = new EksternNøkkel
+                referanseEksternNoekkel = new EksternNoekkel
                 {
                     fagsystem = "Fagsystem X",
-                    nøkkel = "e4reke"
+                    noekkel = "e4reke"
                 }
             };
 
@@ -167,10 +167,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 offentlighetsvurdertDato = DateTime.Today
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4reke"
+                noekkel = "e4reke"
             };
 
 
@@ -245,18 +245,18 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             utg.referanseSaksmappe = new Saksmappe()
             {
-                referanseEksternNøkkel = new EksternNøkkel
+                referanseEksternNoekkel = new EksternNoekkel
                 {
                     fagsystem = "Fagsystem X",
-                    nøkkel = "e4reke"
+                    noekkel = "e4reke"
                 }
             };
 
             utg.nyUtgaaendeJournalpost.tittel = "Vedtak og vedtaksgrunnlag for vedtaket(Ref=e4reke, SakId=e4reke)";
-            utg.nyUtgaaendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "SvarUt.forsendelseId",
-                nøkkel = "BBBBBB-BBBB-CCCC-BBBB-BBBBBBBBB"
+                noekkel = "BBBBBB-BBBB-CCCC-BBBB-BBBBBBBBB"
             };
 
             utg.nyUtgaaendeJournalpost.internAvsender = new List<KorrespondansepartIntern>
@@ -349,10 +349,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             notat.referanseSaksmappe = new Saksmappe()
             {
-                referanseEksternNøkkel = new EksternNøkkel
+                referanseEksternNoekkel = new EksternNoekkel
                 {
                     fagsystem = "Fagsystem X",
-                    nøkkel = "e4reke"
+                    noekkel = "e4reke"
                 }
                 ,
                 klasse = new List<Klasse>
@@ -366,10 +366,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             };
 
             notat.nyttNotat.tittel = "Internt notat ved innstilling(Ref=e4reke, SakId=e4reke)";
-            notat.nyttNotat.referanseEksternNøkkel = new EksternNøkkel
+            notat.nyttNotat.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4reke"
+                noekkel = "e4reke"
             };
 
             notat.nyttNotat.internAvsender = new List<KorrespondansepartIntern>
@@ -442,10 +442,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         tittel = "Byggesaksbehandling"
                     },
                 },
-                referanseEksternNøkkel = new EksternNøkkel
+                referanseEksternNoekkel = new EksternNoekkel
                 {
                     fagsystem = "Fagsystem X",
-                    nøkkel = "752f5e31-75e0-4359-bdcb-c612ba7a04eb"
+                    noekkel = "752f5e31-75e0-4359-bdcb-c612ba7a04eb"
                 }
 
                 //Ny matrikkel og Ny bygning
@@ -459,10 +459,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 offentlighetsvurdertDato = DateTime.Today,
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4712424-883c-4068-9cb7-97ac679d7232"
+                noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
             };
 
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
@@ -549,10 +549,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             };
             //Begrunnelse for skjerming må hjemles - Offentleglova kapittel 3 https://lovdata.no/dokument/NL/lov/2006-05-19-16/KAPITTEL_3#KAPITTEL_3
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4712424-883c-4068-9cb7-97ac679d7232"
+                noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
             };
 
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
@@ -640,10 +640,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 offentlighetsvurdertDato = DateTime.Today
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4712424-883c-4068-9cb7-97ac679d7232"
+                noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
             };
 
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>

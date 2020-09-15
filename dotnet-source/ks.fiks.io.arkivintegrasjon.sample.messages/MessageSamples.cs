@@ -30,10 +30,10 @@ namespace ks.fiks.io.arkivintegrasjon.sample.messages
                 offentlighetsvurdertDato = DateTime.Today,
             };
 
-            inng.nyInnkommendeJournalpost.referanseEksternNøkkel = new EksternNøkkel
+            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
                 fagsystem = "Fagsystem X",
-                nøkkel = "e4712424-883c-4068-9cb7-97ac679d7232"
+                noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
             };
 
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
@@ -91,7 +91,7 @@ namespace ks.fiks.io.arkivintegrasjon.sample.messages
             return inng;
         }
 
-        public static OppdaterSaksmappe GetOppdaterSaksmappeAnsvarligPåFagsystemnøkkel(string fagsystem, string nøkkel, string saksansvarlig, string idSaksansvarlig)
+        public static OppdaterSaksmappe GetOppdaterSaksmappeAnsvarligPaaFagsystemnoekkel(string fagsystem, string nøkkel, string saksansvarlig, string idSaksansvarlig)
         {
             var saksmappe = new OppdaterSaksmappe
             {
@@ -99,10 +99,10 @@ namespace ks.fiks.io.arkivintegrasjon.sample.messages
                 {
                     saksansvarlig = saksansvarlig,
                     referanseSaksansvarlig = idSaksansvarlig,
-                    referanseEksternNøkkel = new EksternNøkkel
+                    referanseEksternNoekkel = new EksternNoekkel
                     {
                         fagsystem = fagsystem,
-                        nøkkel = nøkkel
+                        noekkel = nøkkel
                     }
                 }
             };
@@ -111,7 +111,7 @@ namespace ks.fiks.io.arkivintegrasjon.sample.messages
             return saksmappe;
         }
 
-        public static OppdaterSaksmappe GetOppdaterSaksmappeAnsvarligPåSaksnummer(int saksaar, int sekvensnr, string saksansvarlig, string idSaksansvarlig)
+        public static OppdaterSaksmappe GetOppdaterSaksmappeAnsvarligPaaSaksnummer(int saksaar, int sekvensnr, string saksansvarlig, string idSaksansvarlig)
         {
             var saksmappe = new OppdaterSaksmappe();
 
