@@ -1,6 +1,7 @@
 ﻿using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Ks.Fiks.Maskinporten.Client;
+using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
@@ -91,16 +92,18 @@ namespace ks.fiks.io.arkivsystem.sample
             //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
             // Process the message
-            List<string> kjenteMeldingerForenklet = new List<string>()
+            List<string> kjenteMeldingerBasis = new List<string>()
                 {
-                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingUtgaaende.v1",
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1",
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmeldingUtgaaende.v1",
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1",
-                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.oppdatersaksmappe.v1"
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.oppdatersaksmappe.v1"
 
                 };
             
             List<string> kjenteMeldingerSok = new List<string>()
                 {
+                    "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.v1",
                     "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.v1"
                 };
 
@@ -112,15 +115,46 @@ namespace ks.fiks.io.arkivsystem.sample
 
             List<string> kjenteMeldingerAvansert = new List<string>()
                 {
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmelding.v1",
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmeldingUtgaaende.v1"
                 };
 
-            if (kjenteMeldingerForenklet.Contains(mottatt.Melding.MeldingType))
+            if (kjenteMeldingerBasis.Contains(mottatt.Melding.MeldingType))
             {
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
-                
+                if (mottatt.Melding.HasPayload)
+                { // Verify that message has payload
+
+                    IAsicReader reader = new AsiceReader();
+                    using (var inputStream = mottatt.Melding.DecryptedStream.Result)
+                    using (var asice = reader.Read(inputStream))
+                    {
+                        foreach (var asiceReadEntry in asice.Entries)
+                        {
+                            using (var entryStream = asiceReadEntry.OpenStream())
+                            {
+                                StreamReader reader1 = new StreamReader(entryStream);
+                                string text = reader1.ReadToEnd();
+                                Console.WriteLine(text);
+                            }
+                        }
+                        // Check that all digests declared in the manifest are valid
+                        if (asice.DigestVerifier.Verification().AllValid)
+                        {
+                            // Do something
+                        }
+                        else
+                        {
+                            // Handle error
+                        }
+                    }
+
+
+                }
+
+
                 var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.mottatt.v1").Result;
                 Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 

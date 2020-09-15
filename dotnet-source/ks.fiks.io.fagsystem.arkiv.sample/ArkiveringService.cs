@@ -9,6 +9,7 @@ using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
 using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Ks.Fiks.Maskinporten.Client;
+using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
@@ -158,13 +159,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
-            var messageRequest = new MeldingRequest(
-                                      mottakerKontoId: receiverId,
-                                      avsenderKontoId: senderId,
-                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1"); // Message type as string
-                                                                                                                              //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
-
-
             //Fagsystem definerer ønsket struktur
             ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
             inng.sluttbrukerIdentifikator = "Fagsystemets brukerid";
@@ -247,6 +241,14 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             payloads.Add(new FilePayload(@"samples\rekvisisjon.pdf"));
             payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
 
+            var messageRequest = new MeldingRequest(
+                          mottakerKontoId: receiverId,
+                          avsenderKontoId: senderId,
+                          meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1"); // Message type as string
+                                                                                                                           //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
+
+
+
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
             Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
@@ -260,13 +262,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
                                       mottakerKontoId: receiverId,
                                       avsenderKontoId: senderId,
-                                      meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletInnkommende.v1"); // Message type as string
+                                      meldingType: "no.geointegrasjon.arkiv.oppdatering.basis.arkivmelding.v1"); // Message type as string
                                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
 
@@ -347,7 +349,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 1 vedlegg");
+            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Console.WriteLine(payload);
 
         }
@@ -357,14 +359,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
-            var messageRequest = new MeldingRequest(
-                                      mottakerKontoId: receiverId,
-                                      avsenderKontoId: senderId,
-                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingUtgaaende.v1"); // Message type as string
-                                                                                                                             //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
 
             //Fagsystem definerer ønsket struktur
@@ -438,6 +435,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             payloads.Add(new FilePayload(@"samples\vedtak.pdf"));
             payloads.Add(new FilePayload(@"samples\vedlegg1.pdf"));
 
+            var messageRequest = new MeldingRequest(
+                          mottakerKontoId: receiverId,
+                          avsenderKontoId: senderId,
+                          meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1"); // Message type as string
+                                                                                                                         //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
+
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
             Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
@@ -506,7 +509,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 1 vedlegg");
+            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Console.WriteLine(payload);
 
         }
@@ -561,8 +564,36 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             {
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
-                //TODO håndtere meldingen med ønsket funksjonalitet
-                //Console.WriteLine(fileArgs.Melding.);
+               
+                if (fileArgs.Melding.HasPayload)
+                { // Verify that message has payload
+
+                    IAsicReader reader = new AsiceReader();
+                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
+                    using (var asice = reader.Read(inputStream))
+                    {
+                        foreach (var asiceReadEntry in asice.Entries)
+                        {
+                            using (var entryStream = asiceReadEntry.OpenStream())
+                            {
+                                StreamReader reader1 = new StreamReader(entryStream);
+                                string text = reader1.ReadToEnd();
+                                Console.WriteLine(text);
+                            }
+                        }
+                        // Check that all digests declared in the manifest are valid
+                        if (asice.DigestVerifier.Verification().AllValid)
+                        {
+                            // Do something
+                        }
+                        else
+                        {
+                            // Handle error
+                        }
+                    }
+
+                    
+                }
 
                 Console.WriteLine("Melding er håndtert i fagsystem ok ......");
 
