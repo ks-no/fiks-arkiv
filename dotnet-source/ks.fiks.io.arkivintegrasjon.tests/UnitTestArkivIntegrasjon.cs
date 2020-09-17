@@ -2,6 +2,7 @@ using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
 using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using no.ks.fiks.io.arkivmelding;
+using no.ks.fiks.io.arkivmelding.sok;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -723,5 +724,68 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             Assert.Pass();
         }
 
+        [Test]
+        public void TestEbyggesak()
+        {
+
+            // Finnes det sak fra før?
+            var finnSak = new no.ks.fiks.io.arkivmelding.sok.sok
+            {
+                respons = respons_type.mappe,
+                meldingId = Guid.NewGuid().ToString(),
+                system = "eByggesak",
+                tidspunkt = DateTime.Now,
+                skip = 0,
+                take = 2
+            };
+
+            var paramlist = new List<parameter>
+                {
+                    new parameter
+                    {
+                        felt = field_type.saksaksaar,    // Eg. eksternnøkkel: Mangler!
+                        @operator = operator_type.equal,
+                        parameterverdier = new parameterverdier
+                        {
+                            Item = new stringvalues {value = new[] {"eByggesak", "123"}}
+                        }
+                    }
+                };
+
+
+            finnSak.parameter = paramlist.ToArray();
+
+            var payload = Arkivintegrasjon.Serialize(finnSak);
+
+            // Check if there was a case
+            string systemid = null;
+
+            // Det fantes ikke sak, lag
+            if (!false)
+            {
+                Klasse gnr = new Klasse
+                {
+                    klasseID = "1234-12/1234",
+                    klassifikasjonssystem = "GNR"
+                };
+                Saksmappe saksmappe = new Saksmappe
+                {
+                    tittel = "Byggesak 123",
+                    offentligTittel = "Byggesak 123",
+                    saksansvarlig = "Byggesaksbehandler",
+                    klasse = new List<Klasse> { gnr },
+                    referanseEksternNoekkel = new EksternNoekkel
+                    {
+                        fagsystem = "eByggesak",
+                        noekkel = "123"
+                    }
+                };
+                payload = Arkivintegrasjon.Serialize(saksmappe);
+            }
+
+            // Overfør nye journalposter
+
+            Assert.Pass();
+        }
     }
 }
