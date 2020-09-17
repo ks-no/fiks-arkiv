@@ -135,9 +135,15 @@ namespace ks.fiks.io.arkivsystem.sample
                         {
                             using (var entryStream = asiceReadEntry.OpenStream())
                             {
-                                StreamReader reader1 = new StreamReader(entryStream);
-                                string text = reader1.ReadToEnd();
-                                Console.WriteLine(text);
+                                if (asiceReadEntry.FileName.Contains(".xml")) //TODO regel på navning? alltid arkivmelding.xml?
+                                {
+                                    StreamReader reader1 = new StreamReader(entryStream);
+                                    string text = reader1.ReadToEnd();
+                                    Console.WriteLine(text);
+                                }
+                                else
+                                    Console.WriteLine("Mottatt vedlegg: " + asiceReadEntry.FileName);
+
                             }
                         }
                         // Check that all digests declared in the manifest are valid
@@ -178,14 +184,40 @@ namespace ks.fiks.io.arkivsystem.sample
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
-                
+
+                if (mottatt.Melding.HasPayload)
+                { // Verify that message has payload
+
+                    IAsicReader reader = new AsiceReader();
+                    using (var inputStream = mottatt.Melding.DecryptedStream.Result)
+                    using (var asice = reader.Read(inputStream))
+                    {
+                        foreach (var asiceReadEntry in asice.Entries)
+                        {
+                            using (var entryStream = asiceReadEntry.OpenStream())
+                            {
+                                if (asiceReadEntry.FileName.Contains(".xml")) //TODO regel på navning? alltid arkivmelding.xml?
+                                {
+                                    StreamReader reader1 = new StreamReader(entryStream);
+                                    string text = reader1.ReadToEnd();
+                                    Console.WriteLine("Søker etter: " + text);
+                                }
+                                else
+                                    Console.WriteLine("Mottatt vedlegg: " + asiceReadEntry.FileName);
+                            }
+                        }
+                    }
+                }
+
+
+
                 //Konverterer til arkivmelding xml
                 var simulertSokeresultat = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
                 var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(simulertSokeresultat);
                 string payload = Arkivintegrasjon.Serialize(arkivmelding);
                 //Lager FIKS IO melding
                 List<IPayload> payloads = new List<IPayload>();
-                payloads.Add(new StringPayload(payload, "sok.xml"));
+                payloads.Add(new StringPayload(payload, "arkivmelding.xml"));
 
 
                 var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1", payloads).Result;

@@ -574,6 +574,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     {
                         foreach (var asiceReadEntry in asice.Entries)
                         {
+                           
                             using (var entryStream = asiceReadEntry.OpenStream())
                             {
                                 StreamReader reader1 = new StreamReader(entryStream);
