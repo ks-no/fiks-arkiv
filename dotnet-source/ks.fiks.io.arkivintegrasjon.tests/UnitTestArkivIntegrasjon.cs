@@ -761,7 +761,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             string systemid = null;
 
             // Det fantes ikke sak, lag
-            if (!false)
+            if (systemid == null)
             {
                 Klasse gnr = new Klasse
                 {
@@ -781,9 +781,49 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     }
                 };
                 payload = Arkivintegrasjon.Serialize(saksmappe);
+
+                systemid = "12345"; // Nøkkel fra arkivering av saksmappen
             }
 
             // Overfør nye journalposter
+            // Løkke som går gjennom både I, U og X (og S), eksempler her
+
+            // Inngående
+            InnkommendeJournalpost inn = new InnkommendeJournalpost
+            {
+                // Referanse til sak?
+                avsender = new List<Korrespondansepart> {new Korrespondansepart
+                {
+                    enhetsidentifikator = new Enhetsidentifikator
+                    {
+                        organisasjonsnummer = "123456789"
+                    },
+                    navn = "Testesen",
+                    postadresse = new EnkelAdresse
+                    {
+                        adresselinje1 = "Testveien 3",
+                        postnr = "1234",
+                        poststed = "Poststed"
+                    },
+                } },
+                internMottaker = new List<KorrespondansepartIntern> { new KorrespondansepartIntern
+                {
+                    saksbehandler = "Bygg Behandler"
+                } },
+                referanseEksternNoekkel = new EksternNoekkel
+                {
+                    fagsystem = "eByggesak",
+                    noekkel = "inn1"
+                },
+                tittel = "Søknad om rammetillatelse"
+            };
+            // Arkivere...
+
+            // Gjenta for utgående
+
+            // Gjenta for notater
+
+            // Gjenta for saksfremlegg
 
             Assert.Pass();
         }
