@@ -543,7 +543,25 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
+                if (fileArgs.Melding.HasPayload)
+                { // Verify that message has payload
 
+                    IAsicReader reader = new AsiceReader();
+                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
+                    using (var asice = reader.Read(inputStream))
+                    {
+                        foreach (var asiceReadEntry in asice.Entries)
+                        {
+
+                            using (var entryStream = asiceReadEntry.OpenStream())
+                            {
+                                StreamReader reader1 = new StreamReader(entryStream);
+                                string text = reader1.ReadToEnd();
+                                Console.WriteLine(text);
+                            }
+                        }
+                    }
+                }
                 Console.WriteLine("Melding er håndtert i fagsystem ok ......");
 
                 fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
@@ -554,7 +572,54 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
+                if (fileArgs.Melding.HasPayload)
+                { // Verify that message has payload
 
+                    IAsicReader reader = new AsiceReader();
+                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
+                    using (var asice = reader.Read(inputStream))
+                    {
+                        foreach (var asiceReadEntry in asice.Entries)
+                        {
+
+                            using (var entryStream = asiceReadEntry.OpenStream())
+                            {
+                                StreamReader reader1 = new StreamReader(entryStream);
+                                string text = reader1.ReadToEnd();
+                                Console.WriteLine(text);
+                            }
+                        }
+                    }
+                }
+                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
+
+                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
+
+            }
+            else if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.feil.v1")
+            {
+                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
+
+                //TODO håndtere meldingen med ønsket funksjonalitet
+                if (fileArgs.Melding.HasPayload)
+                { // Verify that message has payload
+
+                    IAsicReader reader = new AsiceReader();
+                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
+                    using (var asice = reader.Read(inputStream))
+                    {
+                        foreach (var asiceReadEntry in asice.Entries)
+                        {
+
+                            using (var entryStream = asiceReadEntry.OpenStream())
+                            {
+                                StreamReader reader1 = new StreamReader(entryStream);
+                                string text = reader1.ReadToEnd();
+                                Console.WriteLine(text);
+                            }
+                        }
+                    }
+                }
                 Console.WriteLine("Melding er håndtert i fagsystem ok ......");
 
                 fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue

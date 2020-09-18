@@ -7,6 +7,7 @@ using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using no.ks.fiks.io.arkivmelding;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -157,20 +158,34 @@ namespace ks.fiks.io.arkivsystem.sample
                         }
                     }
 
+                    //TODO validere arkivmelding og evt sende feil om den ikke er ok for arkivering
+
+                    var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.mottatt.v1").Result;
+                    Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
+
+                    Console.WriteLine("Melding er mottatt i arkiv ok ......");
+
+                    mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+
+                }
+                else {
+                    var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.feil.v1", "Meldingen mangler innhold", "feil.txt").Result;
+                    Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " Meldingen mangler innhold");
+
+                    mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
 
                 }
 
 
-                var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.mottatt.v1").Result;
-                Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
+                //TODO simulerer at arkivet arkiverer og nøkler skal returneres
+                var kvittering = new arkivmelding();
+                var sak = new saksmappe();
+                sak.saksaar = "2020";
+                sak.sakssekvensnummer = "123455676";
+                kvittering.Items = new List<saksmappe>() { sak }.ToArray();
+                string payload = Arkivintegrasjon.Serialize(kvittering);
 
-                Console.WriteLine("Melding er mottatt i arkiv ok ......");
-
-                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-
-                //
-
-                var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1").Result;
+                var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1", payload, "arkivmelding.xml").Result;
                 Console.WriteLine("Svarmelding " + svarmsg2.MeldingId + " " + svarmsg2.MeldingType + " sendt...");
 
                 Console.WriteLine("Arkivering er ok ......");
