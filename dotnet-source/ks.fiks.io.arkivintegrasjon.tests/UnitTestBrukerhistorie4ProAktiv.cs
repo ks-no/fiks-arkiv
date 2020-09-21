@@ -144,7 +144,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             {
                 new parameter
                 {
-                    felt = field_type.mappetittel,
+                    felt = field_type.mappetittel, // Aba kan dette være rett?
                     @operator = operator_type.equal,
                     parameterverdier = new parameterverdier
                     {
