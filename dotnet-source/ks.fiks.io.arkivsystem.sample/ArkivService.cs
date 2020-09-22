@@ -98,7 +98,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1",
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmeldingUtgaaende.v1",
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1",
-                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.oppdatersaksmappe.v1"
+                    "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.oppdatersaksmappe.v1"
 
                 };
             

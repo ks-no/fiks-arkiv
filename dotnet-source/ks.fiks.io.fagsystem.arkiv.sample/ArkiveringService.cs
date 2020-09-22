@@ -119,7 +119,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
+            Console.WriteLine("Melding tittel søk " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
             Console.WriteLine(payload);
         }
 
@@ -134,7 +134,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var messageRequest = new MeldingRequest(
                                       mottakerKontoId: receiverId,
                                       avsenderKontoId: senderId,
-                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.oppdatersaksmappe.v1"); // Message type as string
+                                      meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.oppdatersaksmappe.v1"); // Message type as string
                                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
            
             //Konverterer til arkivmelding xml
@@ -147,7 +147,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
+            Console.WriteLine("Melding OppdaterSaksmappeAnsvarligPaaFagsystemnoekkel " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
             Console.WriteLine(payload);
         }
 
@@ -251,7 +251,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
+            Console.WriteLine("Melding ny inngående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
                 " vedlegg");
             Console.WriteLine(payload);
 
@@ -443,7 +443,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
+            Console.WriteLine("Melding ny utgående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Console.WriteLine(payload);
 
         }
