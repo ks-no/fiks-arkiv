@@ -364,6 +364,7 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("datevalues", typeof(datevalues))]
+        [System.Xml.Serialization.XmlElementAttribute("eksternId", typeof(eksternId))]
         [System.Xml.Serialization.XmlElementAttribute("intvalues", typeof(intvalues))]
         [System.Xml.Serialization.XmlElementAttribute("klassifikasjonvalues", typeof(klassifikasjonvalues))]
         [System.Xml.Serialization.XmlElementAttribute("stringvalues", typeof(stringvalues))]
@@ -466,6 +467,39 @@ namespace no.ks.fiks.io.arkivmelding.sok {
             }
             set {
                 this.klasseField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/sok")]
+    public partial class eksternId {
+        
+        private string systemField;
+        
+        private string idField;
+        
+        /// <remarks/>
+        public string system {
+            get {
+                return this.systemField;
+            }
+            set {
+                this.systemField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
             }
         }
     }
