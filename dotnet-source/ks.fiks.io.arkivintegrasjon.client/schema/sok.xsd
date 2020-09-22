@@ -81,6 +81,7 @@
 	
 	<xs:simpleType name="field_type">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="mappe.eksternId" />
 			<xs:enumeration value="mappe.tittel" />
 			<xs:enumeration value="mappe.skjerming" />
 			<xs:enumeration value="mappe.OpprettetDato" />
@@ -102,6 +103,7 @@
 			<xs:enumeration value="mappe.part.epostadresse" />
 			<xs:enumeration value="mappe.part.virksomhetsspesifikkeMetadata" />
 
+			<xs:enumeration value="registrering.eksternId" />
 			<xs:enumeration value="registrering.tittel" />
 			<xs:enumeration value="registrering.skjerming" />
 
