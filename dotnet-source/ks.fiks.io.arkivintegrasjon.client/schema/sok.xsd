@@ -70,7 +70,8 @@
 	<xs:simpleType name="operator_type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="equal" />
-			<xs:enumeration value="between" />
+      <xs:enumeration value="notequal" />
+      <xs:enumeration value="between" />
 			<xs:enumeration value="lessthan" />
 			<xs:enumeration value="lessequal" />
 			<xs:enumeration value="greaterthan" />
