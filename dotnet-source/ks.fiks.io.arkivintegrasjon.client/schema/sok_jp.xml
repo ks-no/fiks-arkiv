@@ -27,6 +27,16 @@
         </ar:parameterverdier>
         </ar:parameter>
     <ar:parameter>
+        <ar:felt>registrering.eksternId</ar:felt>
+        <ar:operator>equal</ar:operator>
+        <ar:parameterverdier>
+            <ar:eksternId>
+                <ar:system>SikriElements</ar:system>
+                <ar:id>85295a5e-6415-410c-8a2c-5b368f1ed06c</ar:id>
+            </ar:eksternId>
+        </ar:parameterverdier>
+    </ar:parameter>
+    <ar:parameter>
         <ar:felt>journalpost.journaldato</ar:felt>
         <ar:operator>between</ar:operator>
         <ar:parameterverdier>

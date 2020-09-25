@@ -3,7 +3,6 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.arkivverket.no/standarder/noark5/sok" elementFormDefault="qualified">
 	
-
 	<xs:element name="sok" type="sok"/>
 	<xs:complexType name="sok">
 		<xs:sequence>
@@ -30,6 +29,7 @@
 			<xs:element name="stringvalues" type="stringvalues"/>
 			<xs:element name="datevalues" type="datevalues"/>
 			<xs:element name="intvalues" type="intvalues"/>
+			<xs:element name="eksternId" type="eksternId"/>
 			<xs:element name="klassifikasjonvalues" type="klassifikasjonvalues"/>
 			<xs:element name="virksomhetsspesifikkemetadata" type="vsmetadata"/>
 		</xs:choice>
@@ -64,6 +64,13 @@
 		<xs:sequence minOccurs="1" maxOccurs="unbounded">
 			<xs:element name="key" type="xs:string" minOccurs="0"/>
 			<xs:element name="value" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="eksternId">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element name="system" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 

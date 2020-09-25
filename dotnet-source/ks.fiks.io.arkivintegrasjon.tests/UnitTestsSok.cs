@@ -123,6 +123,45 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
 
         [Test]
+        public void TestSokEksternId()
+        {
+
+            var arkivmeldingsok = new sok
+            {
+                respons = respons_type.journalpost,
+                meldingId = Guid.NewGuid().ToString(),
+                system = "Fagsystem X",
+                tidspunkt = DateTime.Now,
+                skip = 0,
+                take = 100
+            };
+
+            var paramlist = new List<parameter>
+            {
+                new parameter
+                {
+                    felt = field_type.registreringeksternId,
+                    @operator = operator_type.equal,
+                    parameterverdier = new parameterverdier
+                    {
+                        Item = new eksternId
+                        {
+                            system = "SikriElements",
+                            id = "85295a5e-6415-410c-8a2c-5b368f1ed06c"
+                        }
+                    }
+                }
+            };
+
+
+            arkivmeldingsok.parameter = paramlist.ToArray();
+
+            var payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
+
+            Assert.Pass();
+        }
+
+        [Test]
         public void TestSokKlassifikasjon()
         {
 
