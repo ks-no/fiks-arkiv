@@ -76,7 +76,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     // dokumentmedium
                     // arkivdel
                     mappetype = new Kode
-                    { kodeverdi = "Saksmappe"},
+                    { kodeverdi = "Saksmappe"}, // Standardiseres?
                     klasse = new List<Klasse> { gnr },
                     // sakspart
                     // merknad
@@ -88,6 +88,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     // skjerming
                     // prosjekt
                     // tilgangsgruppe
+                    // merknad
                     referanseEksternNoekkel = new EksternNoekkel
                     {
                         fagsystem = ekstsys,
@@ -120,6 +121,15 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         poststed = "Poststed"
                     },
                 } },
+                mottaker = new List<Korrespondansepart> { new Korrespondansepart
+                {
+                    // kopimottager
+                    personid = new Personidentifikator
+                    {
+                        personidentifikatorType = "FNR",
+                        personidentifikatorNr = "12345612345"
+                    }
+                } },
                 internMottaker = new List<KorrespondansepartIntern> { new KorrespondansepartIntern
                 {
                     saksbehandler = "Bygg Behandler"
@@ -127,9 +137,20 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 referanseEksternNoekkel = new EksternNoekkel
                 {
                     fagsystem = "eByggesak",
-                    noekkel = "inn1"
+                    noekkel = "20/1234-12"
                 },
-                tittel = "Søknad om rammetillatelse"
+                tittel = "Søknad om rammetillatelse 12/123",
+                offentligTittel = "Søknad om rammetillatelse 12/123",
+                // status
+                dokumentetsDato = new DateTime(2020,10,5),
+                // merknad
+                skjerming = new Skjerming
+                {
+                    //tilgangskode
+                    skjermingshjemmel = "Off.loven § 13",
+                    skjermingsvarighet = 60
+                }
+                // Dokumenter
             };
             // Arkivere...
 
