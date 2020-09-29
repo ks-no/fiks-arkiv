@@ -179,10 +179,21 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 //TODO simulerer at arkivet arkiverer og nøkler skal returneres
                 var kvittering = new arkivmelding();
+                kvittering.tidspunkt = DateTime.Now;
+
                 var sak = new saksmappe();
-                sak.saksaar = "2020";
-                sak.sakssekvensnummer = "123455676";
+                sak.systemID = Guid.NewGuid().ToString();
+                sak.saksaar = DateTime.Now.Year.ToString();
+                sak.sakssekvensnummer = new Random().Next().ToString();
+                var jp = new journalpost();
+                jp.systemID = new systemID();
+                jp.systemID.Value = Guid.NewGuid().ToString();
+                jp.journalaar = DateTime.Now.Year.ToString();
+                jp.journalsekvensnummer = new Random().Next().ToString();
+
+                sak.Items = new List<journalpost>() { jp }.ToArray();
                 kvittering.Items = new List<saksmappe>() { sak }.ToArray();
+
                 string payload = Arkivintegrasjon.Serialize(kvittering);
 
                 var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1", payload, "arkivmelding.xml").Result;
