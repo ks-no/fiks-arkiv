@@ -8,23 +8,22 @@ using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
 
 namespace ks.fiks.io.arkivintegrasjon.tests
 {
-    class UnitTestBrukerhistorie7Oppmalingsdialog
+    class UnitTestBrukerhistorie10Oppmalingsdialog
     {
-        [SetUp]
         public void Setup()
         {
         }
-        // Brukstilfellet søker frem alle dokumenter knyttet til sak og presenterer disse for bruker. Bruker velger et av av disse og knytter til saken i fagsystemet. 
-        // I denne testen søker vi bare frem dokumenter for en sak
+
+        // Skal sjekke om det finnes en sak med angitt saksår og saksseksvensnummer i akrivet
         [Test]
-        public void TestFinnDokumenterForsak()
+        public void SjekkSakMedSaksnummerFinnes()
         {
             int saksaar = 2020;
             int saksaksekvensnummer = 123;
 
             var arkivmeldingsok = new sok
             {
-                respons = respons_type.dokumentbeskrivelse,
+                respons = respons_type.saksmappe,
                 meldingId = Guid.NewGuid().ToString(),
                 system = "Fagsystem X",
                 tidspunkt = DateTime.Now,
@@ -43,7 +42,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         Item = new intvalues
                         {
                             value =new[] {saksaar }
-                            
+
                         }
                     }
                 },
@@ -66,8 +65,8 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             arkivmeldingsok.parameter = paramlist.ToArray();
 
             var payload = Arkivintegrasjon.Serialize(arkivmeldingsok);
-           
-           
+
+
 
 
             Assert.Pass();
