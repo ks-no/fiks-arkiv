@@ -1,6 +1,5 @@
 ﻿using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
 using ks.fiks.io.arkivintegrasjon.sample.messages;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using no.ks.fiks.io.arkivmelding;
 using no.ks.fiks.io.arkivmelding.sok;
 using NUnit.Framework;
@@ -51,7 +50,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             finnSak.parameter = paramlist.ToArray();
 
-            var payload = Arkivintegrasjon.Serialize(finnSak);
+            //var payload = Arkivintegrasjon.Serialize(finnSak);
 
             // Check if there was a case
             string systemid = null;
@@ -59,13 +58,13 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             // Det fantes ikke sak, lag
             if (systemid == null)
             {
-                Klasse gnr = new Klasse
+                klasse gnr = new klasse
                 {
                     klasseID = "1234-12/1234",
                     klassifikasjonssystem = "GNR"
                 };
                 // TODO: Mange manglende felt vs. GI 1.1
-                Saksmappe saksmappe = new Saksmappe
+                saksmappe saksmappe = new saksmappe
                 {
                     tittel = "Byggesak 123",
                     offentligTittel = "Byggesak 123",
@@ -73,29 +72,46 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     saksansvarlig = "Byggesaksbehandler",
                     saksdato = new DateTime(),
                     saksstatus = "B",
-                    // dokumentmedium
-                    // arkivdel
-                    mappetype = new Kode
-                    { kodeverdi = "Saksmappe"}, // Standardiseres?
-                    klasse = new List<Klasse> { gnr },
-                    // sakspart
-                    // merknad
+                    dokumentmedium = "elektronisk", // Kode?
+                    // arkivdel = "BYGG", // Mangler og bør være kodeobjekt
+                    // mappetype = new Kode
+                    // { kodeverdi = "Saksmappe"}, // Standardiseres?
+                    klasse = new klasse[] { gnr },
+                    part = new part[]
+                    {
+                        new part
+                        {
+                            partNavn = "Fr Tiltakshaver"    // navn som for korrespondansepart?
+                        }
+                    },
+                    merknad = new merknad[]
+                    {
+                        new merknad
+                        {
+                            merknadstype = "BYGG",  // Kode?
+                            merknadstekst = "Saksnummer 20/123 i eByggesak"
+                        }
+                    },
                     // matrikkelnummer
                     // punkt
                     // bevaringstid
                     // kassasjonsvedtak
-                    skjermetTittel = true,
-                    // skjerming
+                    skjerming = new skjerming
+                    {
+                        tilgangsrestriksjon = "13", // Settes av server?
+                        skjermingshjemmel = "Ofl § 13, fvl § 123",
+                        skjermingMetadata = new string[] {"tittel"} // Her må det være kodeverk
+                    },
                     // prosjekt
                     // tilgangsgruppe
                     // merknad
-                    referanseEksternNoekkel = new EksternNoekkel
+                    referanseEksternNoekkel = new eksternNoekkel
                     {
                         fagsystem = ekstsys,
                         noekkel = saksid
                     }
                 };
-                payload = Arkivintegrasjon.Serialize(saksmappe);
+                // payload = Arkivintegrasjon.Serialize(saksmappe);
 
                 systemid = "12345"; // Nøkkel fra arkivering av saksmappen / søk
             }
@@ -104,37 +120,41 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             // Løkke som går gjennom både I, U og X (og S), eksempler her
 
             // Inngående
-            InnkommendeJournalpost inn = new InnkommendeJournalpost
+            journalpost inn = new journalpost   // Beholde objekttyper for inn-, ut- etc.?
             {
                 // Referanse til sak?
-                avsender = new List<Korrespondansepart> {new Korrespondansepart
-                {
-                    enhetsidentifikator = new Enhetsidentifikator
+                korrespondansepart = new korrespondansepart[] {
+                    new korrespondansepart
                     {
-                        organisasjonsnummer = "123456789"
+                        korrespondanseparttype = "avsender",    // Kode?
+                        Item = new EnhetsidentifikatorType      // Håpløst feltnavn
+                        {
+                            organisasjonsnummer = "123456789"
+                        },
+                        korrespondansepartNavn = "Testesen",
+                        postadresse = new string[] { "c/o Hei og hå", "Testveien 3" },
+                        postnummer = "1234",
+                        poststed = "Poststed",
                     },
-                    navn = "Testesen",
-                    postadresse = new EnkelAdresse
+                    new korrespondansepart
                     {
-                        adresselinje1 = "Testveien 3",
-                        postnr = "1234",
-                        poststed = "Poststed"
+                        korrespondanseparttype = "kopimottager",    // Kode?
+                        Item = new FoedselsnummerType
+                        {
+                            foedselsnummer = "12345612345"
+                        },
+                        korrespondansepartNavn = "Advokat NN",  // Hvordan skille person og organisasjon?
+                        postadresse = new string[] { "Krøsusveien 3" },
+                        postnummer = "2345",
+                        poststed = "Poststedet",
                     },
-                } },
-                mottaker = new List<Korrespondansepart> { new Korrespondansepart
-                {
-                    // kopimottager
-                    personid = new Personidentifikator
+                    new korrespondansepart
                     {
-                        personidentifikatorType = "FNR",
-                        personidentifikatorNr = "12345612345"
+                        saksbehandler = "SBBYGG",
+                        administrativEnhet = "BYGG"
                     }
-                } },
-                internMottaker = new List<KorrespondansepartIntern> { new KorrespondansepartIntern
-                {
-                    saksbehandler = "Bygg Behandler"
-                } },
-                referanseEksternNoekkel = new EksternNoekkel
+                },
+                referanseEksternNoekkel = new eksternNoekkel
                 {
                     fagsystem = "eByggesak",
                     noekkel = "20/1234-12"
@@ -144,11 +164,11 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 // status
                 dokumentetsDato = new DateTime(2020,10,5),
                 // merknad
-                skjerming = new Skjerming
+                skjerming = new skjerming
                 {
-                    //tilgangskode
+                   tilgangsrestriksjon = "13",
                     skjermingshjemmel = "Off.loven § 13",
-                    skjermingsvarighet = 60
+                    skjermingsvarighet = "60"   // Antall år bør ikke være string
                 }
                 // Dokumenter
             };
