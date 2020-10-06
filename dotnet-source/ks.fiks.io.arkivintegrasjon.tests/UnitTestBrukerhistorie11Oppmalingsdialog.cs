@@ -20,9 +20,8 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         [Test]
         public void TestFinnDokumentFraId()
         {
-            int saksaar = 2020;
-            int saksaksekvensnummer = 123;
-
+            string dokumentEkstenId  = "12345-ABCDE";
+          
             var arkivmeldingsok = new sok
             {
                 respons = respons_type.dokumentbeskrivelse,
@@ -32,23 +31,25 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 skip = 0,
                 take = 100
             };
-            // må søke på ekstenID finner ikke noe felt for doklument id.
+            // må søke på ekstenID finner ikke noe felt for dokument id.
 
-            // finner ikke noe felt for dokument ekstenid.
+         
             List<parameter> paramlist = new List<parameter>
             {
                 new parameter
                 {
-                   // felt = field_type.
-                    //@operator = operator_type.equal,
-                    //parameterverdier = new parameterverdier
-                    //{
-                    //    Item = new eksternId
-                    //    {
-                    //        value =new[] {saksaar }
+                    felt = field_type.dokumenteksternId,
+                    @operator = operator_type.equal,
+                    parameterverdier = new parameterverdier
+                    {
+                        Item = new eksternId
+                        {
+                            system = "Fagsystem X",
+                            id = dokumentEkstenId
 
-                    //    }
-                    //}
+
+                        }
+                    }
                 }
 
             };
