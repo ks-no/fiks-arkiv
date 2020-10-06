@@ -129,6 +129,12 @@
 			<xs:enumeration value="journalpost.journalposttype" />
 			<xs:enumeration value="journalpost.journalstatus" />
 			<xs:enumeration value="journalpost.journaldato" />
+
+			<xs:enumeration value="dokument.eksternId" />
+			<xs:enumeration value="dokument.tittel" />
+			<xs:enumeration value="dokument.skjerming" />
+
+
 		</xs:restriction>
 	</xs:simpleType>
 	

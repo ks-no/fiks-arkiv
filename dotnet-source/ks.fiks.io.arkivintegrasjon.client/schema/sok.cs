@@ -322,6 +322,18 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("journalpost.journaldato")]
         journalpostjournaldato,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.eksternId")]
+        dokumenteksternId,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.tittel")]
+        dokumenttittel,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.skjerming")]
+        dokumentskjerming,
     }
     
     /// <remarks/>
@@ -332,6 +344,9 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         
         /// <remarks/>
         equal,
+        
+        /// <remarks/>
+        notequal,
         
         /// <remarks/>
         between,
