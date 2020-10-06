@@ -181,18 +181,14 @@ namespace ks.fiks.io.arkivsystem.sample
                 var kvittering = new arkivmelding();
                 kvittering.tidspunkt = DateTime.Now;
 
-                var sak = new saksmappe();
-                sak.systemID = Guid.NewGuid().ToString();
-                sak.saksaar = DateTime.Now.Year.ToString();
-                sak.sakssekvensnummer = new Random().Next().ToString();
                 var jp = new journalpost();
                 jp.systemID = new systemID();
                 jp.systemID.Value = Guid.NewGuid().ToString();
                 jp.journalaar = DateTime.Now.Year.ToString();
                 jp.journalsekvensnummer = new Random().Next().ToString();
+                jp.journalpostnummer = new Random().Next(1,100).ToString();
 
-                sak.Items = new List<journalpost>() { jp }.ToArray();
-                kvittering.Items = new List<saksmappe>() { sak }.ToArray();
+                kvittering.Items = new List<journalpost>() { jp }.ToArray();
 
                 string payload = Arkivintegrasjon.Serialize(kvittering);
 
