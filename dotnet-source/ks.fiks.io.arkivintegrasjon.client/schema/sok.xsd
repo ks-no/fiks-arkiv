@@ -91,19 +91,22 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mappe.eksternId" />
 			<xs:enumeration value="mappe.tittel" />
-			<xs:enumeration value="mappe.skjerming" />
-			<xs:enumeration value="mappe.OpprettetDato" />
+			<xs:enumeration value="mappe.skjerming" /><!--Skjerming er vel composite?-->
+			<xs:enumeration value="mappe.opprettetDato" />
 			<xs:enumeration value="mappe.beskrivelse" />
 			<xs:enumeration value="mappe.noekkelord" />
 			<xs:enumeration value="mappe.AvsluttetDato" />
 			<xs:enumeration value="mappe.virksomhetsspesifikkeMetadata" />
-			
-			<xs:enumeration value="sak.saksdato" />
+      <xs:enumeration value="mappe.referansearkivdel" />
+
+      <xs:enumeration value="sak.saksdato" />
 			<xs:enumeration value="sak.saksaar" />
 			<xs:enumeration value="sak.saksekvensnummer" />
 			<xs:enumeration value="sak.saksstatus" />
-			
-			<xs:enumeration value="mappe.part.partNavn" />
+      <xs:enumeration value="sak.administrativenhet" />
+      <xs:enumeration value="sak.saksansvarlig" />
+
+      <xs:enumeration value="mappe.part.partNavn" />
 			<xs:enumeration value="mappe.part.partRolle" />
 			<xs:enumeration value="mappe.part.postadresse" />
 			<xs:enumeration value="mappe.part.postnummer" />
@@ -112,9 +115,13 @@
 			<xs:enumeration value="mappe.part.virksomhetsspesifikkeMetadata" />
 
 			<xs:enumeration value="registrering.eksternId" />
-			<xs:enumeration value="registrering.tittel" />
-			<xs:enumeration value="registrering.skjerming" />
+      <xs:enumeration value="registrering.opprettetDato" />
+      <xs:enumeration value="registrering.tittel" />
+      <xs:enumeration value="registrering.administrativenhet" />
+      <xs:enumeration value="registrering.journalpostansvarlig" />
+      <xs:enumeration value="registrering.skjerming" /><!--Skjerming er vel composite?-->
 
+      <!--Inklusive ekstern korrespondansepart?-->
 			<xs:enumeration value="registrering.part.partNavn" />
 			<xs:enumeration value="registrering.part.partRolle" />
 			<xs:enumeration value="registrering.part.postadresse" />
@@ -125,17 +132,31 @@
 	
 			<xs:enumeration value="journalpost.journalaar" />
 			<xs:enumeration value="journalpost.journalsekvensnummer" />
-			<xs:enumeration value="journalpost.journalpostnummer" />
-			<xs:enumeration value="journalpost.journalposttype" />
+			<xs:enumeration value="journalpost.saksaar" />
+      <xs:enumeration value="journalpost.sakssekvensnummer" />
+      <xs:enumeration value="journalpost.journalpostnummer" />
+      <xs:enumeration value="journalpost.journalposttype" />
 			<xs:enumeration value="journalpost.journalstatus" />
 			<xs:enumeration value="journalpost.journaldato" />
+      <xs:enumeration value="journalpost.dokumentetsdato" />
+      <xs:enumeration value="journalpost.forfallsdato" />
+      
+      <!--Interne korrespondanseparter?-->
 
-			<xs:enumeration value="dokument.eksternId" />
-			<xs:enumeration value="dokument.tittel" />
-			<xs:enumeration value="dokument.skjerming" />
+      <xs:enumeration value="dokument.eksternId" />
+      <xs:enumeration value="dokument.opprettetDato" />
+      <xs:enumeration value="dokument.tittel" />
+			<xs:enumeration value="dokument.skjerming" /><!--Skjerming er vel composite?-->
+      <xs:enumeration value="dokument.dokumenttype" />
+      <xs:enumeration value="dokument.dokumentstatus" />
+      <xs:enumeration value="dokument.variantformat" />
+      <xs:enumeration value="dokument.format" />
+      <xs:enumeration value="dokument.filnavn" />
+      <xs:enumeration value="dokument.mimetype" />
+      <xs:enumeration value="dokument.referansejournalposteksternId" />
 
 
-		</xs:restriction>
+    </xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="respons_type">

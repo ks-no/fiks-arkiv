@@ -146,7 +146,9 @@
 					<xs:element name="journalaar" type="n5mdk:journalaar" minOccurs="0"/>
 					<xs:element name="journalsekvensnummer" type="n5mdk:journalsekvensnummer"
 						minOccurs="0"/>
-					<xs:element name="journalpostnummer" type="n5mdk:journalpostnummer"
+          <xs:element name="saksaar" type="n5mdk:saksaar" minOccurs="0"/>
+          <xs:element name="sakssekvensnummer" type="n5mdk:sakssekvensnummer"	minOccurs="0"/>
+          <xs:element name="journalpostnummer" type="n5mdk:journalpostnummer"
 						minOccurs="0"/>
 					<xs:element name="journalposttype" type="n5mdk:journalposttype"/>
 					<xs:element name="journalstatus" type="n5mdk:journalstatus"/>
