@@ -73,9 +73,11 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     saksdato = new DateTime(),
                     saksstatus = "B",
                     dokumentmedium = "elektronisk", // Kode?
+                    journalenhet = "BYG",
                     // arkivdel = "BYGG", // Mangler og bør være kodeobjekt
+                    referanseArkivdel = new string[] {"BYGG"},  // Dette er ikke tilhører arkivdel, men arkivdeler som er relatert!
                     // mappetype = new Kode
-                    // { kodeverdi = "Saksmappe"}, // Standardiseres?
+                    // { kodeverdi = "Saksmappe"}, // Standardiseres? Gitt av spesialiseringen?
                     klasse = new klasse[] { gnr },
                     part = new part[]
                     {
@@ -104,7 +106,6 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     },
                     // prosjekt
                     // tilgangsgruppe
-                    // merknad
                     referanseEksternNoekkel = new eksternNoekkel
                     {
                         fagsystem = ekstsys,
@@ -122,7 +123,14 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             // Inngående
             journalpost inn = new journalpost   // Beholde objekttyper for inn-, ut- etc.?
             {
-                // Referanse til sak?
+                // Saksår
+                // Sakssekvensnummer
+                // referanseForelderMappe = "", // Ligger i xsd...
+                journalposttype = "I",  // Kodeobjekt?
+                journalstatus = "J",    // Kodeobjekt?
+                dokumentetsDato = new DateTime(),
+                journaldato = new DateTime(),
+                forfallsdato = new DateTime(),
                 korrespondansepart = new korrespondansepart[] {
                     new korrespondansepart
                     {
@@ -154,6 +162,14 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         administrativEnhet = "BYGG"
                     }
                 },
+                merknad = new merknad[]
+                    {
+                        new merknad
+                        {
+                            merknadstype = "BYGG",  // Kode?
+                            merknadstekst = "Journalpostnummer 20/123-5 i eByggesak"
+                        }
+                    },
                 referanseEksternNoekkel = new eksternNoekkel
                 {
                     fagsystem = "eByggesak",
@@ -161,16 +177,73 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 },
                 tittel = "Søknad om rammetillatelse 12/123",
                 offentligTittel = "Søknad om rammetillatelse 12/123",
-                // status
-                dokumentetsDato = new DateTime(2020,10,5),
-                // merknad
                 skjerming = new skjerming
                 {
                    tilgangsrestriksjon = "13",
                     skjermingshjemmel = "Off.loven § 13",
                     skjermingsvarighet = "60"   // Antall år bør ikke være string
-                }
+                },
                 // Dokumenter
+                dokumentbeskrivelse = new dokumentbeskrivelse[]
+                {
+                    new dokumentbeskrivelse
+                    {
+                        tilknyttetRegistreringSom = "H",    // Kodeobjekt?
+                        dokumentnummer = "1",   // Tallfelt!
+                        dokumenttype = "SØKNAD",  // Kodeobjekt?
+                        dokumentstatus = "F",    // Kodeobjekt?
+                        tittel = "Søknad om rammetillatelse",
+                        dokumentobjekt = new dokumentobjekt[]
+                        {
+                            new dokumentobjekt
+                            {
+                                versjonsnummer = "1",   // Tallfelt!
+                                variantformat = "A",    // Kodefelt?
+                                format = "PDF",     // Arkade ønsker filtypen her...
+                                mimeType = "application/pdf",
+                                referanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
+                            }
+                        }
+                    },
+                    new dokumentbeskrivelse
+                    {
+                        tilknyttetRegistreringSom = "V",    // Kodeobjekt?
+                        dokumentnummer = "2",   // Tallfelt!
+                        dokumenttype = "KART",  // Kodeobjekt?
+                        dokumentstatus = "F",    // Kodeobjekt?
+                        tittel = "Situasjonskart",
+                        dokumentobjekt = new dokumentobjekt[]
+                        {
+                            new dokumentobjekt
+                            {
+                                versjonsnummer = "1",   // Tallfelt!
+                                variantformat = "A",    // Kodefelt?
+                                format = "PDF",     // Arkade ønsker filtypen her...
+                                mimeType = "application/pdf",
+                                referanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
+                            }
+                        }
+                    },
+                    new dokumentbeskrivelse
+                    {
+                        tilknyttetRegistreringSom = "V",    // Kodeobjekt?
+                        dokumentnummer = "3",   // Tallfelt!
+                        dokumenttype = "TEGNING",  // Kodeobjekt?
+                        dokumentstatus = "F",    // Kodeobjekt?
+                        tittel = "Fasade",
+                        dokumentobjekt = new dokumentobjekt[]
+                        {
+                            new dokumentobjekt
+                            {
+                                versjonsnummer = "1",   // Tallfelt!
+                                variantformat = "A",    // Kodefelt?
+                                format = "PDF",     // Arkade ønsker filtypen her...
+                                mimeType = "application/pdf",
+                                referanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
+                            }
+                        }
+                    }
+                }
             };
             // Arkivere...
 
