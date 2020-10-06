@@ -6,6 +6,7 @@
 	elementFormDefault="qualified">
 	<xs:import namespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
 		schemaLocation="./metadatakatalog.xsd"/>
+  <!--Utfordring at Noark opererer med streng på tallfelt, tas i API?-->
 
 	<xs:element name="arkivmelding" type="arkivmelding"/>
 	<!-- TODO: fix mixed value, <xs:complexType name="arkivmelding" mixed="true">-->
@@ -24,7 +25,7 @@
 	
 	<xs:complexType name="mappe">
 		<xs:sequence>
-			<xs:element name="systemID" type="GUID" minOccurs="0"/>
+			<xs:element name="systemID" type="GUID" minOccurs="0"/><!--GUID kom som krav i Noark 5.5, mange vil ikke være på det nivået. Bør endres til string-->
 			<xs:element name="mappeID" type="n5mdk:mappeID" minOccurs="0"/>
 			<!-- ReferanseForelderMappe gir mulighet for putte en mappe inn under en eksisterende mappe -->
 			<xs:element minOccurs="0" name="ReferanseForeldermappe" type="GUID"/>
@@ -38,7 +39,7 @@
 			<xs:element name="opprettetAv" type="n5mdk:opprettetAv" minOccurs="0"/>
 			<xs:element name="avsluttetDato" type="n5mdk:avsluttetDato" minOccurs="0"/>
 			<xs:element name="avsluttetAv" type="n5mdk:avsluttetAv" minOccurs="0"/>
-			<xs:element name="referanseArkivdel" type="n5mdk:referanseArkivdel" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="referanseArkivdel" type="n5mdk:referanseArkivdel" minOccurs="0" maxOccurs="unbounded"/> <!--Hvis er i arkivdel, bør denne være 1-->
 			<xs:element name="virksomhetsspesifikkeMetadata" type="xs:anyType" minOccurs="0"/>
 			<xs:element name="part" type="part" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="kryssreferanse" type="kryssreferanse" minOccurs="0" maxOccurs="unbounded"/>
@@ -72,7 +73,11 @@
 					<xs:element name="utlaantDato" type="n5mdk:utlaantDato" minOccurs="0"/>
 					<xs:element name="utlaantTil" type="n5mdk:utlaantTil" minOccurs="0"/>
 					<xs:element name="presedens" type="presedens" minOccurs="0"	maxOccurs="unbounded"/>
-				</xs:sequence>
+          <xs:element name="matrikkelnummer" type="Matrikkelnummer" minOccurs="0"	maxOccurs="unbounded"/>
+          <xs:element name="byggIdent" type="ByggIdent" minOccurs="0"	maxOccurs="unbounded"/>
+          <xs:element name="planIdent" type="NasjonalArealplanId" minOccurs="0"	maxOccurs="unbounded"/>
+          <xs:element name="punkt" type="Koordinat" minOccurs="0"	maxOccurs="unbounded"/>
+        </xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -108,7 +113,7 @@
 
 			<!-- Dersom ren registrering kommer alene må den kunne plasseres i en mappe eller arkivdel-->
 			<xs:choice minOccurs="0" maxOccurs="1">
-				<xs:element name="referanseForelderMappe" type="GUID"/>
+				<xs:element name="referanseForelderMappe" type="GUID"/><!--Her bør det være alternativer med eksternnøkkel, ...--><!--Bør være string her-->
 				<xs:element name="referanseArkivdel" type="n5mdk:referanseArkivdel"/>
 			</xs:choice>
 			
@@ -402,4 +407,68 @@
 	<xs:complexType name="AbstraktResourceType" abstract="true">
 		<xs:sequence/>		
 	</xs:complexType>
+
+  <xs:complexType name="Matrikkelnummer">
+    <xs:sequence>
+      <xs:element name="kommunenummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="gaardsnummer" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="bruksnummer" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="festenummer" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="seksjonsnummer" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ByggIdent">
+    <xs:sequence>
+      <xs:element name="bygningsNummer" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="endringsloepenummer" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="NasjonalArealplanId">
+    <xs:sequence>
+      <xs:element name="nummer" type="Administrativenhetsnummer" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="planidentifikasjon" type="xs:string" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Administrativenhetsnummer">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:element name="Fylke" type="Fylke"/>
+  <xs:complexType name="Fylke">
+    <xs:complexContent>
+      <xs:extension base="Administrativenhetsnummer">
+        <xs:sequence>
+          <xs:element name="fylkesnummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Kommune">
+    <xs:complexContent>
+      <xs:extension base="Administrativenhetsnummer">
+        <xs:sequence>
+          <xs:element name="kommunenummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Stat">
+    <xs:complexContent>
+      <xs:extension base="Administrativenhetsnummer">
+        <xs:sequence>
+          <xs:element name="landskode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Koordinat">
+    <xs:sequence>
+      <xs:element name="x" type="xs:double" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="y" type="xs:double" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="z" type="xs:double" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>
