@@ -86,7 +86,8 @@
 		<xs:sequence>
 			<xs:element name="partID" type="n5mdk:partID" minOccurs="0"/>
 			<xs:element name="partNavn" type="n5mdk:partNavn"/>
-			<xs:element name="partRolle" type="n5mdk:partRolle" minOccurs="0"/>
+      <xs:element name="erSkjermet" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="partRolle" type="n5mdk:partRolle" minOccurs="0"/>
 			<xs:choice minOccurs="0" maxOccurs="1">
 				<xs:element name="organisasjonsnummer" minOccurs="0" type="EnhetsidentifikatorType"/>
 				<xs:element name="foedselsnummer" minOccurs="0" type="FoedselsnummerType"/>
@@ -174,7 +175,8 @@
 		<xs:sequence>
 			<xs:element name="korrespondanseparttype" type="n5mdk:korrespondanseparttype"/>
 			<xs:element name="korrespondansepartNavn" type="n5mdk:korrespondansepartNavn"/>
-			<xs:choice minOccurs="0" maxOccurs="1">
+      <xs:element name="erSkjermet" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+      <xs:choice minOccurs="0" maxOccurs="1">
 				<xs:element name="organisasjonsnummer" minOccurs="0" type="EnhetsidentifikatorType"/>
 				<xs:element name="foedselsnummer" minOccurs="0" type="FoedselsnummerType"/>
 				<xs:element name="DNummer" minOccurs="0" type="DNummerType"/>
@@ -429,16 +431,28 @@
 
   <xs:complexType name="NasjonalArealplanId">
     <xs:sequence>
-      <xs:element name="nummer" type="Administrativenhetsnummer" minOccurs="1" maxOccurs="1"/>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element name="stat" minOccurs="0" type="StatsidentifikatorType"/>
+        <xs:element name="fylke" minOccurs="0" type="FylkesnummerType"/>
+        <xs:element name="kommune" minOccurs="0" type="KommunenummerType"/>
+      </xs:choice>
       <xs:element name="planidentifikasjon" type="xs:string" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Administrativenhetsnummer">
+  <xs:complexType name="Administrativenhetsnummer" abstract="true">
     <xs:sequence/>
   </xs:complexType>
-  <xs:element name="Fylke" type="Fylke"/>
-  <xs:complexType name="Fylke">
+  <xs:complexType name="StatsidentifikatorType">
+    <xs:complexContent>
+      <xs:extension base="Administrativenhetsnummer">
+        <xs:sequence>
+          <xs:element name="landskode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FylkesnummerType">
     <xs:complexContent>
       <xs:extension base="Administrativenhetsnummer">
         <xs:sequence>
@@ -447,20 +461,11 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="Kommune">
+  <xs:complexType name="KommunenummerType">
     <xs:complexContent>
       <xs:extension base="Administrativenhetsnummer">
         <xs:sequence>
           <xs:element name="kommunenummer" type="xs:string" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="Stat">
-    <xs:complexContent>
-      <xs:extension base="Administrativenhetsnummer">
-        <xs:sequence>
-          <xs:element name="landskode" type="xs:string" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

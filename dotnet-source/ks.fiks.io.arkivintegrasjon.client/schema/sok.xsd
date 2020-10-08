@@ -91,7 +91,6 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="mappe.eksternId" />
 			<xs:enumeration value="mappe.tittel" />
-			<xs:enumeration value="mappe.skjerming" /><!--Skjerming er vel composite?-->
 			<xs:enumeration value="mappe.opprettetDato" />
 			<xs:enumeration value="mappe.beskrivelse" />
 			<xs:enumeration value="mappe.noekkelord" />
@@ -114,12 +113,34 @@
 			<xs:enumeration value="mappe.part.epostadresse" />
 			<xs:enumeration value="mappe.part.virksomhetsspesifikkeMetadata" />
 
-			<xs:enumeration value="registrering.eksternId" />
+      <xs:enumeration value="mappe.skjerming.tilgangsrestriksjon" />
+      <xs:enumeration value="mappe.skjerming.skjermingshjemmel" />
+      <xs:enumeration value="mappe.skjerming.skjermingsvarighet" />
+      <xs:enumeration value="mappe.skjerming.skjermingOpphoererDato" />
+
+      <xs:enumeration value="sak.matrikkelnummer.kommunenummer" />
+      <xs:enumeration value="sak.matrikkelnummer.gaardsnummer" />
+      <xs:enumeration value="sak.matrikkelnummer.bruksnummer" />
+      <xs:enumeration value="sak.matrikkelnummer.festenummer" />
+      <xs:enumeration value="sak.matrikkelnummer.seksjonsnummer" />
+
+      <xs:enumeration value="sak.byggident.bygningsnummer" />
+      <xs:enumeration value="sak.byggident.endringsloepenummer" />
+
+      <xs:enumeration value="sak.planident.stat.landkode" />
+      <xs:enumeration value="sak.planident.fylke.fylkesnummer" />
+      <xs:enumeration value="sak.planident.kommune.kommunenummer" />
+      <xs:enumeration value="sak.planident.planidentifikasjon" />
+
+      <xs:enumeration value="sak.punkt.x" />
+      <xs:enumeration value="sak.punkt.y" />
+      <xs:enumeration value="sak.punkt.z" />
+
+      <xs:enumeration value="registrering.eksternId" />
       <xs:enumeration value="registrering.opprettetDato" />
       <xs:enumeration value="registrering.tittel" />
       <xs:enumeration value="registrering.administrativenhet" />
       <xs:enumeration value="registrering.journalpostansvarlig" />
-      <xs:enumeration value="registrering.skjerming" /><!--Skjerming er vel composite?-->
 
       <!--Inklusive ekstern korrespondansepart?-->
 			<xs:enumeration value="registrering.part.partNavn" />
@@ -129,8 +150,13 @@
 			<xs:enumeration value="registrering.part.poststed" />
 			<xs:enumeration value="registrering.part.epostadresse" />
 			<xs:enumeration value="registrering.part.virksomhetsspesifikkeMetadata" />
-	
-			<xs:enumeration value="journalpost.journalaar" />
+
+      <xs:enumeration value="registrering.skjerming.tilgangsrestriksjon" />
+      <xs:enumeration value="registrering.skjerming.skjermingshjemmel" />
+      <xs:enumeration value="registrering.skjerming.skjermingsvarighet" />
+      <xs:enumeration value="registrering.skjerming.skjermingOpphoererDato" />
+
+      <xs:enumeration value="journalpost.journalaar" />
 			<xs:enumeration value="journalpost.journalsekvensnummer" />
 			<xs:enumeration value="journalpost.saksaar" />
       <xs:enumeration value="journalpost.sakssekvensnummer" />
@@ -146,7 +172,6 @@
       <xs:enumeration value="dokument.eksternId" />
       <xs:enumeration value="dokument.opprettetDato" />
       <xs:enumeration value="dokument.tittel" />
-			<xs:enumeration value="dokument.skjerming" /><!--Skjerming er vel composite?-->
       <xs:enumeration value="dokument.dokumenttype" />
       <xs:enumeration value="dokument.dokumentstatus" />
       <xs:enumeration value="dokument.variantformat" />
@@ -155,6 +180,10 @@
       <xs:enumeration value="dokument.mimetype" />
       <xs:enumeration value="dokument.referansejournalposteksternId" />
 
+      <xs:enumeration value="dokument.skjerming.tilgangsrestriksjon" />
+      <xs:enumeration value="dokument.skjerming.skjermingshjemmel" />
+      <xs:enumeration value="dokument.skjerming.skjermingsvarighet" />
+      <xs:enumeration value="dokument.skjerming.skjermingOpphoererDato" />
 
     </xs:restriction>
 	</xs:simpleType>
