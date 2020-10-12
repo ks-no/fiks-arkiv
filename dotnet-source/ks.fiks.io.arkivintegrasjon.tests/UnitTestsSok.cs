@@ -52,7 +52,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 },
                 new parameter
                 {
-                    felt = field_type.mappeOpprettetDato,
+                    felt = field_type.mappeopprettetDato,
                     @operator = operator_type.equal,
                     parameterverdier = new parameterverdier
                     {

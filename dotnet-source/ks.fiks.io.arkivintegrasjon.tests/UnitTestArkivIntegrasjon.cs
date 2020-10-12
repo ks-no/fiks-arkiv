@@ -706,7 +706,11 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             //Legge til basismappe
             mappe basismappe = new mappe();
             basismappe.mappeID = "2020/12345";
-            basismappe.systemID = "f3fd5a87-8703-4771-834f-5bba65df0223";
+            basismappe.systemID = new systemID
+            {
+                Value = "f3fd5a87-8703-4771-834f-5bba65df0223"
+            };
+
             //basismappe.saksbehandler //ligger på saksmappe  
             basismappe.tittel = "Hovedmappe tittel";
 
@@ -714,7 +718,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             foreach (var item in arkivmelding.Items) {
                 if (item is saksmappe) {
-                    ((saksmappe)item).ReferanseForeldermappe = "f3fd5a87-8703-4771-834f-5bba65df0223";
+                    ((saksmappe)item).ReferanseForeldermappe = new systemID {Value = "f3fd5a87-8703-4771-834f-5bba65df0223"};
                 }
             
             }

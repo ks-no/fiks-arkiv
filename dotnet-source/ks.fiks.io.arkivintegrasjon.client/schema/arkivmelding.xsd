@@ -25,10 +25,10 @@
 	
 	<xs:complexType name="mappe">
 		<xs:sequence>
-			<xs:element name="systemID" type="GUID" minOccurs="0"/><!--GUID kom som krav i Noark 5.5, mange vil ikke være på det nivået. Bør endres til string-->
+			<xs:element name="systemID" type="n5mdk:systemID" minOccurs="0"/>
 			<xs:element name="mappeID" type="n5mdk:mappeID" minOccurs="0"/>
 			<!-- ReferanseForelderMappe gir mulighet for putte en mappe inn under en eksisterende mappe -->
-			<xs:element minOccurs="0" name="ReferanseForeldermappe" type="GUID"/>
+			<xs:element minOccurs="0" name="ReferanseForeldermappe" type="n5mdk:systemID"/>
 			<xs:element name="tittel" type="n5mdk:tittel"/>
 			<xs:element name="offentligTittel" type="n5mdk:offentligTittel" minOccurs="0"/>
 			<xs:element name="beskrivelse" type="n5mdk:beskrivelse" minOccurs="0"/>
@@ -114,7 +114,7 @@
 
 			<!-- Dersom ren registrering kommer alene må den kunne plasseres i en mappe eller arkivdel-->
 			<xs:choice minOccurs="0" maxOccurs="1">
-				<xs:element name="referanseForelderMappe" type="GUID"/><!--Her bør det være alternativer med eksternnøkkel, ...--><!--Bør være string her-->
+				<xs:element name="referanseForelderMappe" type="n5mdk:systemID"/><!--Her bør det være alternativer med eksternnøkkel, ...--><!--Bør være string her-->
 				<xs:element name="referanseArkivdel" type="n5mdk:referanseArkivdel"/>
 			</xs:choice>
 			
@@ -236,7 +236,7 @@
 
 	<xs:complexType name="dokumentbeskrivelse">
 		<xs:sequence>
-			<xs:element name="systemID" type="GUID" minOccurs="0"/>
+			<xs:element name="systemID" type="n5mdk:systemID" minOccurs="0"/>
 			<xs:element name="dokumenttype" type="n5mdk:dokumenttype"/>
 			<xs:element name="dokumentstatus" type="n5mdk:dokumentstatus"/>
 			<xs:element name="tittel" type="n5mdk:tittel"/>
@@ -331,7 +331,7 @@
 	</xs:complexType>
 	<xs:complexType name="klasse">
 		<xs:sequence>
-			<xs:element name="systemID" type="GUID" minOccurs="0"/>
+			<xs:element name="systemID" type="n5mdk:systemID" minOccurs="0"/>
 			<xs:element name="klassifikasjonssystem" type = "xs:string"/>
 			<xs:element name="klasseID" type="n5mdk:klasseID"/>
 			<xs:element name="tittel" type="n5mdk:tittel" minOccurs="0"/>
@@ -401,7 +401,7 @@
 		<xs:complexContent>
 			<xs:extension base="AbstraktResourceType">
 				<xs:sequence>
-					<xs:element name="systemID" minOccurs="0" type="GUID"/>
+					<xs:element name="systemID" minOccurs="0" type="n5mdk:systemID"/>
 					<xs:element name="beskrivelse" minOccurs="0" type="xs:string"/>
 				</xs:sequence>
 			</xs:extension>
