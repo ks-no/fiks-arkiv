@@ -192,12 +192,8 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         mappetittel,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("mappe.skjerming")]
-        mappeskjerming,
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("mappe.OpprettetDato")]
-        mappeOpprettetDato,
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.opprettetDato")]
+        mappeopprettetDato,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("mappe.beskrivelse")]
@@ -216,6 +212,10 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         mappevirksomhetsspesifikkeMetadata,
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.referansearkivdel")]
+        mappereferansearkivdel,
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("sak.saksdato")]
         saksaksdato,
         
@@ -230,6 +230,14 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("sak.saksstatus")]
         saksaksstatus,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.administrativenhet")]
+        sakadministrativenhet,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.saksansvarlig")]
+        saksaksansvarlig,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("mappe.part.partNavn")]
@@ -260,16 +268,96 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         mappepartvirksomhetsspesifikkeMetadata,
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.skjerming.tilgangsrestriksjon")]
+        mappeskjermingtilgangsrestriksjon,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.skjerming.skjermingshjemmel")]
+        mappeskjermingskjermingshjemmel,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.skjerming.skjermingsvarighet")]
+        mappeskjermingskjermingsvarighet,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("mappe.skjerming.skjermingOpphoererDato")]
+        mappeskjermingskjermingOpphoererDato,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.matrikkelnummer.kommunenummer")]
+        sakmatrikkelnummerkommunenummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.matrikkelnummer.gaardsnummer")]
+        sakmatrikkelnummergaardsnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.matrikkelnummer.bruksnummer")]
+        sakmatrikkelnummerbruksnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.matrikkelnummer.festenummer")]
+        sakmatrikkelnummerfestenummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.matrikkelnummer.seksjonsnummer")]
+        sakmatrikkelnummerseksjonsnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.byggident.bygningsnummer")]
+        sakbyggidentbygningsnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.byggident.endringsloepenummer")]
+        sakbyggidentendringsloepenummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.planident.stat.landkode")]
+        sakplanidentstatlandkode,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.planident.fylke.fylkesnummer")]
+        sakplanidentfylkefylkesnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.planident.kommune.kommunenummer")]
+        sakplanidentkommunekommunenummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.planident.planidentifikasjon")]
+        sakplanidentplanidentifikasjon,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.punkt.x")]
+        sakpunktx,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.punkt.y")]
+        sakpunkty,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("sak.punkt.z")]
+        sakpunktz,
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("registrering.eksternId")]
         registreringeksternId,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.opprettetDato")]
+        registreringopprettetDato,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("registrering.tittel")]
         registreringtittel,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("registrering.skjerming")]
-        registreringskjerming,
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.administrativenhet")]
+        registreringadministrativenhet,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.journalpostansvarlig")]
+        registreringjournalpostansvarlig,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("registrering.part.partNavn")]
@@ -300,12 +388,36 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         registreringpartvirksomhetsspesifikkeMetadata,
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.skjerming.tilgangsrestriksjon")]
+        registreringskjermingtilgangsrestriksjon,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.skjerming.skjermingshjemmel")]
+        registreringskjermingskjermingshjemmel,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.skjerming.skjermingsvarighet")]
+        registreringskjermingskjermingsvarighet,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("registrering.skjerming.skjermingOpphoererDato")]
+        registreringskjermingskjermingOpphoererDato,
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalaar")]
         journalpostjournalaar,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalsekvensnummer")]
         journalpostjournalsekvensnummer,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.saksaar")]
+        journalpostsaksaar,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.sakssekvensnummer")]
+        journalpostsakssekvensnummer,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("journalpost.journalpostnummer")]
@@ -324,16 +436,68 @@ namespace no.ks.fiks.io.arkivmelding.sok {
         journalpostjournaldato,
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.dokumentetsdato")]
+        journalpostdokumentetsdato,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("journalpost.forfallsdato")]
+        journalpostforfallsdato,
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("dokument.eksternId")]
         dokumenteksternId,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.opprettetDato")]
+        dokumentopprettetDato,
         
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("dokument.tittel")]
         dokumenttittel,
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("dokument.skjerming")]
-        dokumentskjerming,
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.dokumenttype")]
+        dokumentdokumenttype,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.dokumentstatus")]
+        dokumentdokumentstatus,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.variantformat")]
+        dokumentvariantformat,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.format")]
+        dokumentformat,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.filnavn")]
+        dokumentfilnavn,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.mimetype")]
+        dokumentmimetype,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.referansejournalposteksternId")]
+        dokumentreferansejournalposteksternId,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.skjerming.tilgangsrestriksjon")]
+        dokumentskjermingtilgangsrestriksjon,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.skjerming.skjermingshjemmel")]
+        dokumentskjermingskjermingshjemmel,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.skjerming.skjermingsvarighet")]
+        dokumentskjermingskjermingsvarighet,
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("dokument.skjerming.skjermingOpphoererDato")]
+        dokumentskjermingskjermingOpphoererDato,
     }
     
     /// <remarks/>
