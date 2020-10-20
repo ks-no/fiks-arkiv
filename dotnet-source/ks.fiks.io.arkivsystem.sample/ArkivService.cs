@@ -176,19 +176,34 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 }
 
-
-                //TODO simulerer at arkivet arkiverer og nøkler skal returneres
                 var kvittering = new arkivmelding();
                 kvittering.tidspunkt = DateTime.Now;
 
-                var jp = new journalpost();
-                jp.systemID = new systemID();
-                jp.systemID.Value = Guid.NewGuid().ToString();
-                jp.journalaar = DateTime.Now.Year.ToString();
-                jp.journalsekvensnummer = new Random().Next().ToString();
-                jp.journalpostnummer = new Random().Next(1,100).ToString();
+                if (mottatt.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.oppdatersaksmappe.v1")
+                {
+                    var mp = new saksmappe();
+                    mp.systemID = new systemID();
+                    mp.systemID.Value = Guid.NewGuid().ToString();
+                    mp.saksaar = DateTime.Now.Year.ToString();
+                    mp.sakssekvensnummer = new Random().Next().ToString();
 
-                kvittering.Items = new List<journalpost>() { jp }.ToArray();
+                    kvittering.Items = new List<saksmappe>() { mp }.ToArray();
+                }
+                else { //Simulerer alltid ny journalpost
+
+                    var jp = new journalpost();
+                    jp.systemID = new systemID();
+                    jp.systemID.Value = Guid.NewGuid().ToString();
+                    jp.journalaar = DateTime.Now.Year.ToString();
+                    jp.journalsekvensnummer = new Random().Next().ToString();
+                    jp.journalpostnummer = new Random().Next(1, 100).ToString();
+
+                    kvittering.Items = new List<journalpost>() { jp }.ToArray();
+                }
+                //TODO simulerer at arkivet arkiverer og nøkler skal returneres
+                
+
+                
 
                 string payload = Arkivintegrasjon.Serialize(kvittering);
 
