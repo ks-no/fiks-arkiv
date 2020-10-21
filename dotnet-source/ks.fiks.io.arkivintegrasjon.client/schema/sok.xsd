@@ -105,6 +105,11 @@
       <xs:enumeration value="sak.administrativenhet" />
       <xs:enumeration value="sak.saksansvarlig" />
 
+      <xs:enumeration value="mappe.klasse.klassifikasjonssystem" />
+      <xs:enumeration value="mappe.klasse.klasseID" />
+      <xs:enumeration value="mappe.klasse.tittel" />
+      <xs:enumeration value="mappe.klasse.beskrivelse" />
+
       <xs:enumeration value="mappe.part.partNavn" />
 			<xs:enumeration value="mappe.part.partRolle" />
 			<xs:enumeration value="mappe.part.postadresse" />
