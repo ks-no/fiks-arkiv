@@ -126,6 +126,7 @@ namespace ks.fiks.io.arkivsystem.sample
             string xmlValidationErrorMessage = "";
             if (kjenteMeldingerBasis.Contains(mottatt.Melding.MeldingType))
             {
+                arkivmelding deserializedArkivmelding = new arkivmelding();
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 
                 //TODO håndtere meldingen med ønsket funksjonalitet
@@ -148,6 +149,7 @@ namespace ks.fiks.io.arkivsystem.sample
                                         var newEntryStream = asiceReadEntry.OpenStream();
                                         StreamReader reader1 = new StreamReader(newEntryStream);
                                         string text = reader1.ReadToEnd();
+                                        deserializedArkivmelding = Arkivintegrasjon.DeSerialize(text);
                                         Console.WriteLine(text);
                                     }
                                     catch (XmlSchemaValidationException e)
@@ -197,25 +199,27 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 if (!xmlValidationErrorOccurd)
                 {
-                var kvittering = new arkivmelding();
-                kvittering.tidspunkt = DateTime.Now;
+                    var kvittering = new arkivmelding();
+                    kvittering.tidspunkt = DateTime.Now;
+                    var type = deserializedArkivmelding?.Items?[0]?.GetType();
 
-                if (mottatt.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.oppdatersaksmappe.v1")
-                {
-                    var mp = new saksmappe();
-                    mp.systemID = new systemID();
+                    if (type == typeof(saksmappe))
+                    {
+                        var mp = new saksmappe();
+                        mp.systemID = new systemID();
                     mp.systemID.Value = Guid.NewGuid().ToString();
                     mp.saksaar = DateTime.Now.Year.ToString();
                     mp.sakssekvensnummer = new Random().Next().ToString();
 
-                    kvittering.Items = new List<saksmappe>() { mp }.ToArray();
-                }
-                else { //Simulerer alltid ny journalpost
+                        kvittering.Items = new List<saksmappe>() { mp }.ToArray();
+                    }
+                    else if (type == typeof(journalpost))
+                    {
+                        var jp = new journalpost();
 
-                    var jp = new journalpost();
-                    jp.systemID = new systemID();
-                    jp.systemID.Value = Guid.NewGuid().ToString();
-                    jp.journalaar = DateTime.Now.Year.ToString();
+                        jp.systemID = new systemID();
+                        jp.systemID.Value = Guid.NewGuid().ToString();
+                        jp.journalaar = DateTime.Now.Year.ToString();
                     jp.journalsekvensnummer = new Random().Next().ToString();
                     jp.journalpostnummer = new Random().Next(1, 100).ToString();
 

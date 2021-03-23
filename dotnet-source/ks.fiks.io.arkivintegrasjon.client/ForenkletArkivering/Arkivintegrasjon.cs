@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 {
@@ -283,6 +284,18 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
             var stringWriter = new StringWriter();
             serializer.Serialize(stringWriter, arkivmelding);
             return stringWriter.ToString();
+        }
+
+        public static arkivmelding DeSerialize(string arkivmelding)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(arkivmelding));
+            arkivmelding arkivmeldingDeserialized;
+            using (TextReader reader = new StringReader(arkivmelding))
+            {
+                arkivmeldingDeserialized = (arkivmelding) serializer.Deserialize(reader);
+            }
+
+            return arkivmeldingDeserialized;
         }
 
         public static arkivmelding ConvertForenkletInnkommendeToArkivmelding(ArkivmeldingForenkletInnkommende input)
