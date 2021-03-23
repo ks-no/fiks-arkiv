@@ -1,4 +1,4 @@
-using ks.fiks.io.arkivintegrasjon.sample.messages;
+﻿using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Ks.Fiks.Maskinporten.Client;
 using KS.Fiks.ASiC_E;
@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -42,54 +44,10 @@ namespace ks.fiks.io.arkivsystem.sample
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Arkiv Service is starting.");
-
-            Console.WriteLine("Setter opp FIKS integrasjon for arkivsystem...");
-            Guid accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
-            string privateKey = File.ReadAllText("privkey.pem"); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
-            Guid integrationId = Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
-            string integrationPassword = config["integrationPassword"];  /* Integration password */
-
-            // Fiks IO account configuration
-            var account = new KontoConfiguration(
-                                accountId,
-                                privateKey);
-
-            // Id and password for integration associated to the Fiks IO account.
-            var integration = new IntegrasjonConfiguration(
-                                    integrationId,
-                                    integrationPassword, "ks:fiks");
-
-            // ID-porten machine to machine configuration
-            var maskinporten = new MaskinportenClientConfiguration(
-                audience: @"https://oidc-ver2.difi.no/idporten-oidc-provider/", // ID-porten audience path
-                tokenEndpoint: @"https://oidc-ver2.difi.no/idporten-oidc-provider/token", // ID-porten token path
-                issuer: @"arkitektum_test",  // issuer name
-                numberOfSecondsLeftBeforeExpire: 10, // The token will be refreshed 10 seconds before it expires
-                certificate: GetCertificate(config["ThumbprintIdPortenVirksomhetssertifikat"]));
-
-            // Optional: Use custom api host (i.e. for connecting to test api)
-            var api = new ApiConfiguration(
-                            scheme: "https",
-                            host: "api.fiks.test.ks.no",
-                            port: 443);
-
-            // Optional: Use custom amqp host (i.e. for connection to test queue)
-            var amqp = new AmqpConfiguration(
-                            host: "io.fiks.test.ks.no",
-                            port: 5671);
-
-            // Combine all configurations
-            var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
-            client = new FiksIOClient(configuration); // See setup of configuration below
-
-
-
-            client.NewSubscription(OnReceivedMelding);
-
-            Console.WriteLine("Abonnerer på meldinger på konto " + accountId.ToString() + " ...");
-
+            SetUpConfiguredFiksIOClient();
             return Task.CompletedTask;
         }
+
 
         private void OnReceivedMelding(object sender, MottattMeldingArgs mottatt)
         {
@@ -207,9 +165,9 @@ namespace ks.fiks.io.arkivsystem.sample
                     {
                         var mp = new saksmappe();
                         mp.systemID = new systemID();
-                    mp.systemID.Value = Guid.NewGuid().ToString();
-                    mp.saksaar = DateTime.Now.Year.ToString();
-                    mp.sakssekvensnummer = new Random().Next().ToString();
+                        mp.systemID.Value = Guid.NewGuid().ToString();
+                        mp.saksaar = DateTime.Now.Year.ToString();
+                        mp.sakssekvensnummer = new Random().Next().ToString();
 
                         kvittering.Items = new List<saksmappe>() { mp }.ToArray();
                     }
@@ -220,26 +178,20 @@ namespace ks.fiks.io.arkivsystem.sample
                         jp.systemID = new systemID();
                         jp.systemID.Value = Guid.NewGuid().ToString();
                         jp.journalaar = DateTime.Now.Year.ToString();
-                    jp.journalsekvensnummer = new Random().Next().ToString();
-                    jp.journalpostnummer = new Random().Next(1, 100).ToString();
+                        jp.journalsekvensnummer = new Random().Next().ToString();
+                        jp.journalpostnummer = new Random().Next(1, 100).ToString();
 
-                    kvittering.Items = new List<journalpost>() { jp }.ToArray();
+                        kvittering.Items = new List<journalpost>() { jp }.ToArray();
+                    }
+                    //TODO simulerer at arkivet arkiverer og nøkler skal returneres
+
+                    string payload = Arkivintegrasjon.Serialize(kvittering);
+
+                    var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1", payload, "arkivmelding.xml").Result;
+                    Console.WriteLine("Svarmelding " + svarmsg2.MeldingId + " " + svarmsg2.MeldingType + " sendt...");
+
+                    Console.WriteLine("Arkivering er ok ......");
                 }
-                //TODO simulerer at arkivet arkiverer og nøkler skal returneres
-                
-
-                
-
-                string payload = Arkivintegrasjon.Serialize(kvittering);
-
-                var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1", payload, "arkivmelding.xml").Result;
-                Console.WriteLine("Svarmelding " + svarmsg2.MeldingId + " " + svarmsg2.MeldingType + " sendt...");
-
-                Console.WriteLine("Arkivering er ok ......");
-                }
-
-
-
             }
             else if (kjenteMeldingerSok.Contains(mottatt.Melding.MeldingType))
             {
@@ -309,6 +261,54 @@ namespace ks.fiks.io.arkivsystem.sample
 
 
             }
+        }
+
+        private void SetUpConfiguredFiksIOClient()
+        {
+            Console.WriteLine("Setter opp FIKS integrasjon for arkivsystem...");
+            Guid accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
+            string privateKey = File.ReadAllText("privkey.pem"); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
+            Guid integrationId = Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
+            string integrationPassword = config["integrationPassword"];  /* Integration password */
+
+            // Fiks IO account configuration
+            var account = new KontoConfiguration(
+                                accountId,
+                                privateKey);
+
+            // Id and password for integration associated to the Fiks IO account.
+            var integration = new IntegrasjonConfiguration(
+                                    integrationId,
+                                    integrationPassword, "ks:fiks");
+
+            // ID-porten machine to machine configuration
+            var maskinporten = new MaskinportenClientConfiguration(
+                audience: @"https://oidc-ver2.difi.no/idporten-oidc-provider/", // ID-porten audience path
+                tokenEndpoint: @"https://oidc-ver2.difi.no/idporten-oidc-provider/token", // ID-porten token path
+                issuer: @"arkitektum_test",  // issuer name
+                numberOfSecondsLeftBeforeExpire: 10, // The token will be refreshed 10 seconds before it expires
+                certificate: GetCertificate(config["ThumbprintIdPortenVirksomhetssertifikat"]));
+
+            // Optional: Use custom api host (i.e. for connecting to test api)
+            var api = new ApiConfiguration(
+                            scheme: "https",
+                            host: "api.fiks.test.ks.no",
+                            port: 443);
+
+            // Optional: Use custom amqp host (i.e. for connection to test queue)
+            var amqp = new AmqpConfiguration(
+                            host: "io.fiks.test.ks.no",
+                            port: 5671);
+
+            // Combine all configurations
+            var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
+            client = new FiksIOClient(configuration); // See setup of configuration below
+
+
+
+            client.NewSubscription(OnReceivedMelding);
+
+            Console.WriteLine("Abonnerer på meldinger på konto " + accountId.ToString() + " ...");
         }
 
         private void ValidateXML(Stream entryStream)
