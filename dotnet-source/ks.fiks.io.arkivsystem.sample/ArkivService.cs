@@ -80,6 +80,18 @@ namespace ks.fiks.io.arkivsystem.sample
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmelding.v1",
                     "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmeldingUtgaaende.v1"
                 };
+            List<string> arkivmeldingValidationSettings = new List<string>()
+            {
+                "http://www.arkivverket.no/standarder/noark5/arkivmelding",
+                "https://raw.githubusercontent.com/ks-no/move-messagetypes/master/arkivmelding/arkivmelding.xsd",
+                "http://www.arkivverket.no/standarder/noark5/metadatakatalog",
+                "https://raw.githubusercontent.com/ks-no/move-messagetypes/master/arkivmelding/metadatakatalog.xsd"
+            };
+            List<string> sokValidationSettings = new List<string>()
+            {
+                "http://www.arkivverket.no/standarder/noark5/sok",
+                Path.Combine("..\\..\\..\\..\\ks.fiks.io.arkivintegrasjon.client\\schema", "sok.xsd")
+            };
             bool xmlValidationErrorOccurd = false;
             string xmlValidationErrorMessage = "";
             if (kjenteMeldingerBasis.Contains(mottatt.Melding.MeldingType))
@@ -103,7 +115,13 @@ namespace ks.fiks.io.arkivsystem.sample
                                 {
                                     try{
                                         //TODO validere arkivmelding og evt sende feil om den ikke er ok for arkivering
-                                        ValidateXML(entryStream);
+                                        ValidateXML(
+                                            entryStream, 
+                                            arkivmeldingValidationSettings[0], 
+                                            arkivmeldingValidationSettings[1],
+                                            arkivmeldingValidationSettings[2],
+                                            arkivmeldingValidationSettings[3]
+                                            );
                                         var newEntryStream = asiceReadEntry.OpenStream();
                                         StreamReader reader1 = new StreamReader(newEntryStream);
                                         string text = reader1.ReadToEnd();
@@ -212,18 +230,37 @@ namespace ks.fiks.io.arkivsystem.sample
                             {
                                 if (asiceReadEntry.FileName.Contains(".xml")) //TODO regel på navning? alltid arkivmelding.xml?
                                 {
-                                    StreamReader reader1 = new StreamReader(entryStream);
-                                    string text = reader1.ReadToEnd();
-                                    Console.WriteLine("Søker etter: " + text);
+                                    try
+                                    {
+                                        ValidateXML(
+                                            entryStream,
+                                            sokValidationSettings[0],
+                                            sokValidationSettings[1],
+                                            null,
+                                            null
+                                        );
+                                        StreamReader reader1 = new StreamReader(entryStream);
+                                        string text = reader1.ReadToEnd();
+                                        Console.WriteLine("Søker etter: " + text);
+                                    }
+                                    catch (XmlSchemaValidationException e)
+                                    {
+                                        Console.WriteLine("Error while validating .xml file: " + e.Message);
+                                        xmlValidationErrorOccurd = true;
+                                        xmlValidationErrorMessage = e.Message;
+                                    }
                                 }
                                 else
                                     Console.WriteLine("Mottatt vedlegg: " + asiceReadEntry.FileName);
                             }
                         }
                     }
+                    if (xmlValidationErrorOccurd)
+                    {
+                        var errorMessage = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.feil.v1", xmlValidationErrorMessage, "feil.txt").Result;
+                        mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+                    }
                 }
-
-
 
                 //Konverterer til arkivmelding xml
                 var simulertSokeresultat = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
@@ -311,11 +348,14 @@ namespace ks.fiks.io.arkivsystem.sample
             Console.WriteLine("Abonnerer på meldinger på konto " + accountId.ToString() + " ...");
         }
 
-        private void ValidateXML(Stream entryStream)
+        private void ValidateXML(Stream entryStream, string targetNameSpace, string schemaUri, string metaTargetNameSpace, string metaSchemaUri)
         {
             XmlSchemaSet xmlSchemaSet = new XmlSchemaSet();
-            xmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding", "https://raw.githubusercontent.com/ks-no/move-messagetypes/master/arkivmelding/arkivmelding.xsd");
-            xmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog", "https://raw.githubusercontent.com/ks-no/move-messagetypes/master/arkivmelding/metadatakatalog.xsd");
+            xmlSchemaSet.Add(targetNameSpace, schemaUri);
+            if (metaSchemaUri != null)
+            {
+                xmlSchemaSet.Add(metaTargetNameSpace, metaSchemaUri);
+            }
             xmlSchemaSet.XmlResolver = new XmlUrlResolver();
             xmlSchemaSet.Compile();
             XmlReader xmlReader = XmlReader.Create(entryStream);
