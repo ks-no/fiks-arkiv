@@ -1,4 +1,4 @@
-using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
+ï»¿using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
 using ks.fiks.io.arkivintegrasjon.sample.messages;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using no.ks.fiks.io.arkivmelding;
@@ -46,7 +46,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestSaksmappereferanse()
         {
 
-            var inng = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
+            var inng = MessageSamples.GetForenkletArkivmeldingInngÃ¥endeMedSaksreferanse();
 
             //Konverterer til arkivmelding xml
             var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(inng);
@@ -59,7 +59,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestnyInnkommendeJournalpostBrukerhistorie3_1()
         {
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
             inng.sluttbrukerIdentifikator = "9hs2ir";
 
@@ -77,7 +77,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             inng.nyInnkommendeJournalpost = new InnkommendeJournalpost
             {
-                tittel = "Startlån søknad(Ref=e4reke, SakId=e4reke)",
+                tittel = "StartlÃ¥n sÃ¸knad(Ref=e4reke, SakId=e4reke)",
                 mottattDato = DateTime.Today,
                 dokumentetsDato = DateTime.Today.AddDays(-2),
                 offentlighetsvurdertDato = DateTime.Today
@@ -98,10 +98,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         organisasjonsnummer = "123456789"
                     },
                     postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Startlån avd",
-                        adresselinje2 = "Rådhusgate 1",
+                        adresselinje1 = "StartlÃ¥n avd",
+                        adresselinje2 = "RÃ¥dhusgate 1",
                         postnr = "3801",
-                        poststed = "Bø"
+                        poststed = "BÃ¸"
                     }
                 }
             };
@@ -110,20 +110,20 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             inng.nyInnkommendeJournalpost.avsender = new List<Korrespondansepart>
             {
                 new Korrespondansepart() {
-                    navn = "Anita Søker",
+                    navn = "Anita SÃ¸ker",
                     personid = new Personidentifikator() { personidentifikatorType = "F",  personidentifikatorNr = "12345678901"},
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Gate 1",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "BÃ¸" }
                 }
             };
 
 
             inng.nyInnkommendeJournalpost.hoveddokument = new ForenkletDokument
             {
-                tittel = "Søknad om startlån",
-                filnavn = "søknad.pdf"
+                tittel = "SÃ¸knad om startlÃ¥n",
+                filnavn = "sÃ¸knad.pdf"
             };
 
             inng.nyInnkommendeJournalpost.vedlegg = new List<ForenkletDokument>
@@ -146,7 +146,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestnyInnkommendeJournalpostEttersendingBrukerhistorie3_2()
         {
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
             inng.sluttbrukerIdentifikator = "9hs2ir";
 
@@ -162,7 +162,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
 
             inng.nyInnkommendeJournalpost = new InnkommendeJournalpost
             {
-                tittel = "Startlån ettersendt vedlegg(Ref=e4reke, SakId=e4reke)",
+                tittel = "StartlÃ¥n ettersendt vedlegg(Ref=e4reke, SakId=e4reke)",
                 mottattDato = DateTime.Today,
                 dokumentetsDato = DateTime.Today.AddDays(-2),
                 offentlighetsvurdertDato = DateTime.Today
@@ -183,10 +183,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         organisasjonsnummer = "123456789"
                     },
                     postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Startlån avd",
-                        adresselinje2 = "Rådhusgate 1",
+                        adresselinje1 = "StartlÃ¥n avd",
+                        adresselinje2 = "RÃ¥dhusgate 1",
                         postnr = "3801",
-                        poststed = "Bø"
+                        poststed = "BÃ¸"
                     }
                 }
             };
@@ -195,12 +195,12 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             inng.nyInnkommendeJournalpost.avsender = new List<Korrespondansepart>
             {
                 new Korrespondansepart() {
-                    navn = "Anita Søker",
+                    navn = "Anita SÃ¸ker",
                     personid = new Personidentifikator() { personidentifikatorType = "F",  personidentifikatorNr = "12345678901"},
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Gate 1",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "BÃ¸" }
                 }
             };
 
@@ -234,10 +234,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             //                         mottakerKontoId: receiverId,
             //                         avsenderKontoId: senderId,
             //                         meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletUtgaaende.v1"); // Message type as string
-            //                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
+            //                                                                                                                //Se oversikt over meldingstyper pÃ¥ https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletUtgaaende utg = new ArkivmeldingForenkletUtgaaende
             {
                 sluttbrukerIdentifikator = "9hs2ir",
@@ -278,8 +278,8 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         adresselinje2 = "Andre adresselinje",
                         adresselinje3 = "Tredje adresselinje",
                         postnr = "3801",
-                        poststed = "Bø" },
-                    forsendelsemåte = "SvarUt",
+                        poststed = "BÃ¸" },
+                    forsendelsemÃ¥te = "SvarUt",
                     deresReferanse = "SvarUt.forsendelseId - BBBBBB-BBBB-CCCC-BBBB-BBBBBBBBBB"
                 },
                 new Korrespondansepart() {
@@ -291,15 +291,15 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Forretningsgate 1",
                         postnr = "3801",
-                        poststed = "Bø" },
-                    forsendelsemåte = "SvarUt",
+                        poststed = "BÃ¸" },
+                    forsendelsemÃ¥te = "SvarUt",
                     deresReferanse = "SvarUt.forsendelseId - AAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"
                 }
             };
 
             utg.nyUtgaaendeJournalpost.hoveddokument = new ForenkletDokument
             {
-                tittel = "Vedtak om startlån",
+                tittel = "Vedtak om startlÃ¥n",
                 filnavn = "vedtak.pdf"
             };
 
@@ -324,7 +324,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             //payloads.Add(new FilePayload(@"samples\vedtak.pdf"));
             //payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
 
-            ////Sender til FIKS IO (arkiv løsning)
+            ////Sender til FIKS IO (arkiv lÃ¸sning)
             //var msg = client.Send(messageRequest, payloads).Result;
 
             Assert.Pass();
@@ -337,10 +337,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             //                         mottakerKontoId: receiverId,
             //                         avsenderKontoId: senderId,
             //                         meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingforenkletnotat.v1"); // Message type as string
-            //                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
+            //                                                                                                                //Se oversikt over meldingstyper pÃ¥ https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletNotat notat = new ArkivmeldingForenkletNotat
             {
                 sluttbrukerIdentifikator = "9hs2ir",
@@ -359,7 +359,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 klasse = new List<Klasse>
                 {
                     new Klasse(){
-                        klassifikasjonssystem = "Søknadsreferanse",
+                        klassifikasjonssystem = "SÃ¸knadsreferanse",
                         klasseID = "9hs2ir"
 
                     }
@@ -376,7 +376,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             notat.nyttNotat.internAvsender = new List<KorrespondansepartIntern>
             {
                 new KorrespondansepartIntern() {
-                    saksbehandler = "Ståle Låne",
+                    saksbehandler = "StÃ¥le LÃ¥ne",
                     referanseSaksbehandler = "325abaf3-f607-4fe1-9413-91145db22d1f"
                 }
             };
@@ -408,7 +408,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             //payloads.Add(new FilePayload(@"samples\notat.pdf"));
             //payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
 
-            ////Sender til FIKS IO (arkiv løsning)
+            ////Sender til FIKS IO (arkiv lÃ¸sning)
             //var msg = client.Send(messageRequest, payloads).Result;
 
             Assert.Pass();
@@ -418,7 +418,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestSaksmappeKlasse()
         {
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
             inng.sluttbrukerIdentifikator = "Fagsystemets brukerid";
 
@@ -469,7 +469,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
             {
                 new KorrespondansepartIntern() {
-                    administrativEnhet = "Oppmålingsetaten",
+                    administrativEnhet = "OppmÃ¥lingsetaten",
                     referanseAdministrativEnhet = "b631f24b-48fb-4b5c-838e-6a1f7d56fae2"
                 }
             };
@@ -482,10 +482,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         organisasjonsnummer = "123456789"
                     },
                     postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Oppmålingsetaten",
-                        adresselinje2 = "Rådhusgate 1",
+                        adresselinje1 = "OppmÃ¥lingsetaten",
+                        adresselinje2 = "RÃ¥dhusgate 1",
                         postnr = "3801",
-                        poststed = "Bø"
+                        poststed = "BÃ¸"
                     }
                 }
             };
@@ -499,14 +499,14 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Gate 1",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "BÃ¸" }
                 }
             };
 
 
             inng.nyInnkommendeJournalpost.hoveddokument = new ForenkletDokument
             {
-                tittel = "Rekvisisjon av oppmålingsforretning",
+                tittel = "Rekvisisjon av oppmÃ¥lingsforretning",
                 filnavn = "rekvisisjon.pdf"
             };
 
@@ -530,7 +530,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestSkjerming()
         {
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
             inng.sluttbrukerIdentifikator = "Fagsystemets brukerid";
 
@@ -541,14 +541,14 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 dokumentetsDato = DateTime.Today.AddDays(-2),
                 offentlighetsvurdertDato = DateTime.Today,
                 skjermetTittel = true,
-                offentligTittel = "Skjermet tittel som kan offentliggjøres",
+                offentligTittel = "Skjermet tittel som kan offentliggjÃ¸res",
                 skjerming = new Skjerming()
                 {
-                     skjermingshjemmel= "Offl. § 26.1"
+                     skjermingshjemmel= "Offl. Â§ 26.1"
                 }
                    
             };
-            //Begrunnelse for skjerming må hjemles - Offentleglova kapittel 3 https://lovdata.no/dokument/NL/lov/2006-05-19-16/KAPITTEL_3#KAPITTEL_3
+            //Begrunnelse for skjerming mÃ¥ hjemles - Offentleglova kapittel 3 https://lovdata.no/dokument/NL/lov/2006-05-19-16/KAPITTEL_3#KAPITTEL_3
 
             inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
             {
@@ -559,7 +559,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
             {
                 new KorrespondansepartIntern() {
-                    administrativEnhet = "Oppmålingsetaten",
+                    administrativEnhet = "OppmÃ¥lingsetaten",
                     referanseAdministrativEnhet = "b631f24b-48fb-4b5c-838e-6a1f7d56fae2"
                 }
             };
@@ -572,10 +572,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         organisasjonsnummer = "123456789"
                     },
                     postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Oppmålingsetaten",
-                        adresselinje2 = "Rådhusgate 1",
+                        adresselinje1 = "OppmÃ¥lingsetaten",
+                        adresselinje2 = "RÃ¥dhusgate 1",
                         postnr = "3801",
-                        poststed = "Bø"
+                        poststed = "BÃ¸"
                     }
                 }
             };
@@ -590,7 +590,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Gate 1",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "BÃ¸" }
                 }
             };
 
@@ -623,7 +623,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
         public void TestMapperIMappe()
         {
 
-            //Fagsystem definerer ønsket struktur
+            //Fagsystem definerer Ã¸nsket struktur
             ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
             inng.sluttbrukerIdentifikator = "Fagsystemets brukerid";
 
@@ -650,7 +650,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
             inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
             {
                 new KorrespondansepartIntern() {
-                    administrativEnhet = "Oppmålingsetaten",
+                    administrativEnhet = "OppmÃ¥lingsetaten",
                     referanseAdministrativEnhet = "b631f24b-48fb-4b5c-838e-6a1f7d56fae2"
                 }
             };
@@ -663,10 +663,10 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                         organisasjonsnummer = "123456789"
                     },
                     postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Oppmålingsetaten",
-                        adresselinje2 = "Rådhusgate 1",
+                        adresselinje1 = "OppmÃ¥lingsetaten",
+                        adresselinje2 = "RÃ¥dhusgate 1",
                         postnr = "3801",
-                        poststed = "Bø"
+                        poststed = "BÃ¸"
                     }
                 }
             };
@@ -680,14 +680,14 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                     postadresse = new EnkelAdresse() {
                         adresselinje1 = "Gate 1",
                         postnr = "3801",
-                        poststed = "Bø" }
+                        poststed = "BÃ¸" }
                 }
             };
 
 
             inng.nyInnkommendeJournalpost.hoveddokument = new ForenkletDokument
             {
-                tittel = "Rekvisisjon av oppmålingsforretning",
+                tittel = "Rekvisisjon av oppmÃ¥lingsforretning",
                 filnavn = "rekvisisjon.pdf"
             };
 
@@ -711,7 +711,7 @@ namespace ks.fiks.io.arkivintegrasjon.tests
                 Value = "f3fd5a87-8703-4771-834f-5bba65df0223"
             };
 
-            //basismappe.saksbehandler //ligger på saksmappe  
+            //basismappe.saksbehandler //ligger pÃ¥ saksmappe  
             basismappe.tittel = "Hovedmappe tittel";
 
 
