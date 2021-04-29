@@ -5,6 +5,7 @@
     <Authors>Arbeidsgruppe GI Arkiv 2.0</Authors>
     <Company>KS og Kartverket</Company>
     <Description>Klient for å generere forenklede arkivmeldinger. Inneholder de mest vanlige brukstilfeller for arkivintegrasjon et fagsystem vil trenge.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
