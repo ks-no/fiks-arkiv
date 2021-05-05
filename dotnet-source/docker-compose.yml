@@ -1,0 +1,22 @@
+version: '3'
+services:
+  oidc-mock:
+    image: docker-all.artifactory.fiks.ks.no/oidc-provider-mock:1.0.2
+    ports:
+      - "127.0.0.1:8081:8080"
+  rabbitmq:
+    image: rabbitmq:3.7.13-management
+    volumes:
+      - ./local/rabbitmq:/etc/rabbitmq
+    ports:
+      - "127.0.0.1:4369:4369"
+      - "127.0.0.1:5671:5671"
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15671:15671"
+      - "127.0.0.1:15672:15672"
+      - "127.0.0.1:25672:25672"
+  fiks-io-authorization-service:
+    image: rodolpheche/wiremock
+    volumes:
+      - ./local/fiks-io-authorization-service-mock:/home/wiremock/mappings
+    command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating

@@ -1,41 +1,39 @@
-﻿using ks.fiks.io.arkivintegrasjon.sample.messages;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
-using Ks.Fiks.Maskinporten.Client;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml.Schema;
 using KS.Fiks.ASiC_E;
+using ks.fiks.io.arkivintegrasjon.sample.messages;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
-using Microsoft.Extensions.Configuration;
+using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
+using Ks.Fiks.Maskinporten.Client;
 using Microsoft.Extensions.Hosting;
 using no.ks.fiks.io.arkivmelding;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Schema;
-using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
-using Org.BouncyCastle.Asn1.X509.Qualified;
+using RabbitMQ.Client;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
     public class ArkivService : IHostedService, IDisposable
     {
-        FiksIOClient client;
-        IConfiguration config;
+        private FiksIOClient client;
+        private readonly AppSettings appSettings;
 
-        public ArkivService()
+        public ArkivService(AppSettings appSettings)
         {
-            config = new ConfigurationBuilder()
+            /*config = new ConfigurationBuilder()
                .AddJsonFile("appsettings.json", true, true)
                .AddJsonFile("appsettings.development.json", true, true)
-               .Build();
+               .Build();*/
+            this.appSettings = appSettings;
+            client = CreateFiksIoClient();
         }
+        
         public void Dispose()
         {
             client.Dispose();
@@ -44,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Arkiv Service is starting.");
-            SetUpConfiguredFiksIOClient();
+            SubscribeToFiksIOClient();
             return Task.CompletedTask;
         }
 
@@ -285,13 +283,20 @@ namespace ks.fiks.io.arkivsystem.sample
             }
         }
 
-        private void SetUpConfiguredFiksIOClient()
+        private FiksIOClient CreateFiksIoClient()
         {
             Console.WriteLine("Setter opp FIKS integrasjon for arkivsystem...");
-            Guid accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
-            string privateKey = File.ReadAllText("privkey.pem"); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
-            Guid integrationId = Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
-            string integrationPassword = config["integrationPassword"];  /* Integration password */
+            var accountId = appSettings.FiksIOConfig.FiksIoAccountId; // Guid.Parse(config["accountId"]));  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
+            var privateKey = File.ReadAllText(appSettings.FiksIOConfig.FiksIoPrivateKey); //File.ReadAllText("privkey.pem")); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
+            var integrationId = appSettings.FiksIOConfig.FiksIoIntegrationId; //Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
+            var integrationPassword = appSettings.FiksIOConfig.FiksIoIntegrationPassword; // config["integrationPassword"];  /* Integration password */
+            var scope = appSettings.FiksIOConfig.FiksIoIntegrationScope;
+            var audience = appSettings.FiksIOConfig.MaskinPortenAudienceUrl;
+            var tokenEndpoint = appSettings.FiksIOConfig.MaskinPortenTokenUrl;
+            var issuer = appSettings.FiksIOConfig.MaskinPortenIssuer;
+            
+            var ignoreSSLError = Environment.GetEnvironmentVariable("AMQP_IGNORE_SSL_ERROR");
+
 
             // Fiks IO account configuration
             var account = new KontoConfiguration(
@@ -301,36 +306,54 @@ namespace ks.fiks.io.arkivsystem.sample
             // Id and password for integration associated to the Fiks IO account.
             var integration = new IntegrasjonConfiguration(
                                     integrationId,
-                                    integrationPassword, "ks:fiks");
+                                    integrationPassword, scope);
 
             // ID-porten machine to machine configuration
             var maskinporten = new MaskinportenClientConfiguration(
-                audience: @"https://oidc-ver2.difi.no/idporten-oidc-provider/", // ID-porten audience path
-                tokenEndpoint: @"https://oidc-ver2.difi.no/idporten-oidc-provider/token", // ID-porten token path
-                issuer: @"arkitektum_test",  // issuer name
+                audience: audience, // @"https://oidc-ver2.difi.no/idporten-oidc-provider/", // ID-porten audience path
+                tokenEndpoint: tokenEndpoint, //@"https://oidc-ver2.difi.no/idporten-oidc-provider/token", // ID-porten token path
+                issuer: issuer, // @"arkitektum_test",  // issuer name
                 numberOfSecondsLeftBeforeExpire: 10, // The token will be refreshed 10 seconds before it expires
-                certificate: GetCertificate(config["ThumbprintIdPortenVirksomhetssertifikat"]));
+                certificate: GetCertificate(appSettings)); //GetCertificate(config["ThumbprintIdPortenVirksomhetssertifikat"]));
 
             // Optional: Use custom api host (i.e. for connecting to test api)
             var api = new ApiConfiguration(
-                            scheme: "https",
-                            host: "api.fiks.test.ks.no",
-                            port: 443);
+                scheme: appSettings.FiksIOConfig.ApiScheme, //"https",
+                host: appSettings.FiksIOConfig.ApiHost, // "api.fiks.test.ks.no",
+                port: appSettings.FiksIOConfig.ApiPort); //443);
+            
+            var sslOption1 = (!string.IsNullOrEmpty(ignoreSSLError) && ignoreSSLError == "true")
+                ? new SslOption()
+                {
+                    Enabled = true,
+                    ServerName = appSettings.FiksIOConfig.AmqpHost,
+                    CertificateValidationCallback =
+                        (RemoteCertificateValidationCallback) ((sender, certificate, chain, errors) => true)
+                }
+                : null;
+                
 
             // Optional: Use custom amqp host (i.e. for connection to test queue)
             var amqp = new AmqpConfiguration(
-                            host: "io.fiks.test.ks.no",
-                            port: 5671);
+                host: appSettings.FiksIOConfig.AmqpHost, //"io.fiks.test.ks.no",
+                port: appSettings.FiksIOConfig.AmqpPort,
+                sslOption1); //5671);
 
             // Combine all configurations
             var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
-            client = new FiksIOClient(configuration); // See setup of configuration below
+            return new FiksIOClient(configuration); // See setup of configuration below
+        }
+        
+        
 
-
+        private void SubscribeToFiksIOClient()
+        {
+            Console.WriteLine("Starter abonnement for FIKS integrasjon for arkivsystem...");
+            var accountId = appSettings.FiksIOConfig.FiksIoAccountId; 
 
             client.NewSubscription(OnReceivedMelding);
 
-            Console.WriteLine("Abonnerer på meldinger på konto " + accountId.ToString() + " ...");
+            Console.WriteLine("Abonnerer på meldinger på konto " + accountId + " ...");
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -356,6 +379,24 @@ namespace ks.fiks.io.arkivsystem.sample
             store.Close();
 
             return cer;
+        }
+        
+        private static X509Certificate2 GetCertificate(AppSettings appSettings)
+        {
+            if (!string.IsNullOrEmpty(appSettings.FiksIOConfig.MaskinPortenCompanyCertificatePath))
+            {
+                return new X509Certificate2(File.ReadAllBytes(appSettings.FiksIOConfig.MaskinPortenCompanyCertificatePath), appSettings.FiksIOConfig.MaskinPortenCompanyCertificatePassword);
+            }
+           
+            var store = new X509Store(StoreLocation.CurrentUser);
+
+            store.Open(OpenFlags.ReadOnly);
+
+            var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, appSettings.FiksIOConfig.MaskinPortenCompanyCertificateThumbprint, false);
+
+            store.Close();
+
+            return certificates.Count > 0 ? certificates[0] : null;
         }
     }
 }

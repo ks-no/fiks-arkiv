@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "ANY",
+    "urlPattern": "/fiks-io/authorization/api/v1/.*"
+  },
+  "response": {
+    "status": 200,
+    "body": "allow",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -17,6 +17,9 @@
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +37,16 @@
     <None Update="privkey.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="etc\fiks\fiks-io\privatekey.pem" />
+    <None Remove="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" />
+    <Content Include="etc\fiks\fiks-io\development\privatekey.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always"/>
+    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>
