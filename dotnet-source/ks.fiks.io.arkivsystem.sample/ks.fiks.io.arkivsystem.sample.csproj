@@ -45,6 +45,7 @@
     <Content Include="etc\fiks\fiks-io\development\privatekey.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="etc\fiks\fiks-io\privatekey.pem" />
     <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" />
   </ItemGroup>
 

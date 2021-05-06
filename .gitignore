@@ -1,8 +1,8 @@
 .idea
 
 dotnet-source/ks.fiks.io.arkivsystem.sample/privkey.pem
-
 dotnet-source/ks.fiks.io.arkivsystem.sample/appsettings.development.json
-
 dotnet-source/ks.fiks.io.arkivsystem.sample/etc/fiks/fiks-io/*
+dotnet-source/local/fiks-io-authorization-service-mock
+dotnet-source/local/rabbitmq
 
