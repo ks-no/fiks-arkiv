@@ -264,5 +264,3 @@ ks.fiks.io.fagsystem.arkiv.sample/privkey.pem
 ks.fiks.io.fagsystem.arkiv.sample/appsettings.development.json
 
 ks.fiks.io.fagsystem.arkiv.sample/schema/genSchemaClasses.bat
-
-*.p12
