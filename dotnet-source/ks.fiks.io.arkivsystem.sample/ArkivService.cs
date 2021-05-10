@@ -85,7 +85,7 @@ namespace ks.fiks.io.arkivsystem.sample
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog", "https://raw.githubusercontent.com/ks-no/move-messagetypes/master/arkivmelding/metadatakatalog.xsd");
 
             XmlSchemaSet sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("..\\..\\..\\..\\ks.fiks.io.arkivintegrasjon.client\\schema", "sok.xsd"));
+            sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("schema", "sok.xsd"));
 
             bool xmlValidationErrorOccurd = false;
 

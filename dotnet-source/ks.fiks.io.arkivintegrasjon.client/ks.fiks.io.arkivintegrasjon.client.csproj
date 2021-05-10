@@ -7,4 +7,9 @@
     <Description>Klient for å generere forenklede arkivmeldinger. Inneholder de mest vanlige brukstilfeller for arkivintegrasjon et fagsystem vil trenge.</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="schema\sok.xsd" />
+    <Content Include="schema\sok.xsd" CopyToOutputDirectory="Always"/>
+  </ItemGroup>
+
 </Project>
