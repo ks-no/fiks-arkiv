@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.client\ks.fiks.io.arkivintegrasjon.client.csproj" />
+    <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.common\ks.fiks.io.arkivintegrasjon.common.csproj" />
     <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.sample.messages\ks.fiks.io.arkivintegrasjon.sample.messages.csproj" />
   </ItemGroup>
 
@@ -34,18 +35,34 @@
     <None Update="privkey.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="samples\rekvisisjon.pdf">
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="etc\fiks\fiks-io\development\privatekey.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="etc\fiks\fiks-io\privatekey.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="samples\rekvisisjon.pdf" />
+    <Content Include="samples\rekvisisjon.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="samples\vedlegg1.pdf">
+    </Content>
+    <None Remove="samples\vedlegg.pdf" />
+    <Content Include="samples\vedlegg.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="samples\vedlegg.pdf">
+    </Content>
+    <None Remove="samples\vedlegg1.pdf" />
+    <Content Include="samples\vedlegg1.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="samples\vedtak.pdf">
+    </Content>
+    <None Remove="samples\vedtak.pdf" />
+    <Content Include="samples\vedtak.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 
 </Project>
