@@ -20,3 +20,12 @@ services:
     volumes:
       - ./local/fiks-io-authorization-service-mock:/home/wiremock/mappings
     command: java -cp /var/wiremock/lib/*:/var/wiremock/extensions/* com.github.tomakehurst.wiremock.standalone.WireMockServerRunner --global-response-templating
+
+  fiks-arkiv-simulator-fagsystem-arkiv:
+    image: fiks-arkiv-simulator-fagsystem-arkiv
+    volumes:
+      - ./ks.fiks.io.fagsystem.arkiv.sample/etc/fiks/fiks-io:/etc/fiks/fiks-io
+      - ./ks.fiks.io.fagsystem.arkiv.sample/etc/fiks/ks-certs:/etc/fiks/ks-certs
+    environment:
+      DOTNET_ENVIRONMENT: "DockerCompose"
+      AMQP_IGNORE_SSL_ERROR: "true"

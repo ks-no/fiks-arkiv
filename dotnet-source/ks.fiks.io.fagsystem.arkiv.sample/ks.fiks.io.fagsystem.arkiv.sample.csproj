@@ -11,12 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="appsettings.development.json">
+    <EmbeddedResource Include="appsettings.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.Local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="appsettings.DockerCompose.json" />
+    <EmbeddedResource Include="appsettings.DockerCompose.json" CopyToOutputDirectory="Always"/>
   </ItemGroup>
 
   <ItemGroup>
