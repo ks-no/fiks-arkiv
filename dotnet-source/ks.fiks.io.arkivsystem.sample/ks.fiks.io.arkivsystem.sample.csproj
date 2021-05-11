@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.common\ks.fiks.io.arkivintegrasjon.common.csproj" />
     <ProjectReference Include="..\ks.fiks.io.arkivintegrasjon.sample.messages\ks.fiks.io.arkivintegrasjon.sample.messages.csproj" />
   </ItemGroup>
 
@@ -40,12 +41,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always"/>
+    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" />
     <None Remove="etc\fiks\fiks-io\privatekey.pem" />
     <Content Include="etc\fiks\fiks-io\development\privatekey.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always"/>
+    <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 using KS.Fiks.ASiC_E;
+using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.sample.messages;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
@@ -26,10 +27,6 @@ namespace ks.fiks.io.arkivsystem.sample
 
         public ArkivService(AppSettings appSettings)
         {
-            /*config = new ConfigurationBuilder()
-               .AddJsonFile("appsettings.json", true, true)
-               .AddJsonFile("appsettings.development.json", true, true)
-               .Build();*/
             this.appSettings = appSettings;
             client = CreateFiksIoClient();
         }
@@ -286,10 +283,10 @@ namespace ks.fiks.io.arkivsystem.sample
         private FiksIOClient CreateFiksIoClient()
         {
             Console.WriteLine("Setter opp FIKS integrasjon for arkivsystem...");
-            var accountId = appSettings.FiksIOConfig.FiksIoAccountId; // Guid.Parse(config["accountId"]));  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
-            var privateKey = File.ReadAllText(appSettings.FiksIOConfig.FiksIoPrivateKey); //File.ReadAllText("privkey.pem")); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
-            var integrationId = appSettings.FiksIOConfig.FiksIoIntegrationId; //Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
-            var integrationPassword = appSettings.FiksIOConfig.FiksIoIntegrationPassword; // config["integrationPassword"];  /* Integration password */
+            var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
+            var privateKey = File.ReadAllText(appSettings.FiksIOConfig.FiksIoPrivateKey);
+            var integrationId = appSettings.FiksIOConfig.FiksIoIntegrationId; 
+            var integrationPassword = appSettings.FiksIOConfig.FiksIoIntegrationPassword;
             var scope = appSettings.FiksIOConfig.FiksIoIntegrationScope;
             var audience = appSettings.FiksIOConfig.MaskinPortenAudienceUrl;
             var tokenEndpoint = appSettings.FiksIOConfig.MaskinPortenTokenUrl;
@@ -310,17 +307,17 @@ namespace ks.fiks.io.arkivsystem.sample
 
             // ID-porten machine to machine configuration
             var maskinporten = new MaskinportenClientConfiguration(
-                audience: audience, // @"https://oidc-ver2.difi.no/idporten-oidc-provider/", // ID-porten audience path
-                tokenEndpoint: tokenEndpoint, //@"https://oidc-ver2.difi.no/idporten-oidc-provider/token", // ID-porten token path
-                issuer: issuer, // @"arkitektum_test",  // issuer name
-                numberOfSecondsLeftBeforeExpire: 10, // The token will be refreshed 10 seconds before it expires
-                certificate: GetCertificate(appSettings)); //GetCertificate(config["ThumbprintIdPortenVirksomhetssertifikat"]));
+                audience: audience,
+                tokenEndpoint: tokenEndpoint,
+                issuer: issuer,
+                numberOfSecondsLeftBeforeExpire: 10,
+                certificate: GetCertificate(appSettings));
 
             // Optional: Use custom api host (i.e. for connecting to test api)
             var api = new ApiConfiguration(
-                scheme: appSettings.FiksIOConfig.ApiScheme, //"https",
-                host: appSettings.FiksIOConfig.ApiHost, // "api.fiks.test.ks.no",
-                port: appSettings.FiksIOConfig.ApiPort); //443);
+                scheme: appSettings.FiksIOConfig.ApiScheme,
+                host: appSettings.FiksIOConfig.ApiHost,
+                port: appSettings.FiksIOConfig.ApiPort);
             
             var sslOption1 = (!string.IsNullOrEmpty(ignoreSSLError) && ignoreSSLError == "true")
                 ? new SslOption()
@@ -337,11 +334,11 @@ namespace ks.fiks.io.arkivsystem.sample
             var amqp = new AmqpConfiguration(
                 host: appSettings.FiksIOConfig.AmqpHost, //"io.fiks.test.ks.no",
                 port: appSettings.FiksIOConfig.AmqpPort,
-                sslOption1); //5671);
+                sslOption1);
 
             // Combine all configurations
             var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
-            return new FiksIOClient(configuration); // See setup of configuration below
+            return new FiksIOClient(configuration);
         }
         
         

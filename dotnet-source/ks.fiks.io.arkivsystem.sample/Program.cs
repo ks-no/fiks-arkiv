@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -15,7 +14,7 @@ namespace ks.fiks.io.arkivsystem.sample
             await new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddSingleton(CreateAppSettings(hostContext.Configuration));
+                    services.AddSingleton(AppSettingsBuilder.CreateAppSettings(hostContext.Configuration));
                     services.AddHostedService<ArkivService>();
                 }).ConfigureHostConfiguration((configHost) =>
                 {
@@ -30,22 +29,5 @@ namespace ks.fiks.io.arkivsystem.sample
                 })
                 .RunConsoleAsync();
         }
-
-        private static AppSettings CreateAppSettings(IConfiguration configuration)
-        {
-            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
-            
-            // Available from maskinporten-config config-map in k8s cluster
-            var maskinportenClientId = Environment.GetEnvironmentVariable("MASKINPORTEN_CLIENT_ID");
-            
-            if (!string.IsNullOrEmpty(maskinportenClientId))
-            {
-                appSettings.FiksIOConfig.MaskinPortenIssuer = maskinportenClientId;
-            }
-            
-            return appSettings;
-        }
-
-       
     }
 }

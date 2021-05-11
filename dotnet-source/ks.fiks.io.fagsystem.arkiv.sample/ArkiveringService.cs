@@ -2,33 +2,29 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
-using ks.fiks.io.arkivintegrasjon.sample.messages;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
-using Ks.Fiks.Maskinporten.Client;
 using KS.Fiks.ASiC_E;
+using ks.fiks.io.arkivintegrasjon.common.AppSettings;
+using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
+using ks.fiks.io.arkivintegrasjon.sample.messages;
 using KS.Fiks.IO.Client;
-using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
-using Microsoft.Extensions.Configuration;
+using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Microsoft.Extensions.Hosting;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
     public class ArkiveringService : IHostedService, IDisposable
     {
-        FiksIOClient client;
-        IConfiguration config;
+        private readonly FiksIOClient client;
+        private readonly AppSettings appSettings;
 
-        public ArkiveringService()
+        public ArkiveringService(AppSettings appSettings)
         {
-            config = new ConfigurationBuilder()
-               .AddJsonFile("appsettings.json", true, true)
-               .AddJsonFile("appsettings.development.json", true, true)
-               .Build();
+            this.appSettings = appSettings;
+            client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
         }
         public void Dispose()
         {
@@ -38,51 +34,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         {
             Console.WriteLine("Fagsystem Service is starting.");
 
-            Console.WriteLine("Setter opp FIKS integrasjon for fagsystem...");
-            Guid accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
-            string privateKey = File.ReadAllText("privkey.pem"); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
-            Guid integrationId = Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
-            string integrationPassword = config["integrationPassword"];  /* Integration password */
-
-            // Fiks IO account configuration
-            var account = new KontoConfiguration(
-                                accountId,
-                                privateKey);
-
-            // Id and password for integration associated to the Fiks IO account.
-            var integration = new IntegrasjonConfiguration(
-                                    integrationId,
-                                    integrationPassword, "ks:fiks");
-
-            // ID-porten machine to machine configuration
-            var maskinporten = new MaskinportenClientConfiguration(
-                audience: @"https://oidc-ver2.difi.no/idporten-oidc-provider/", // ID-porten audience path
-                tokenEndpoint: @"https://oidc-ver2.difi.no/idporten-oidc-provider/token", // ID-porten token path
-                issuer: @"arkitektum_test",  // issuer name
-                numberOfSecondsLeftBeforeExpire: 10, // The token will be refreshed 10 seconds before it expires
-                certificate: GetCertificate(config["ThumbprintIdPortenVirksomhetssertifikat"]));
-
-            // Optional: Use custom api host (i.e. for connecting to test api)
-            var api = new ApiConfiguration(
-                            scheme: "https",
-                            host: "api.fiks.test.ks.no",
-                            port: 443);
-
-            // Optional: Use custom amqp host (i.e. for connection to test queue)
-            var amqp = new AmqpConfiguration(
-                            host: "io.fiks.test.ks.no",
-                            port: 5671);
-
-            // Combine all configurations
-            var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
-            client = new FiksIOClient(configuration); // See setup of configuration below
-
-
-
+            var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
+            
             client.NewSubscription(OnReceivedMelding);
 
-            Console.WriteLine("Abonnerer på meldinger på konto " + accountId.ToString() + " ...");
-
+            Console.WriteLine("Abonnerer på meldinger på konto " + accountId + " ...");
 
             SendInngående();
 
@@ -92,14 +48,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             SendSok();
 
-
             return Task.CompletedTask;
         }
 
         private void SendSok()
         {
-            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
-            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.innsyn.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
@@ -112,10 +67,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Konverterer til arkivmelding xml
             var sok = MessageSamples.SokTittel("tittel*");
-            string payload = Arkivintegrasjon.Serialize(sok);
+            var payload = Arkivintegrasjon.Serialize(sok);
+            
             //Lager FIKS IO melding
-            List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "sok.xml"));
+            var payloads = new List<IPayload> {new StringPayload(payload, "sok.xml")};
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
@@ -125,8 +80,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendOppdatering()
         {
-            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
-            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
@@ -140,10 +95,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //Konverterer til arkivmelding xml
             var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPaaFagsystemnoekkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
             var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var payload = Arkivintegrasjon.Serialize(arkivmelding);
             //Lager FIKS IO melding
-            List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "oppdatersaksmappe.xml"));
+            var payloads = new List<IPayload> {new StringPayload(payload, "oppdatersaksmappe.xml")};
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
@@ -153,79 +107,77 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendInngående()
         {
-            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
-            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             //Fagsystem definerer ønsket struktur
-            ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
-            inng.sluttbrukerIdentifikator = "Fagsystemets brukerid";
-
-            inng.nyInnkommendeJournalpost = new InnkommendeJournalpost
+            var inng = new ArkivmeldingForenkletInnkommende
             {
-                tittel = "Bestilling av oppmålingsforretning ...",
-                mottattDato = DateTime.Today,
-                dokumentetsDato = DateTime.Today.AddDays(-2),
-                offentlighetsvurdertDato = DateTime.Today,
-            };
-
-            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
-            {
-                fagsystem = "Fagsystem X",
-                noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
-            };
-            
-            inng.nyInnkommendeJournalpost.internMottaker = new List<KorrespondansepartIntern>
-            {
-                new KorrespondansepartIntern() { 
-                    administrativEnhet = "Oppmålingsetaten",
-                    referanseAdministrativEnhet = "b631f24b-48fb-4b5c-838e-6a1f7d56fae2"
-                }
-            };
-
-            inng.nyInnkommendeJournalpost.mottaker = new List<Korrespondansepart>
-            {
-                new Korrespondansepart() { 
-                    navn = "Test kommune", 
-                    enhetsidentifikator = new Enhetsidentifikator() { 
-                        organisasjonsnummer = "123456789" 
-                    }, 
-                    postadresse = new EnkelAdresse() { 
-                        adresselinje1 = "Oppmålingsetaten", 
-                        adresselinje2 = "Rådhusgate 1", 
-                        postnr = "3801", 
-                        poststed = "Bø" 
-                    } 
-                }
-            };
-
-
-            inng.nyInnkommendeJournalpost.avsender = new List<Korrespondansepart>
-            {
-                new Korrespondansepart() { 
-                    navn = "Anita Avsender",
-                    personid = new Personidentifikator() { personidentifikatorType = "F",  personidentifikatorNr = "12345678901"},
-                    postadresse = new EnkelAdresse() { 
-                        adresselinje1 = "Gate 1", 
-                        postnr = "3801", 
-                        poststed = "Bø" } 
-                }
-            };
-
-
-            inng.nyInnkommendeJournalpost.hoveddokument = new ForenkletDokument
-            {
-                tittel = "Rekvisisjon av oppmålingsforretning",
-                filnavn = "rekvisisjon.pdf"
-            };
-
-            inng.nyInnkommendeJournalpost.vedlegg = new List<ForenkletDokument>
-            {
-                new ForenkletDokument(){
-                    tittel = "Vedlegg 1",
-                    filnavn = "vedlegg.pdf"
+                sluttbrukerIdentifikator = "Fagsystemets brukerid",
+                nyInnkommendeJournalpost = new InnkommendeJournalpost
+                {
+                    tittel = "Bestilling av oppmålingsforretning ...",
+                    mottattDato = DateTime.Today,
+                    dokumentetsDato = DateTime.Today.AddDays(-2),
+                    offentlighetsvurdertDato = DateTime.Today,
+                    referanseEksternNoekkel =
+                        new EksternNoekkel
+                        {
+                            fagsystem = "Fagsystem X", noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
+                        },
+                    internMottaker =
+                        new List<KorrespondansepartIntern>
+                        {
+                            new KorrespondansepartIntern()
+                            {
+                                administrativEnhet = "Oppmålingsetaten",
+                                referanseAdministrativEnhet = "b631f24b-48fb-4b5c-838e-6a1f7d56fae2"
+                            }
+                        },
+                    mottaker =
+                        new List<Korrespondansepart>
+                        {
+                            new Korrespondansepart()
+                            {
+                                navn = "Test kommune",
+                                enhetsidentifikator =
+                                    new Enhetsidentifikator() {organisasjonsnummer = "123456789"},
+                                postadresse = new EnkelAdresse()
+                                {
+                                    adresselinje1 = "Oppmålingsetaten",
+                                    adresselinje2 = "Rådhusgate 1",
+                                    postnr = "3801",
+                                    poststed = "Bø"
+                                }
+                            }
+                        },
+                    avsender = new List<Korrespondansepart>
+                    {
+                        new Korrespondansepart()
+                        {
+                            navn = "Anita Avsender",
+                            personid = new Personidentifikator()
+                            {
+                                personidentifikatorType = "F", personidentifikatorNr = "12345678901"
+                            },
+                            postadresse = new EnkelAdresse()
+                            {
+                                adresselinje1 = "Gate 1", postnr = "3801", poststed = "Bø"
+                            }
+                        }
+                    },
+                    hoveddokument =
+                        new ForenkletDokument
+                        {
+                            tittel = "Rekvisisjon av oppmålingsforretning", filnavn = "rekvisisjon.pdf"
+                        },
+                    vedlegg = new List<ForenkletDokument>
+                    {
+                        new ForenkletDokument() {tittel = "Vedlegg 1", filnavn = "vedlegg.pdf"}
+                    },
                 }
             };
 
@@ -233,34 +185,32 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Konverterer til arkivmelding xml
             var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(inng);
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var payload = Arkivintegrasjon.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
-            List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "innkommendejournalpost.xml"));
-            payloads.Add(new FilePayload(@"samples\rekvisisjon.pdf"));
-            payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
+            var payloads = new List<IPayload>
+            {
+                new StringPayload(payload, "innkommendejournalpost.xml"),
+                new FilePayload(Path.Combine("samples", "rekvisisjon.pdf")),
+                new FilePayload(Path.Combine("samples", "vedlegg.pdf"))
+            };
 
             var messageRequest = new MeldingRequest(
                           mottakerKontoId: receiverId,
                           avsenderKontoId: senderId,
                           meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1"); // Message type as string
                                                                                                                            //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
-
-
-
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
             Console.WriteLine("Melding ny inngående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
                 " vedlegg");
             Console.WriteLine(payload);
-
         }
 
         private void SendInngåendeBrukerhistorie3_1()
         {
-            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
-            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
@@ -271,81 +221,70 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                       meldingType: "no.geointegrasjon.arkiv.oppdatering.basis.arkivmelding.v1"); // Message type as string
                                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
-
             //Fagsystem definerer ønsket struktur
-            ArkivmeldingForenkletInnkommende inng = new ArkivmeldingForenkletInnkommende();
-            inng.sluttbrukerIdentifikator = "9hs2ir";
-
-            inng.nyInnkommendeJournalpost = new InnkommendeJournalpost
+            var inng = new ArkivmeldingForenkletInnkommende
             {
-                tittel = "Startlån søknad(Ref=e4reke, SakId=e4reke)",
-                mottattDato = DateTime.Today,
-                dokumentetsDato = DateTime.Today.AddDays(-2),
-                offentlighetsvurdertDato = DateTime.Today
-            };
-
-            inng.nyInnkommendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
-            {
-                fagsystem = "Fagsystem X",
-                noekkel = "e4reke"
-            };
-
-           
-            inng.nyInnkommendeJournalpost.mottaker = new List<Korrespondansepart>
-            {
-                new Korrespondansepart() {
-                    navn = "Test kommune",
-                    enhetsidentifikator = new Enhetsidentifikator() {
-                        organisasjonsnummer = "123456789"
+                sluttbrukerIdentifikator = "9hs2ir",
+                nyInnkommendeJournalpost = new InnkommendeJournalpost
+                {
+                    tittel = "Startlån søknad(Ref=e4reke, SakId=e4reke)",
+                    mottattDato = DateTime.Today,
+                    dokumentetsDato = DateTime.Today.AddDays(-2),
+                    offentlighetsvurdertDato = DateTime.Today,
+                    referanseEksternNoekkel =
+                        new EksternNoekkel {fagsystem = "Fagsystem X", noekkel = "e4reke"},
+                    mottaker =
+                        new List<Korrespondansepart>
+                        {
+                            new Korrespondansepart()
+                            {
+                                navn = "Test kommune",
+                                enhetsidentifikator =
+                                    new Enhetsidentifikator() {organisasjonsnummer = "123456789"},
+                                postadresse = new EnkelAdresse()
+                                {
+                                    adresselinje1 = "Startlån avd",
+                                    adresselinje2 = "Rådhusgate 1",
+                                    postnr = "3801",
+                                    poststed = "Bø"
+                                }
+                            }
+                        },
+                    avsender = new List<Korrespondansepart>
+                    {
+                        new Korrespondansepart()
+                        {
+                            navn = "Anita Søker",
+                            personid = new Personidentifikator()
+                            {
+                                personidentifikatorType = "F", personidentifikatorNr = "12345678901"
+                            },
+                            postadresse = new EnkelAdresse()
+                            {
+                                adresselinje1 = "Gate 1", postnr = "3801", poststed = "Bø"
+                            }
+                        }
                     },
-                    postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Startlån avd",
-                        adresselinje2 = "Rådhusgate 1",
-                        postnr = "3801",
-                        poststed = "Bø"
+                    hoveddokument =
+                        new ForenkletDokument {tittel = "Søknad om startlån", filnavn = "søknad.pdf"},
+                    vedlegg = new List<ForenkletDokument>
+                    {
+                        new ForenkletDokument() {tittel = "Vedlegg 1", filnavn = "vedlegg.pdf"}
                     }
                 }
             };
 
-
-            inng.nyInnkommendeJournalpost.avsender = new List<Korrespondansepart>
-            {
-                new Korrespondansepart() {
-                    navn = "Anita Søker",
-                    personid = new Personidentifikator() { personidentifikatorType = "F",  personidentifikatorNr = "12345678901"},
-                    postadresse = new EnkelAdresse() {
-                        adresselinje1 = "Gate 1",
-                        postnr = "3801",
-                        poststed = "Bø" }
-                }
-            };
-
-
-            inng.nyInnkommendeJournalpost.hoveddokument = new ForenkletDokument
-            {
-                tittel = "Søknad om startlån",
-                filnavn = "søknad.pdf"
-            };
-
-            inng.nyInnkommendeJournalpost.vedlegg = new List<ForenkletDokument>
-            {
-                new ForenkletDokument(){
-                    tittel = "Vedlegg 1",
-                    filnavn = "vedlegg.pdf"
-                }
-            };
-
-            
-
             //Konverterer til arkivmelding xml
             var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(inng);
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var payload = Arkivintegrasjon.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
-            List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "innkommendejournalpost.xml"));
-            payloads.Add(new FilePayload(@"samples\søknad.pdf"));
-            payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
+            var payloads = new List<IPayload>
+            {
+                new StringPayload(payload, "innkommendejournalpost.xml"),
+                new FilePayload(Path.Combine("samples", "søknad.pdf")),
+                new FilePayload(Path.Combine("samples", "vedlegg.pdf"))
+            };
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
@@ -356,16 +295,14 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendUtgående()
         {
-            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
-            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
-
-
             //Fagsystem definerer ønsket struktur
-            ArkivmeldingForenkletUtgaaende utg = new ArkivmeldingForenkletUtgaaende
+            var utg = new ArkivmeldingForenkletUtgaaende
             {
                 sluttbrukerIdentifikator = "Fagsystemets brukerid",
                 nyUtgaaendeJournalpost = new UtgaaendeJournalpost()
@@ -427,13 +364,15 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Konverterer til arkivmelding xml
             var arkivmelding = Arkivintegrasjon.ConvertForenkletUtgaaendeToArkivmelding(utg);
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var payload = Arkivintegrasjon.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
-            List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "utgaaendejournalpost.xml"));
-            payloads.Add(new FilePayload(@"samples\vedtak.pdf"));
-            payloads.Add(new FilePayload(@"samples\vedlegg1.pdf"));
+            var payloads = new List<IPayload>
+            {
+                new StringPayload(payload, "utgaaendejournalpost.xml"),
+                new FilePayload(Path.Combine("samples", "vedtak.pdf")),
+                new FilePayload(Path.Combine("samples", "vedlegg1.pdf"))
+            };
 
             var messageRequest = new MeldingRequest(
                           mottakerKontoId: receiverId,
@@ -450,8 +389,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendUtgåendeUtvidet()
         {
-            Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
-            Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
+            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
             var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmelding.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
@@ -462,32 +401,53 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                       meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingUtgaaende.v1"); // Message type as string
                                                                                                                              //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
-
             //Fagsystem definerer ønsket struktur
-            ArkivmeldingForenkletUtgaaende utg = new ArkivmeldingForenkletUtgaaende();
-            utg.sluttbrukerIdentifikator = "Fagsystemets brukerid";
-            utg.nyUtgaaendeJournalpost = new UtgaaendeJournalpost();
-            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel = new EksternNoekkel();
-            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel.fagsystem = "Fagsystem X";
-            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel.noekkel = Guid.NewGuid().ToString();
+            var utg = new ArkivmeldingForenkletUtgaaende
+            {
+                sluttbrukerIdentifikator = "Fagsystemets brukerid",
+                nyUtgaaendeJournalpost = new UtgaaendeJournalpost
+                {
+                    referanseEksternNoekkel = new EksternNoekkel
+                    {
+                        fagsystem = "Fagsystem X", noekkel = Guid.NewGuid().ToString()
+                    }
+                }
+            };
 
             utg.nyUtgaaendeJournalpost.tittel = "Tillatelse til ...";
 
-            utg.nyUtgaaendeJournalpost.internAvsender = new List<KorrespondansepartIntern>();
-            utg.nyUtgaaendeJournalpost.internAvsender.Add(new KorrespondansepartIntern() { saksbehandler = "Sigve Saksbehandler" });
+            utg.nyUtgaaendeJournalpost.internAvsender = new List<KorrespondansepartIntern>
+            {
+                new KorrespondansepartIntern() {saksbehandler = "Sigve Saksbehandler"}
+            };
 
-            utg.nyUtgaaendeJournalpost.mottaker = new List<Korrespondansepart>();
-            utg.nyUtgaaendeJournalpost.mottaker.Add(new Korrespondansepart() { navn = "Mons Mottaker", postadresse = new EnkelAdresse() { adresselinje1 = "Gate 1", postnr = "3801", poststed = "Bø" } });
-            utg.nyUtgaaendeJournalpost.mottaker.Add(new Korrespondansepart() { navn = "Foretak Mottaker", postadresse = new EnkelAdresse() { adresselinje1 = "Forretningsgate 1", postnr = "3801", poststed = "Bø" } });
+            utg.nyUtgaaendeJournalpost.mottaker = new List<Korrespondansepart>
+            {
+                new Korrespondansepart()
+                {
+                    navn = "Mons Mottaker",
+                    postadresse = new EnkelAdresse()
+                    {
+                        adresselinje1 = "Gate 1", postnr = "3801", poststed = "Bø"
+                    }
+                },
+                new Korrespondansepart()
+                {
+                    navn = "Foretak Mottaker",
+                    postadresse = new EnkelAdresse()
+                    {
+                        adresselinje1 = "Forretningsgate 1", postnr = "3801", poststed = "Bø"
+                    }
+                }
+            };
 
-            utg.nyUtgaaendeJournalpost.hoveddokument = new ForenkletDokument();
-            utg.nyUtgaaendeJournalpost.hoveddokument.tittel = "Vedtak om tillatelse til ...";
-            utg.nyUtgaaendeJournalpost.hoveddokument.filnavn = "vedtak.pdf";
+            utg.nyUtgaaendeJournalpost.hoveddokument = new ForenkletDokument
+            {
+                tittel = "Vedtak om tillatelse til ...", filnavn = "vedtak.pdf"
+            };
 
             utg.nyUtgaaendeJournalpost.vedlegg = new List<ForenkletDokument>();
-            var vedlegg1 = new ForenkletDokument();
-            vedlegg1.tittel = "Vedlegg 1";
-            vedlegg1.filnavn = "vedlegg.pdf";
+            var vedlegg1 = new ForenkletDokument {tittel = "Vedlegg 1", filnavn = "vedlegg.pdf"};
             utg.nyUtgaaendeJournalpost.vedlegg.Add(vedlegg1);
 
             //osv...
@@ -497,15 +457,15 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //TODO redigere arkivmelding
 
-
-
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var payload = Arkivintegrasjon.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
-            List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "utgaaendejournalpost.xml"));
-            payloads.Add(new FilePayload(@"samples\vedtak.pdf"));
-            payloads.Add(new FilePayload(@"samples\vedlegg.pdf"));
+            var payloads = new List<IPayload>
+            {
+                new StringPayload(payload, "utgaaendejournalpost.xml"),
+                new FilePayload(Path.Combine("samples", "vedtak.pdf")),
+                new FilePayload(Path.Combine("samples", "vedlegg.pdf"))
+            };
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
@@ -513,31 +473,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             Console.WriteLine(payload);
 
         }
-        private static X509Certificate2 GetCertificate(string ThumbprintIdPortenVirksomhetssertifikat)
-        {
-
-            //Det samme virksomhetssertifikat som er registrert hos ID-porten
-            X509Store store = new X509Store(StoreLocation.CurrentUser);
-            X509Certificate2 cer = null;
-            store.Open(OpenFlags.ReadOnly);
-            //Henter Arkitektum sitt virksomhetssertifikat
-            X509Certificate2Collection cers = store.Certificates.Find(X509FindType.FindByThumbprint, ThumbprintIdPortenVirksomhetssertifikat, false);
-            if (cers.Count > 0)
-            {
-                cer = cers[0];
-            };
-            store.Close();
-
-            return cer;
-        }
-
+        
         static void OnReceivedMelding(object sender, MottattMeldingArgs fileArgs)
         {
             //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
             // Process the message
-
-
             if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.mottatt.v1")
             {
                 Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
@@ -657,14 +598,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             // Handle error
                         }
                     }
-
-                    
                 }
 
                 Console.WriteLine("Melding er håndtert i fagsystem ok ......");
 
                 fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
-
             }
             else
             {
@@ -676,7 +614,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Arkivering Service is stopping.2");
-
             return Task.CompletedTask;
         }
     }

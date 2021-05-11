@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ks.fiks.io.arkivsystem.sample
+namespace ks.fiks.io.arkivintegrasjon.common.AppSettings
 {
     public class AppSettings
     {
@@ -25,5 +25,6 @@ namespace ks.fiks.io.arkivsystem.sample
         public string MaskinPortenCompanyCertificatePassword { get; set; }
         public string MaskinPortenIssuer { get; set; }
         public string MaskinPortenTokenUrl { get; set; }
+        public Guid SendToAccountId { get; set; }
     }
 }
