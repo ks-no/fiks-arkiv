@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        PROJECT_ARKIVSYSTEM_FOLDER = "ks.fiks.io.arkivsystem.sample"
-        PROJECT_FAGSYSTEM_ARKIV_FOLDER = "ks.fiks.io.fagsystem.arkiv.sample"
-        PROJECT_COMMON_FOLDER = "ks.fiks.io.arkivintegrasjon.common"
+        PROJECT_ARKIVSYSTEM_FOLDER = "dotnet-source/ks.fiks.io.arkivsystem.sample"
+        PROJECT_FAGSYSTEM_ARKIV_FOLDER = "dotnet-source/ks.fiks.io.fagsystem.arkiv.sample"
+        PROJECT_COMMON_FOLDER = "dotnet-source/ks.fiks.io.arkivintegrasjon.common"
         PROJECT_CHARTNAME = "fiks-arkiv"
         ARKIVSYSTEM_APP_NAME = "fiks-arkiv-simulator-arkivsystem"
         FAGSYSTEM_ARKIV_APP_NAME = "fiks-arkiv-simulator-fagsystem-arkiv"
@@ -139,7 +139,7 @@ def versionPattern() {
 
 def findVersionSuffix() {
     println("FindVersionSuffix")
-    def findCommand = $/find ks.fiks.io.arkivintegrasjon.common -name "ks.fiks.io.arkivintegrasjon.common.csproj" -exec xpath '{}' '/Project/PropertyGroup/VersionPrefix/text()' \;/$
+    def findCommand = $/find dotnet-source/ks.fiks.io.arkivintegrasjon.common -name "ks.fiks.io.arkivintegrasjon.common.csproj" -exec xpath '{}' '/Project/PropertyGroup/VersionPrefix/text()' \;/$
 
     def version = sh(script: findCommand, returnStdout: true, label: 'Lookup current version from csproj files').trim().split('\n').find {
         return it.trim().matches(versionPattern())
