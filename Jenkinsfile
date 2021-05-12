@@ -51,7 +51,7 @@ pipeline {
                 dir("dotnet-source") {
                     script {
                         println("fiks-arkiv-simulator-arkivsystem: Building and publishing docker image version: ${env.FULL_VERSION}")
-                        buildAndPushDockerImage(ARKIVSYSTEM_APP_NAME, "./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile" [env.FULL_VERSION, 'latest'], [], params.isRelease)
+                        buildAndPushDockerImageFiksArkiv(ARKIVSYSTEM_APP_NAME, "./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile" [env.FULL_VERSION, 'latest'], [], params.isRelease)
                     }
                 }
             }
@@ -62,7 +62,7 @@ pipeline {
                 dir("dotnet-source") {
                     script {
                         println("fiks-arkiv-simulator-fagsystem-arkiv: Building and publishing docker image version: ${env.FULL_VERSION}")
-                        buildAndPushDockerImage(FAGSYSTEM_ARKIV_APP_NAME, "./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile" [env.FULL_VERSION, 'latest'], [], params.isRelease)
+                        buildAndPushDockerImageFiksArkiv(FAGSYSTEM_ARKIV_APP_NAME, "./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile" [env.FULL_VERSION, 'latest'], [], params.isRelease)
                     }
                 }
             }
