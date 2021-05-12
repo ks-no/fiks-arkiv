@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        PROJECT_ARKIVSYSTEM_FOLDER = "dotnet-source/ks.fiks.io.arkivsystem.sample"
-        PROJECT_FAGSYSTEM_ARKIV_FOLDER = "dotnet-source/ks.fiks.io.fagsystem.arkiv.sample"
+        PROJECT_ARKIVSYSTEM_FOLDER = "ks.fiks.io.arkivsystem.sample"
+        PROJECT_FAGSYSTEM_ARKIV_FOLDER = "ks.fiks.io.fagsystem.arkiv.sample"
         PROJECT_COMMON_FOLDER = "dotnet-source/ks.fiks.io.arkivintegrasjon.common"
         PROJECT_CHARTNAME = "fiks-arkiv-simulator"
         ARKIVSYSTEM_APP_NAME = "fiks-arkiv-simulator-arkivsystem"
@@ -46,20 +46,24 @@ pipeline {
             }
         }
               
-        stage('${ARKIVSYSTEM_APP_NAME}: Build and publish docker image') {
+        stage("fiks-arkiv-simulator-arkivsystem: Build and publish docker image") {
             steps {
-                script {
-                    println("${ARKIVSYSTEM_APP_NAME}: Building and publishing docker image version: ${env.FULL_VERSION}")
-                    buildAndPushDockerImage(ARKIVSYSTEM_APP_NAME, [env.FULL_VERSION, 'latest'], ["build_version_number=${env.FULL_VERSION}"], params.isRelease, PROJECT_ARKIVSYSTEM_FOLDER)
+                dir("dotnet-source") {
+                    script {
+                        println("fiks-arkiv-simulator-arkivsystem: Building and publishing docker image version: ${env.FULL_VERSION}")
+                        buildAndPushDockerImage(ARKIVSYSTEM_APP_NAME, [env.FULL_VERSION, 'latest'], ["build_version_number=${env.FULL_VERSION}"], params.isRelease, PROJECT_ARKIVSYSTEM_FOLDER)
+                    }
                 }
             }
         }
         
-        stage('${FAGSYSTEM_ARKIV_APP_NAME}: Build and publish docker image') {
+        stage('fiks-arkiv-simulator-fagsystem-arkiv}: Build and publish docker image') {
             steps {
-                script {
-                    println("WEB: Building and publishing docker image version: ${env.FULL_VERSION}")
-                    buildAndPushDockerImage(FAGSYSTEM_ARKIV_APP_NAME, [env.FULL_VERSION, 'latest'], ["build_version_number=${env.FULL_VERSION}"], params.isRelease, PROJECT_FAGSYSTEM_ARKIV_FOLDER)
+                dir("dotnet-source") {
+                    script {
+                        println("fiks-arkiv-simulator-fagsystem-arkiv: Building and publishing docker image version: ${env.FULL_VERSION}")
+                        buildAndPushDockerImage(FAGSYSTEM_ARKIV_APP_NAME, [env.FULL_VERSION, 'latest'], ["build_version_number=${env.FULL_VERSION}"], params.isRelease, PROJECT_FAGSYSTEM_ARKIV_FOLDER)
+                    }
                 }
             }
         }
