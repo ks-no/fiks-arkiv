@@ -49,10 +49,8 @@ pipeline {
         stage("fiks-arkiv-simulator-arkivsystem: Build and publish docker image") {
             steps {
                 dir("dotnet-source") {
-                    script {
-                        println("fiks-arkiv-simulator-arkivsystem: Building and publishing docker image version: ${env.FULL_VERSION}")
-                        buildAndPushDockerImageFiksArkiv(ARKIVSYSTEM_APP_NAME, "./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile", [env.FULL_VERSION, 'latest'], [], params.isRelease)
-                    }
+                    println("fiks-arkiv-simulator-arkivsystem: Building and publishing docker image version: ${env.FULL_VERSION}")
+                    buildAndPushDockerImageFiksArkiv(ARKIVSYSTEM_APP_NAME, "./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile", [env.FULL_VERSION, 'latest'], [], params.isRelease)
                 }
             }
         }
@@ -60,18 +58,18 @@ pipeline {
         stage('fiks-arkiv-simulator-fagsystem-arkiv}: Build and publish docker image') {
             steps {
                 dir("dotnet-source") {
-                    script {
-                        println("fiks-arkiv-simulator-fagsystem-arkiv: Building and publishing docker image version: ${env.FULL_VERSION}")
-                        buildAndPushDockerImageFiksArkiv(FAGSYSTEM_ARKIV_APP_NAME, "./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile", [env.FULL_VERSION, 'latest'], [], params.isRelease)
-                    }
+                    println("fiks-arkiv-simulator-fagsystem-arkiv: Building and publishing docker image version: ${env.FULL_VERSION}")
+                    buildAndPushDockerImageFiksArkiv(FAGSYSTEM_ARKIV_APP_NAME, "./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile", [env.FULL_VERSION, 'latest'], [], params.isRelease)
                 }
             }
         }
         
         stage('Push helm chart') {
             steps {
-                println("Building helm chart version: ${env.FULL_VERSION}")
-                buildHelm3Chart(PROJECT_CHARTNAME, env.FULL_VERSION)
+                dir("dotnet-source") {
+                    println("Building helm chart version: ${env.FULL_VERSION}")
+                    buildHelm3Chart(PROJECT_CHARTNAME, env.FULL_VERSION)
+                }
             }
         }
         
