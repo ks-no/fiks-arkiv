@@ -51,7 +51,7 @@ pipeline {
                 dir("dotnet-source") {
                     script {
                         println("fiks-arkiv-simulator-arkivsystem: Building and publishing docker image version: ${env.FULL_VERSION}")
-                        buildAndPushDockerImage(ARKIVSYSTEM_APP_NAME, [env.FULL_VERSION, 'latest'], ["-f ./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile"], params.isRelease)
+                        buildAndPushDockerImage(ARKIVSYSTEM_APP_NAME, "./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile" [env.FULL_VERSION, 'latest'], [], params.isRelease)
                     }
                 }
             }
@@ -62,7 +62,7 @@ pipeline {
                 dir("dotnet-source") {
                     script {
                         println("fiks-arkiv-simulator-fagsystem-arkiv: Building and publishing docker image version: ${env.FULL_VERSION}")
-                        buildAndPushDockerImage(FAGSYSTEM_ARKIV_APP_NAME, [env.FULL_VERSION, 'latest'], ["-f ./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile"], params.isRelease)
+                        buildAndPushDockerImage(FAGSYSTEM_ARKIV_APP_NAME, "./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile" [env.FULL_VERSION, 'latest'], [], params.isRelease)
                     }
                 }
             }
@@ -164,4 +164,25 @@ def incrementVersion(versionString) {
 
 def getTimestamp() {
     return java.time.OffsetDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"))
+}
+
+def buildAndPushDockerImageFiksArkiv(String imageName, dockerFile, List tags = [], List dockerArgs = [], boolean isRelease = false, String path = ".") {
+    script {
+        println "imageName: ${imageName}"
+        println "tags: ${tags}"
+        println "dockerArgs: ${dockerArgs}"
+        println "isRelease: ${isRelease}"
+        if (isRelease) {
+            repo = 'https://docker-local.artifactory.fiks.ks.no'
+        } else {
+            repo = 'https://docker-local-snapshots.artifactory.fiks.ks.no'
+        }
+
+        docker.withRegistry(repo, 'artifactory-token-based') {
+            def customImage = docker.build("${imageName}", "-f ${dockerFile}" + dockerArgs.collect { "--build-arg $it" }.join(' ') + " " + path)
+            tags.each {
+                customImage.push(it)
+            }
+        }
+    }
 }
