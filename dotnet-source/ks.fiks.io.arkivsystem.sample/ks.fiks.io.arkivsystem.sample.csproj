@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="appsettings.Development.json" Condition="Exsists('appsettings.Development.json')">
+    <EmbeddedResource Include="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="appsettings.Local.json" Condition="Exsists('appsettings.Local.json')">
+    <EmbeddedResource Include="appsettings.Local.json" Condition="Exists('appsettings.Local.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
