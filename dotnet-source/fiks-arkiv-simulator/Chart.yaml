@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for Kubernetes
+name: fiks-arkiv-simulator
+version: ${CHART_VERSION}
