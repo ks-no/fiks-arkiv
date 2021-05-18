@@ -60,10 +60,8 @@ spec:
             secretName: ks-virksomhetssertifikat-store
         - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
           secret:
-            secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
-      
+            secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering      
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
