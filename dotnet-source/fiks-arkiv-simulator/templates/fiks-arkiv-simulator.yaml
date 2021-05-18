@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: fiks-arkiv-simulator-arkivsystem
   annotations:
-    description: "Simulator for arkivsystem som kjører som en console app"
+    description: "Simulator for arkivsystem som kjorer som en console app"
     externalServices: "Fiks-io, maskinporten"
   labels:
     app: fiks-arkiv-simulator-arkivsystem
@@ -67,7 +67,7 @@ kind: Deployment
 metadata:
   name: fiks-arkiv-simulator-fagsystem-arkiv
   annotations:
-    description: "Simulator for fagsystem-arkiv som kjører som en console app"
+    description: "Simulator for fagsystem-arkiv som kjorer som en console app"
     externalServices: "Fiks-io, maskinporten"
   labels:
     app: fiks-arkiv-simulator-fagsystem-arkiv
