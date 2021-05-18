@@ -62,6 +62,23 @@ spec:
           secret:
             secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering      
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  name: fiks-arkiv-simulator-arkivsystem-service
+    labels:
+    app: fiks-arkiv-simulator-arkivsystem
+    tier: dotnet
+spec:
+  selector:
+    component: fiks-arkiv-simulator-arkivsystem
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -125,3 +142,18 @@ spec:
               - name: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
                 secret:
                   secretName: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: fiks-arkiv-simulator-fagsystem-arkiv-service
+    labels:
+    app: fiks-arkiv-simulator-fagsystem-arkiv
+    tier: dotnet
+spec:
+  selector:
+    component: fiks-arkiv-simulator-fagsystem-arkiv
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
