@@ -117,13 +117,13 @@ spec:
               - name: ks-virksomhetssertifikat-store
                 readOnly: true
                 mountPath: /etc/fiks/ks-certs
-              - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+              - name: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
                 readOnly: true
                 mountPath: /etc/fiks/fiks-io
             volumes:
               - name: ks-virksomhetssertifikat-store
                 secret:
                   secretName: ks-virksomhetssertifikat-store
-              - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+              - name: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
                 secret:
-                  secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+                  secretName: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
