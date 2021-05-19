@@ -23,7 +23,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 .ConfigureAppConfiguration((hostBuilder, config) =>
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddEnvironmentVariables("fiksArkivsystemMock_");
+                    config.AddEnvironmentVariables("fiksArkivMock_");
                     config.AddJsonFile("appsettings.json", optional: true);
                     config.AddJsonFile($"appsettings.{hostBuilder.HostingEnvironment.EnvironmentName}.json", optional: true);
                 })
