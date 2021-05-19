@@ -34,3 +34,28 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+          envFrom:
+            - configMapRef:
+                name: fiks-arkiv-simulator-arkivsystem-config
+            - configMapRef:
+                name: fiks-hosts-config
+            - configMapRef:
+                name: maskinporten-config
+            - secretRef:
+                name: fiks-arkiv-simulator-arkivsystem-secret
+            - secretRef:
+                name: ks-virksomhetssertifikat
+          volumeMounts:
+            - name: ks-virksomhetssertifikat-store
+              readOnly: true
+              mountPath: /etc/fiks/ks-certs
+            - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+              readOnly: true
+              mountPath: /etc/fiks/fiks-io
+      volumes:
+        - name: ks-virksomhetssertifikat-store
+          secret:
+            secretName: ks-virksomhetssertifikat-store
+        - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+          secret:
+            secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
