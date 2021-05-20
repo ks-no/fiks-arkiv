@@ -59,3 +59,65 @@ spec:
         - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
           secret:
             secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiks-arkiv-simulator-fagsystem-arkiv
+  annotations:
+    description: "Simulator for fagsystem-arkiv som kjorer som en console app"
+    externalServices: "Fiks-io, maskinporten"
+  labels:
+    app: fiks-arkiv-simulator-fagsystem-arkiv
+    component: fiks-arkiv-simulator-fagsystem-arkiv
+    criticality: "NORMAL"
+spec:
+  replicas: 1
+  minReadySeconds: 10
+  revisionHistoryLimit: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      component: fiks-arkiv-simulator-fagsystem-arkiv
+  template:
+    metadata:
+      labels:
+        component: fiks-arkiv-simulator-fagsystem-arkiv
+    spec:
+      containers:
+        - name: fiks-arkiv-simulator-fagsystem-arkiv
+          image: "{{ .Values.image.repository }}fiks-arkiv-simulator-fagsystem-arkiv:{{ .Values.image.tag }}"
+          env:
+            - name: KUBERNETES_NODE
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          envFrom:
+            - configMapRef:
+                name: fiks-arkiv-simulator-fagsystem-arkiv-config
+            - configMapRef:
+                name: fiks-hosts-config
+            - configMapRef:
+                name: maskinporten-config
+            - secretRef:
+                name: fiks-arkiv-simulator-fagsystem-arkiv-secret
+            - secretRef:
+                name: ks-virksomhetssertifikat
+          volumeMounts:
+            - name: ks-virksomhetssertifikat-store
+              readOnly: true
+              mountPath: /etc/fiks/ks-certs
+            - name: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
+              readOnly: true
+              mountPath: /etc/fiks/fiks-io
+      volumes:
+        - name: ks-virksomhetssertifikat-store
+          secret:
+            secretName: ks-virksomhetssertifikat-store
+        - name: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
+          secret:
+            secretName: fiks-arkiv-simulator-fagsystem-arkiv-fiks-io-kryptering
