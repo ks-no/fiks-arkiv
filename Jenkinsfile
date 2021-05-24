@@ -3,7 +3,6 @@ pipeline {
     environment {
         PROJECT_ARKIVSYSTEM_FOLDER = "ks.fiks.io.arkivsystem.sample"
         PROJECT_FAGSYSTEM_ARKIV_FOLDER = "ks.fiks.io.fagsystem.arkiv.sample"
-        PROJECT_COMMON_FOLDER = "dotnet-source/ks.fiks.io.arkivintegrasjon.common"
         PROJECT_CHARTNAME = "fiks-arkiv-simulator"
         ARKIVSYSTEM_APP_NAME = "fiks-arkiv-simulator-arkivsystem"
         FAGSYSTEM_ARKIV_APP_NAME = "fiks-arkiv-simulator-fagsystem-arkiv"
