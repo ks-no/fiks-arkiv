@@ -10,11 +10,11 @@ Repoet inneholder også client biblioteket ks.fiks.io.arkivintegrasjon.client so
 Konfigurasjon av console applikasjonene krever at man har en Fiks-io konto og integrasjon. 
 Id'er og passord for disse puttes inn i appsettings.<miljø>.json. 
 Keys og certs puttes i mapper som skal ikke commites til github.
+Referanser til disse puttes også inn i appsettings.<miljø>.json
 For Windows brukere støttes det å hente importert cert fra operativsystem vha thumbprint.
 
 ## Annet
-**VIKTIG**: Ikke commit certs og keys til github. 
-
+For å kunne kjøre disse simulatorene lokalt sammen med fiks-protokoll-validator så må man også kunne kjøre fiks-io lokalt. 
 
 
 
