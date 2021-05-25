@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="appsettings.development.json">
+    <EmbeddedResource Include="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="appsettings.local.json">
+    <EmbeddedResource Include="appsettings.Local.json" Condition="Exists('appsettings.Local.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -41,12 +41,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" />
+    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12')"/>
     <None Remove="etc\fiks\fiks-io\privatekey.pem" />
-    <Content Include="etc\fiks\fiks-io\development\privatekey.pem">
+    <Content Include="etc\fiks\fiks-io\development\privatekey.pem" Condition="Exists('etc\fiks\fiks-io\development\privatekey.pem')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always" />
+    <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\fiks-io\privatekey.pem')"/>
   </ItemGroup>
 
 </Project>

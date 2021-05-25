@@ -340,8 +340,6 @@ namespace ks.fiks.io.arkivsystem.sample
             var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
             return new FiksIOClient(configuration);
         }
-        
-        
 
         private void SubscribeToFiksIOClient()
         {

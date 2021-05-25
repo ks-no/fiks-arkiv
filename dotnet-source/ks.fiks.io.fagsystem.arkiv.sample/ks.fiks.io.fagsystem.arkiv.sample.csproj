@@ -11,12 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="appsettings.development.json">
+    <EmbeddedResource Include="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.Local.json" Condition="Exists('appsettings.Local.json')">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="appsettings.DockerCompose.json"/>
+    <EmbeddedResource Include="appsettings.DockerCompose.json" CopyToOutputDirectory="Always" Condition="Exists('appsettings.DockerCompose.json')"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,13 +43,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="etc\fiks\fiks-io\development\privatekey.pem">
+    <Content Include="etc\fiks\fiks-io\development\privatekey.pem" Condition="Exists('etc\fiks\fiks-io\development\privatekey.pem')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="etc\fiks\fiks-io\privatekey.pem">
+    <Content Include="etc\fiks\fiks-io\privatekey.pem" Condition="Exists('etc\fiks\fiks-io\privatekey.pem')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12">
+    <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" Condition="Exists('etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Remove="samples\rekvisisjon.pdf" />
