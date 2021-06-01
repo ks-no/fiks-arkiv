@@ -29,6 +29,11 @@ spec:
       containers:
         - name: fiks-arkiv-simulator-arkivsystem
           image: "{{ .Values.image.repository }}fiks-arkiv-simulator-arkivsystem:{{ .Values.image.tag }}"
+          resources:
+            requests:
+              memory: 64Mi
+            limits:
+              memory: 128Mi
           env:
             - name: KUBERNETES_NODE
               valueFrom:
@@ -91,6 +96,11 @@ spec:
       containers:
         - name: fiks-arkiv-simulator-fagsystem-arkiv
           image: "{{ .Values.image.repository }}fiks-arkiv-simulator-fagsystem-arkiv:{{ .Values.image.tag }}"
+          resources:
+            requests:
+              memory: 64Mi
+            limits:
+              memory: 128Mi
           env:
             - name: KUBERNETES_NODE
               valueFrom:
