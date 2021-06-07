@@ -1409,4 +1409,224 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- GI Arkiv 2.0 -->
+  <xs:simpleType name="fagsystem">
+    <xs:annotation>
+      <xs:documentation>M01..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+<xs:simpleType name="noekkel">
+    <xs:annotation>
+      <xs:documentation>M01..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="skjermetObjekt">
+    <xs:annotation>
+      <xs:documentation>M5..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+<xs:simpleType name="personnavn">
+    <xs:annotation>
+      <xs:documentation>M5..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="forsendelsesmaate">
+    <xs:annotation>
+      <xs:documentation>M4..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="referanseAvskriverJournalpost">
+    <xs:annotation>
+      <xs:documentation>M2..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="ID"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="hendelsestype">
+    <xs:annotation>
+      <xs:documentation>M4..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="hendelsesdato">
+    <xs:annotation>
+      <xs:documentation>M4..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="klassifikasjonssystem">
+    <xs:annotation>
+      <xs:documentation>M4..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="personid">
+    <xs:annotation>
+      <xs:documentation>M4..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="organisasjonid">
+    <xs:annotation>
+      <xs:documentation>M4..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="kommunenummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="gardsnummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+
+  <xs:simpleType name="bruksnummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+
+<xs:simpleType name="festenummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+
+  <xs:simpleType name="seksjonsnummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+
+<xs:simpleType name="bygningsnummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+
+  <xs:simpleType name="endringsloepenummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer" />
+  </xs:simpleType>
+
+<xs:simpleType name="fylkesnummer">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="landkode">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+   <xs:simpleType name="planidentifikasjon">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="x">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:double" />
+  </xs:simpleType>
+
+   <xs:simpleType name="y">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:double" />
+  </xs:simpleType>
+
+  <xs:simpleType name="z">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:double" />
+  </xs:simpleType>
+
+  <xs:simpleType name="koordinatsystem">
+    <xs:annotation>
+      <xs:documentation>M3..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="referanseTilDokumentbeskrivelse">
+    <xs:annotation>
+      <xs:documentation>M2..</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="ID"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="utfortAv">
+    <xs:annotation>      
+      <xs:documentation>M4..</xs:documentation>    
+    </xs:annotation>    
+    <xs:restriction base="xs:string">      
+      <xs:minLength value="1"/>    
+    </xs:restriction>  
+  </xs:simpleType>
+
 </xs:schema>
