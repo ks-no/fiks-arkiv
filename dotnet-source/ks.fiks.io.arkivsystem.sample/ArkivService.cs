@@ -79,7 +79,7 @@ namespace ks.fiks.io.arkivsystem.sample
             XmlSchemaSet arkivmeldingXmlSchemaSet = new XmlSchemaSet();
 
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding", Path.Combine("schema", "arkivmelding.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog", Path.Combine("metadatakatalog.xsd"));
+            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog", Path.Combine("schema", "metadatakatalog.xsd"));
 
             XmlSchemaSet sokXmlSchemaSet = new XmlSchemaSet();
             sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("schema", "sok.xsd"));
