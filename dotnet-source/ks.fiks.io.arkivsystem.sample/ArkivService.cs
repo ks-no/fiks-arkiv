@@ -84,7 +84,7 @@ namespace ks.fiks.io.arkivsystem.sample
             XmlSchemaSet sokXmlSchemaSet = new XmlSchemaSet();
             sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("schema", "sok.xsd"));
 
-            bool xmlValidationErrorOccurd = false;
+            bool xmlValidationErrorOccured = false;
 
             if (kjenteMeldingerBasis.Contains(mottatt.Melding.MeldingType))
             {
@@ -114,7 +114,7 @@ namespace ks.fiks.io.arkivsystem.sample
                                             );
                                     if (validationResult[0].Count > 0)
                                     {
-                                        xmlValidationErrorOccurd = true;
+                                        xmlValidationErrorOccured = true;
                                     }
                                     var newEntryStream = asiceReadEntry.OpenStream();
                                         StreamReader reader1 = new StreamReader(newEntryStream);
@@ -137,7 +137,7 @@ namespace ks.fiks.io.arkivsystem.sample
                             // Handle error
                         }
                     }
-                    if (xmlValidationErrorOccurd)
+                    if (xmlValidationErrorOccured)
                     {
                         var errorMessage = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.feil.v1", String.Join("\n ", validationResult[0]) , "feil.txt").Result;
                         mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
@@ -160,7 +160,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 }
 
-                if (!xmlValidationErrorOccurd)
+                if (!xmlValidationErrorOccured)
                 {
                     var kvittering = new arkivmelding();
                     kvittering.tidspunkt = DateTime.Now;
@@ -224,7 +224,7 @@ namespace ks.fiks.io.arkivsystem.sample
                                         );
                                         if (validationResult[0].Count > 0)
                                         {
-                                            xmlValidationErrorOccurd = true;
+                                            xmlValidationErrorOccured = true;
                                         }
                                         StreamReader reader1 = new StreamReader(entryStream);
                                         string text = reader1.ReadToEnd();
@@ -235,7 +235,7 @@ namespace ks.fiks.io.arkivsystem.sample
                             }
                         }
                     }
-                    if (xmlValidationErrorOccurd)
+                    if (xmlValidationErrorOccured)
                     {
                         var errorMessage = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.feil.v1", String.Join("\n ", validationResult[0]), "feil.txt").Result;
                         mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
