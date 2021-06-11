@@ -1,5 +1,4 @@
 ﻿using ks.fiks.io.arkivintegrasjon.sample.messages;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Ks.Fiks.Maskinporten.Client;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client;

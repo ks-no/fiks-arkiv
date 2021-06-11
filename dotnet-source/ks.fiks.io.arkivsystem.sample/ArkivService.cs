@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 using KS.Fiks.ASiC_E;
+using ks.fiks.io.arkivintegrasjon.client.ForenkletArkivering;
+using ks.fiks.io.arkivintegrasjon.client.Melding;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.sample.messages;
 using KS.Fiks.IO.Client;
@@ -137,14 +139,20 @@ namespace ks.fiks.io.arkivsystem.sample
                             // Handle error
                         }
                     }
-                    if (xmlValidationErrorOccured)
+                    if (xmlValidationErrorOccured) // Ugyldig forespørsel
                     {
-                        var errorMessage = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.feil.v1", String.Join("\n ", validationResult[0]) , "feil.txt").Result;
+                        var ugyldigforespørsel = new Ugyldigforespørsel()
+                        {
+                            errorId = Guid.NewGuid().ToString(),
+                            feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0])
+                        };
+                        var errorMessage = mottatt.SvarSender.Svar(MeldingTypeV1.Ugyldigforespørsel, ugyldigforespørsel.ToString(), "ugyldigforespørsel.json").Result;
+                        
                         mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                     }
                     else
                     {
-                        var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.mottatt.v1").Result;
+                        var svarmsg = mottatt.SvarSender.Svar(MeldingTypeV1.Mottatt).Result;
                         Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 
                         Console.WriteLine("Melding er mottatt i arkiv ok ......");
