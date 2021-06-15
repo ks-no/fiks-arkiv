@@ -12,9 +12,9 @@
     <None Remove="schema\sok.xsd" />
     <Content Include="schema\sok.xsd" CopyToOutputDirectory="Always" />
     <None Remove="schema\arkivmelding.xsd" />
-    <Content Include="schema\arkivmelding.xsd" CopyToOutputDirectory="Always"/>
+    <Content Include="schema\arkivmelding.xsd" CopyToOutputDirectory="Always" />
     <None Remove="schema\metadatakatalog.xsd" />
-    <Content Include="schema\metadatakatalog.xsd" CopyToOutputDirectory="Always"/>
+    <Content Include="schema\metadatakatalog.xsd" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>
