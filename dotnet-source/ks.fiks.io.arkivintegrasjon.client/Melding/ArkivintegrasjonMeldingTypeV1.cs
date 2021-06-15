@@ -4,8 +4,9 @@ namespace ks.fiks.io.arkivintegrasjon.client.Melding
 {
     public static class ArkivintegrasjonMeldingTypeV1
     {
-        // Arkivintegrasjon
+        // Arkivintegrasjon mottaksmelding og kvitteringsmelding
         public const string Mottatt = "no.ks.fiks.gi.arkivintegrasjon.mottatt.v1";
+        public const string Kvittering = "no.ks.fiks.gi.arkivintegrasjon.kvittering.v1";
         
         // Basis
         public const string BasisArkivmelding = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1";
@@ -15,6 +16,7 @@ namespace ks.fiks.io.arkivintegrasjon.client.Melding
         
         // Sok
         public const string InnsynSok = "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.v1";
+        public const string InnsynSokResultat = "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1";
         
         // Avansert
         public const string OppdateringArkivmelding = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmelding.v1";
@@ -31,7 +33,8 @@ namespace ks.fiks.io.arkivintegrasjon.client.Melding
             
         public static readonly List<string> Sok = new List<string>()
         {
-            InnsynSok
+            InnsynSok,
+            InnsynSokResultat
         };
 
         public static readonly List<string> Avansert = new List<string>()

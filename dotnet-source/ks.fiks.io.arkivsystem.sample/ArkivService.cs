@@ -112,7 +112,7 @@ namespace ks.fiks.io.arkivsystem.sample
                         {
                             ErrorId = Guid.NewGuid().ToString(),
                             Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
-                            SvarPåMeldingId = mottatt.Melding.MeldingId
+                            ReferanseMeldingId = mottatt.Melding.MeldingId
                         };
                         var errorMessage = mottatt.SvarSender.Svar(MeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                         Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
@@ -131,7 +131,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     {
                         ErrorId = Guid.NewGuid().ToString(),
                         Feilmelding = "Meldingen mangler innhold",
-                        SvarPåMeldingId = mottatt.Melding.MeldingId
+                        ReferanseMeldingId = mottatt.Melding.MeldingId
                     };
                     
                     var svarmsg = mottatt.SvarSender.Svar(MeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
@@ -171,7 +171,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
                     string payload = Arkivintegrasjon.Serialize(kvittering);
 
-                    var svarmsg2 = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.kvittering.v1", payload, "arkivmelding.xml").Result;
+                    var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.Kvittering, payload, "arkivmelding.xml").Result;
                     Console.WriteLine("$Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
                     Console.WriteLine("Arkivering er ok ......");
                 }
@@ -221,7 +221,7 @@ namespace ks.fiks.io.arkivsystem.sample
                         {
                             ErrorId = Guid.NewGuid().ToString(),
                             Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
-                            SvarPåMeldingId = mottatt.Melding.MeldingId
+                            ReferanseMeldingId = mottatt.Melding.MeldingId
                         };
                         var errorMessage = mottatt.SvarSender.Svar(MeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                         Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
@@ -237,7 +237,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 List<IPayload> payloads = new List<IPayload>();
                 payloads.Add(new StringPayload(payload, "arkivmelding.xml"));
 
-                var svarmsg = mottatt.SvarSender.Svar("no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1", payloads).Result;
+                var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.InnsynSokResultat, payloads).Result;
                 Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
 
                 Console.WriteLine("Melding er håndtert i arkiv ok ......");
