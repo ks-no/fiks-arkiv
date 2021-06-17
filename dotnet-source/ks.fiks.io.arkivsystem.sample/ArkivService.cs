@@ -113,18 +113,18 @@ namespace ks.fiks.io.arkivsystem.sample
                         {
                             ErrorId = Guid.NewGuid().ToString(),
                             Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
-                            ReferanseMeldingId = mottatt.Melding.MeldingId
+                            CorrelationId = Guid.NewGuid().ToString()
                         };
+                        mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                         var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                         Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
-                        mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                     }
                     else
                     {
+                        mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                         var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.Mottatt).Result;
                         Console.WriteLine($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt...");
                         Console.WriteLine("Melding er mottatt i arkiv ok ......");
-                        mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                     }
                 }
                 else { // Ugyldig forespørsel
@@ -132,12 +132,12 @@ namespace ks.fiks.io.arkivsystem.sample
                     {
                         ErrorId = Guid.NewGuid().ToString(),
                         Feilmelding = "Meldingen mangler innhold",
-                        ReferanseMeldingId = mottatt.Melding.MeldingId
+                        CorrelationId = Guid.NewGuid().ToString()
                     };
-                    
+
+                    mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                     var svarmsg = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                     Console.WriteLine($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt");
-                    mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 }
 
                 if (!xmlValidationErrorOccured)
@@ -205,8 +205,8 @@ namespace ks.fiks.io.arkivsystem.sample
                                         {
                                             xmlValidationErrorOccured = true;
                                         }
-                                        StreamReader reader1 = new StreamReader(entryStream);
-                                        string text = reader1.ReadToEnd();
+                                        var reader1 = new StreamReader(entryStream);
+                                        var text = reader1.ReadToEnd();
                                         Console.WriteLine("Søker etter: " + text);
                                 }
                                 else
@@ -222,7 +222,7 @@ namespace ks.fiks.io.arkivsystem.sample
                         {
                             ErrorId = Guid.NewGuid().ToString(),
                             Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
-                            ReferanseMeldingId = mottatt.Melding.MeldingId
+                            CorrelationId = Guid.NewGuid().ToString()
                         };
                         var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                         Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
@@ -238,21 +238,16 @@ namespace ks.fiks.io.arkivsystem.sample
                 List<IPayload> payloads = new List<IPayload>();
                 payloads.Add(new StringPayload(payload, "arkivmelding.xml"));
 
+                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.InnsynSokResultat, payloads).Result;
                 Console.WriteLine("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
-
                 Console.WriteLine("Melding er håndtert i arkiv ok ......");
-
-                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
             }
             else if (ArkivintegrasjonMeldingTypeV1.IsAvansert(mottatt.Melding.MeldingType))
             {
                 Console.WriteLine("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
-
                 //TODO håndtere meldingen med ønsket funksjonalitet
-
                 Console.WriteLine("Melding er håndtert i arkiv ok ......");
-
                 mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
             }
             else
@@ -266,16 +261,13 @@ namespace ks.fiks.io.arkivsystem.sample
         {
             Console.WriteLine("Starter abonnement for FIKS integrasjon for arkivsystem...");
             var accountId = appSettings.FiksIOConfig.FiksIoAccountId; 
-
             client.NewSubscription(OnReceivedMelding);
-
             Console.WriteLine("Abonnerer på meldinger på konto " + accountId + " ...");
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Arkiv Service is stopping.");
-
             return Task.CompletedTask;
         }
     }

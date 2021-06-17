@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="KS.Fiks.ASiC-E" Version="1.0.3" />
-    <PackageReference Include="KS.Fiks.IO.Client" Version="1.2.1-build.20210616145016937" />
+    <PackageReference Include="KS.Fiks.IO.Client" Version="1.2.1-build.20210617123926173" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
   </ItemGroup>
