@@ -10,8 +10,8 @@ namespace ks.fiks.io.arkivintegrasjon.client.Melding
         
         // Basis
         public const string BasisArkivmelding = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1";
-        public const string BasisArkivmeldingUtgaaende = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmeldingUtgaaende.v1";
-        public const string ForenkletArkivmeldingInnkommende = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1";
+        //public const string BasisArkivmeldingUtgaaende = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmeldingUtgaaende.v1";
+        //public const string ForenkletArkivmeldingInnkommende = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.arkivmeldingInnkommende.v1";
         public const string BasisOppdaterSaksmappe = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.oppdatersaksmappe.v1";
         
         // Sok
@@ -19,28 +19,27 @@ namespace ks.fiks.io.arkivintegrasjon.client.Melding
         public const string InnsynSokResultat = "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1";
         
         // Avansert
-        public const string OppdateringArkivmelding = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmelding.v1";
-        public const string OppdateringArkivmeldingUtgaaende =
-            "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmeldingUtgaaende.v1";
+        //public const string OppdateringArkivmelding = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmelding.v1";
+        //public const string OppdateringArkivmeldingUtgaaende = "no.ks.fiks.gi.arkivintegrasjon.oppdatering.arkivmeldingUtgaaende.v1";
         
         public static readonly List<string> Basis = new List<string>()
         {
             BasisArkivmelding,
-            BasisArkivmeldingUtgaaende,
-            ForenkletArkivmeldingInnkommende,
+            //BasisArkivmeldingUtgaaende,
+            //ForenkletArkivmeldingInnkommende,
             BasisOppdaterSaksmappe
         };
             
         public static readonly List<string> Sok = new List<string>()
         {
             InnsynSok,
-            InnsynSokResultat
+            //InnsynSokResultat
         };
 
         public static readonly List<string> Avansert = new List<string>()
         {
-            OppdateringArkivmelding,
-            OppdateringArkivmeldingUtgaaende
+            //OppdateringArkivmelding,
+            //OppdateringArkivmeldingUtgaaende
         };
 
         public static bool IsBasis(string meldingsType)
