@@ -1,32 +1,31 @@
-﻿using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
-using no.ks.fiks.io.arkivmelding;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml.Serialization;
+using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
+using no.ks.fiks.io.arkivmelding;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 {
     public class Arkivintegrasjon
     {
-        const string _mottakerKode = "EM";
-        const string _avsenderKode = "EA";
-        const string _internavsenderKode = "IA";
-        const string _internmottakerKode = "IM";
+        private static readonly string Skjermingshjemmel = "Offl. § 26.1";
+        const string MottakerKode = "EM";
+        const string AvsenderKode = "EA";
+        const string InternavsenderKode = "IA";
+        const string InternmottakerKode = "IM";
 
         public static arkivmelding ConvertOppdaterSaksmappeToArkivmelding(OppdaterSaksmappe input)
         {
-
-            if (input.oppdaterSaksmappe == null) throw new Exception("Badrequest - saksmappe må være angitt");
-
-            var arkivmld = new arkivmelding();
-            int antFiler = 0;
-            saksmappe mappe = null;
-            mappe = ConvertSaksmappe(input.oppdaterSaksmappe);
+            if (input.oppdaterSaksmappe == null)
+            {
+                throw new Exception("Badrequest - saksmappe må være angitt");    
+            }
             
-            var mappeliste = new List<saksmappe>();
-            mappeliste.Add(mappe);
+            var arkivmld = new arkivmelding();
+            var antFiler = 0;
+            var mappeliste = new List<saksmappe> { ConvertSaksmappe(input.oppdaterSaksmappe) };
+            
             arkivmld.Items = mappeliste.ToArray();
 
             arkivmld.antallFiler = antFiler;
@@ -38,10 +37,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
         }
         public static arkivmelding ConvertForenkletUtgaaendeToArkivmelding(ArkivmeldingForenkletUtgaaende input) {
 
-            if (input.nyUtgaaendeJournalpost == null) throw new Exception("Badrequest - journalpost må være angitt");
-            
+            if (input.nyUtgaaendeJournalpost == null)
+            {
+                throw new Exception("Badrequest - journalpost må være angitt");
+            }
+
             var arkivmld = new arkivmelding();
-            int antFiler = 0;
+            var antFiler = 0;
             saksmappe mappe = null;
             if (input.referanseSaksmappe != null)
             {
@@ -81,17 +83,17 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 journalpst.opprettetAv = input.sluttbrukerIdentifikator;
                 journalpst.arkivertAv = input.sluttbrukerIdentifikator; //TODO ?????
                 
-                //skjerming
+                // Skjerming
                 if (input.nyUtgaaendeJournalpost.skjermetTittel)
                 {
                     journalpst.skjerming = new skjerming()
                     {
-                        skjermingshjemmel = "Offl. § 26.1",
+                        skjermingshjemmel = Skjermingshjemmel,
                         skjermingMetadata = new List<string> { "tittel", "korrespondansepart" }.ToArray()
                     };
                 }
 
-                //Håndtere alle filer
+                // Håndtere alle filer
                 List<dokumentbeskrivelse> dokbliste = new List<dokumentbeskrivelse>();
 
                 if (input.nyUtgaaendeJournalpost.hoveddokument != null)
@@ -106,7 +108,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                     if (input.nyUtgaaendeJournalpost.hoveddokument.skjermetDokument) {
                         dokbesk.skjerming = new skjerming()
                         {
-                            skjermingshjemmel = "Offl. § 26.1",
+                            skjermingshjemmel = Skjermingshjemmel,
                             skjermingDokument = "Hele"
                         };
                     }
@@ -152,24 +154,24 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 }
                 journalpst.dokumentbeskrivelse = dokbliste.ToArray();
 
-                //Korrespondanseparter
+                // Korrespondanseparter
                 List<korrespondansepart> partsListe = new List<korrespondansepart>();
 
                 foreach (var mottaker in input.nyUtgaaendeJournalpost.mottaker)
                 {
-                    korrespondansepart korrpart = KorrespondansepartToArkivPart(_mottakerKode, mottaker);
+                    korrespondansepart korrpart = KorrespondansepartToArkivPart(MottakerKode, mottaker);
                     partsListe.Add(korrpart);
                 }
 
                 foreach (var avsender in input.nyUtgaaendeJournalpost.avsender)
                 {
-                    korrespondansepart korrpart = KorrespondansepartToArkivPart(_avsenderKode, avsender);
+                    korrespondansepart korrpart = KorrespondansepartToArkivPart(AvsenderKode, avsender);
                     partsListe.Add(korrpart);
                 }
                 
                 foreach (var internAvsender in input.nyUtgaaendeJournalpost.internAvsender)
                 {
-                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(_internavsenderKode, internAvsender);
+                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(InternavsenderKode, internAvsender);
                     partsListe.Add(korrpart);
                 }
 
@@ -197,27 +199,20 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 else {
                     arkivmld.Items = jliste.ToArray();
                 }
-
-                
-
-
             }
+            
             arkivmld.antallFiler = antFiler;
             arkivmld.system = input.nyUtgaaendeJournalpost.referanseEksternNoekkel?.fagsystem;
             arkivmld.meldingId = input.nyUtgaaendeJournalpost.referanseEksternNoekkel?.noekkel;
             arkivmld.tidspunkt = DateTime.Now;
 
             return arkivmld;
-
-            
         }
 
         private static korrespondansepart KorrespondansepartToArkivPart(string partRolle, Korrespondansepart mottaker)
         {
             var part= new korrespondansepart
             {
-                 
-               
                 korrespondansepartNavn = mottaker.navn,
                 korrespondanseparttype = partRolle,
                 postadresse = (new List<string>() {
@@ -236,7 +231,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 }).ToArray(),
                 deresReferanse = mottaker.deresReferanse,
                 forsendelsesmaate = mottaker.forsendelsemåte
-
             };
 
             if (mottaker.enhetsidentifikator?.organisasjonsnummer != null) {
@@ -245,6 +239,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                         organisasjonsnummer = mottaker.enhetsidentifikator.organisasjonsnummer
                     };
             }
+            
             if (mottaker.personid?.personidentifikatorNr != null) {
                 if (mottaker.personid?.personidentifikatorType == "F")
                 {
@@ -262,12 +257,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
             }
 
             return part;
-
         }
+        
         private static korrespondansepart InternKorrespondansepartToArkivPart(string internKode, KorrespondansepartIntern intern)
         {
-
-
             return  new korrespondansepart
             {
                 korrespondansepartNavn = intern.saksbehandler ?? intern.administrativEnhet,
@@ -275,7 +268,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 administrativEnhet = intern.administrativEnhet,
                 saksbehandler = intern.saksbehandler
             };
-
         }
 
         public static string Serialize(object arkivmelding)
@@ -309,14 +301,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
             if (input.referanseSaksmappe != null)
             {
                 mappe = ConvertSaksmappe(input.referanseSaksmappe);
-                
             }
 
             if (input.nyInnkommendeJournalpost != null)
             {
                 var journalpst = new journalpost();
                 journalpst.tittel = input.nyInnkommendeJournalpost.tittel;
-                
 
                 journalpst.journalposttype = "I";
                 if (input.nyInnkommendeJournalpost.mottattDato != null)
@@ -338,7 +328,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 journalpst.offentligTittel = input.nyInnkommendeJournalpost.offentligTittel;
                 journalpst.opprettetAv = input.sluttbrukerIdentifikator;
                 journalpst.arkivertAv = input.sluttbrukerIdentifikator; //TODO ?????
-                //skjerming
+                
+                // Skjerming
                 if (input.nyInnkommendeJournalpost.skjermetTittel)
                 {
                     journalpst.skjerming = new skjerming()
@@ -347,7 +338,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                         skjermingMetadata = new List<string> { "tittel", "korrespondansepart" }.ToArray()
                     };
                 }
-                //Håndtere alle filer
+                
+                // Håndtere alle filer
                 List<dokumentbeskrivelse> dokbliste = new List<dokumentbeskrivelse>();
                 
                 if (input.nyInnkommendeJournalpost.hoveddokument != null)
@@ -404,19 +396,19 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
 
                 foreach (var mottaker in input.nyInnkommendeJournalpost.mottaker)
                 {
-                    korrespondansepart korrpart = KorrespondansepartToArkivPart(_mottakerKode, mottaker);
+                    korrespondansepart korrpart = KorrespondansepartToArkivPart(MottakerKode, mottaker);
                     partsListe.Add(korrpart);
                 }
 
                 foreach (var avsender in input.nyInnkommendeJournalpost.avsender)
                 {
-                    korrespondansepart korrpart = KorrespondansepartToArkivPart(_avsenderKode, avsender);
+                    korrespondansepart korrpart = KorrespondansepartToArkivPart(AvsenderKode, avsender);
                     partsListe.Add(korrpart);
                 }
 
                 foreach (var internMottaker in input.nyInnkommendeJournalpost.internMottaker)
                 {
-                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(_internmottakerKode, internMottaker);
+                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(InternmottakerKode, internMottaker);
                     partsListe.Add(korrpart);
                 }
 
@@ -428,7 +420,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                     journalpst.referanseEksternNoekkel.fagsystem = input.nyInnkommendeJournalpost.referanseEksternNoekkel.fagsystem;
                     journalpst.referanseEksternNoekkel.noekkel = input.nyInnkommendeJournalpost.referanseEksternNoekkel.noekkel;
                 }
-
 
                 List<journalpost> jliste = new List<journalpost>
                 {
@@ -563,13 +554,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 
                 foreach (var internMottaker in input.nyttNotat.internAvsender)
                 {
-                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(_internavsenderKode, internMottaker);
+                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(InternavsenderKode, internMottaker);
                     partsListe.Add(korrpart);
                 }
 
                 foreach (var internMottaker in input.nyttNotat.internMottaker)
                 {
-                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(_internmottakerKode, internMottaker);
+                    korrespondansepart korrpart = InternKorrespondansepartToArkivPart(InternmottakerKode, internMottaker);
                     partsListe.Add(korrpart);
                 }
 
@@ -642,7 +633,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering
                 mappe.referanseEksternNoekkel.fagsystem = input.referanseEksternNoekkel.fagsystem;
                 mappe.referanseEksternNoekkel.noekkel = input.referanseEksternNoekkel.noekkel;
             }
-
 
             return mappe;
         }
