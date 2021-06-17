@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
@@ -16,6 +15,7 @@ using KS.Fiks.IO.Client.Models.Feilmelding;
 using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Microsoft.Extensions.Hosting;
 using no.ks.fiks.io.arkivmelding;
+using Newtonsoft.Json;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -116,7 +116,7 @@ namespace ks.fiks.io.arkivsystem.sample
                             CorrelationId = Guid.NewGuid().ToString()
                         };
                         mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-                        var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                        var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                         Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
                     }
                     else
@@ -136,7 +136,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     };
 
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-                    var svarmsg = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                    var svarmsg = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                     Console.WriteLine($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt");
                 }
 
@@ -224,7 +224,7 @@ namespace ks.fiks.io.arkivsystem.sample
                             Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
                             CorrelationId = Guid.NewGuid().ToString()
                         };
-                        var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonSerializer.Serialize(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                        var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
                         Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
                         mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                     }
