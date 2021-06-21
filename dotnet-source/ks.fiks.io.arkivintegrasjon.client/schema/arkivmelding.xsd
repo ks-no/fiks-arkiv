@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/arkivmelding"
+<xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:n5mdk="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
-	targetNamespace="http://www.arkivverket.no/standarder/noark5/arkivmelding"
+	xmlns:n5mdk="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2"
+	targetNamespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2"
 	elementFormDefault="qualified">
-	<xs:import namespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
+	<xs:import namespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2"
 		schemaLocation="./metadatakatalog.xsd"/>
 
 	<xs:element name="arkivmelding" type="arkivmelding"/>

@@ -20,8 +20,8 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", IsNullable=false)]
     public partial class arkivmelding {
         
         private string systemField;
@@ -93,7 +93,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class mappe {
         
         private systemID systemIDField;
@@ -448,7 +448,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class Koordinat {
         
         private double xField;
@@ -509,7 +509,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public abstract partial class Administrativenhetsnummer {
     }
     
@@ -518,7 +518,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class KommunenummerType : Administrativenhetsnummer {
         
         private string kommunenummerField;
@@ -539,7 +539,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class FylkesnummerType : Administrativenhetsnummer {
         
         private string fylkesnummerField;
@@ -560,7 +560,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class StatsidentifikatorType : Administrativenhetsnummer {
         
         private string landskodeField;
@@ -581,7 +581,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class NasjonalArealplanId {
         
         private Administrativenhetsnummer itemField;
@@ -617,7 +617,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class ByggIdent {
         
         private string bygningsNummerField;
@@ -652,7 +652,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class Matrikkelnummer {
         
         private string kommunenummerField;
@@ -725,7 +725,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class klasse {
         
         private systemID systemIDField;
@@ -844,7 +844,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class presedens {
         
         private System.DateTime presedensDatoField;
@@ -1024,7 +1024,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class dokumentflyt {
         
         private string flytTilField;
@@ -1105,7 +1105,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class avskrivning {
         
         private System.DateTime avskrivningsdatoField;
@@ -1163,7 +1163,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class eksternNoekkel {
         
         private string fagsystemField;
@@ -1196,7 +1196,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class korrespondansepart {
         
         private string korrespondanseparttypeField;
@@ -1403,8 +1403,8 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
-    [System.Xml.Serialization.XmlRootAttribute("DNummer", Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
+    [System.Xml.Serialization.XmlRootAttribute("DNummer", Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", IsNullable=false)]
     public partial class DNummerType : AbstraktPersonidentifikatorType {
         
         private string dNummerField;
@@ -1427,7 +1427,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public abstract partial class AbstraktPersonidentifikatorType : AbstraktNasjonalidentifikatorType {
     }
     
@@ -1440,7 +1440,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public abstract partial class AbstraktNasjonalidentifikatorType : AbstraktResourceType {
         
         private systemID systemIDField;
@@ -1478,7 +1478,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public abstract partial class AbstraktResourceType {
     }
     
@@ -1487,7 +1487,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class EnhetsidentifikatorType : AbstraktNasjonalidentifikatorType {
         
         private string organisasjonsnummerField;
@@ -1508,8 +1508,8 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
-    [System.Xml.Serialization.XmlRootAttribute("Foedselsnummer", Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
+    [System.Xml.Serialization.XmlRootAttribute("Foedselsnummer", Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", IsNullable=false)]
     public partial class FoedselsnummerType : AbstraktPersonidentifikatorType {
         
         private string foedselsnummerField;
@@ -1530,7 +1530,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class kryssreferanse {
         
         private string referanseTilKlasseField;
@@ -1575,7 +1575,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class dokumentobjekt {
         
         private string versjonsnummerField;
@@ -1731,7 +1731,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class merknad {
         
         private string merknadstekstField;
@@ -1788,7 +1788,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class dokumentbeskrivelse {
         
         private systemID systemIDField;
@@ -2069,7 +2069,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class part {
         
         private string partIDField;
@@ -2252,7 +2252,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class skjerming {
         
         private string tilgangsrestriksjonField;
@@ -2349,7 +2349,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class gradering {
         
         private string gradField;
@@ -2433,7 +2433,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class registrering {
         
         private systemID systemIDField;
@@ -2754,7 +2754,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class arkivnotat : registrering {
         
         private System.DateTime dokumentetsDatoField;
@@ -2955,7 +2955,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class journalpost : registrering {
         
         private string journalaarField;
@@ -3309,7 +3309,7 @@ namespace no.ks.fiks.io.arkivmelding {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2")]
     public partial class saksmappe : mappe {
         
         private string saksaarField;

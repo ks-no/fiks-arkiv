@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
+<xs:schema xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  targetNamespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog"
+  targetNamespace="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2"
   elementFormDefault="qualified" version="5.0">
 
   <!-- 
