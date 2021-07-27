@@ -2,10 +2,8 @@ pipeline {
     agent any
     environment {
         PROJECT_ARKIVSYSTEM_FOLDER = "ks.fiks.io.arkivsystem.sample"
-        PROJECT_FAGSYSTEM_ARKIV_FOLDER = "ks.fiks.io.fagsystem.arkiv.sample"
         PROJECT_CHARTNAME = "fiks-arkiv-simulator"
         ARKIVSYSTEM_APP_NAME = "fiks-arkiv-simulator-arkivsystem"
-        FAGSYSTEM_ARKIV_APP_NAME = "fiks-arkiv-simulator-fagsystem-arkiv"
         DOCKERFILE_TESTS = "Dockerfile-run-tests"
         // Artifactory credentials is stored under this key
         ARTIFACTORY_CREDENTIALS = "artifactory-token-based"
@@ -50,15 +48,6 @@ pipeline {
                 dir("dotnet-source") {
                     println("fiks-arkiv-simulator-arkivsystem: Building and publishing docker image version: ${env.FULL_VERSION}")
                     buildAndPushDockerImageFiksArkiv(ARKIVSYSTEM_APP_NAME, "./${PROJECT_ARKIVSYSTEM_FOLDER}/Dockerfile", [env.FULL_VERSION, 'latest'], [], params.isRelease)
-                }
-            }
-        }
-        
-        stage('fiks-arkiv-simulator-fagsystem-arkiv}: Build and publish docker image') {
-            steps {
-                dir("dotnet-source") {
-                    println("fiks-arkiv-simulator-fagsystem-arkiv: Building and publishing docker image version: ${env.FULL_VERSION}")
-                    buildAndPushDockerImageFiksArkiv(FAGSYSTEM_ARKIV_APP_NAME, "./${PROJECT_FAGSYSTEM_ARKIV_FOLDER}/Dockerfile", [env.FULL_VERSION, 'latest'], [], params.isRelease)
                 }
             }
         }
@@ -121,9 +110,6 @@ pipeline {
     
     post {
         always {
-            dir("${PROJECT_FAGSYSTEM_ARKIV_FOLDER}\\bin") {
-                deleteDir()
-            }
             dir("${PROJECT_ARKIVSYSTEM_FOLDER}\\bin") {
                 deleteDir()
             }

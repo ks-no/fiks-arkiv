@@ -2,9 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine AS core-build-env
 WORKDIR /build-app
 
 # Copy csproj and build + publish code
-COPY ks.fiks.io.arkivintegrasjon.client ./ks.fiks.io.arkivintegrasjon.client
 COPY ks.fiks.io.arkivintegrasjon.common ./ks.fiks.io.arkivintegrasjon.common
-COPY ks.fiks.io.arkivintegrasjon.sample.messages ./ks.fiks.io.arkivintegrasjon.sample.messages
 COPY ks.fiks.io.arkivsystem.sample  ./ks.fiks.io.arkivsystem.sample 
 
 RUN dotnet restore ks.fiks.io.arkivsystem.sample/ks.fiks.io.arkivsystem.sample.csproj

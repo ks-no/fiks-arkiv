@@ -5,17 +5,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 using KS.Fiks.ASiC_E;
+using KS.Fiks.IO.Arkivintegrasjon.Client.ForenkletArkivering;
 using ks.fiks.io.arkivintegrasjon.client.Melding;
+using KS.Fiks.IO.Arkivintegrasjon.Client.Sample.Messages;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
-using ks.fiks.io.arkivintegrasjon.sample.messages;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using KS.Fiks.IO.Client.Models.Feilmelding;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Microsoft.Extensions.Hosting;
-using no.ks.fiks.io.arkivmelding;
 using Newtonsoft.Json;
+using no.ks.fiks.io.arkivmelding;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -89,7 +89,7 @@ namespace ks.fiks.io.arkivsystem.sample
                                     var newEntryStream = asiceReadEntry.OpenStream();
                                         StreamReader reader1 = new StreamReader(newEntryStream);
                                         string text = reader1.ReadToEnd();
-                                        deserializedArkivmelding = Arkivintegrasjon.DeSerialize(text);
+                                        deserializedArkivmelding = ArkivmeldingSerializeHelper.DeSerialize(text);
                                         Console.WriteLine(text);
                                 }
                                 else
@@ -170,7 +170,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     }
                     //TODO simulerer at arkivet arkiverer og nøkler skal returneres
 
-                    string payload = Arkivintegrasjon.Serialize(kvittering);
+                    string payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
 
                     var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.Kvittering, payload, "arkivmelding.xml").Result;
                     Console.WriteLine("$Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
@@ -232,8 +232,8 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 //Konverterer til arkivmelding xml
                 var simulertSokeresultat = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
-                var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(simulertSokeresultat);
-                var payload = Arkivintegrasjon.Serialize(arkivmelding);
+                var arkivmelding = ArkivmeldingFactory.GetArkivmelding(simulertSokeresultat);
+                var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
                 //Lager FIKS IO melding
                 List<IPayload> payloads = new List<IPayload>();
                 payloads.Add(new StringPayload(payload, "arkivmelding.xml"));

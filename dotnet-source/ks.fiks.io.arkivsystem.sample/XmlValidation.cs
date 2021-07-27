@@ -1,25 +1,7 @@
-﻿using ks.fiks.io.arkivintegrasjon.sample.messages;
-using Ks.Fiks.Maskinporten.Client;
-using KS.Fiks.ASiC_E;
-using KS.Fiks.IO.Client;
-using KS.Fiks.IO.Client.Configuration;
-using KS.Fiks.IO.Client.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using no.ks.fiks.io.arkivmelding;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
-using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace ks.fiks.io.arkivsystem.sample
 {

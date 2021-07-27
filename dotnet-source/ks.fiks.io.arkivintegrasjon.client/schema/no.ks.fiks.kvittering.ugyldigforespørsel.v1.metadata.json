@@ -1,6 +1,0 @@
-{
-  "meldingstype": "no.ks.fiks.kvittering.ugyldigforespørsel.v1",
-  "beskrivelse": "Kvittering på at det var en ugyldig forespørsel ved mottak av melding.",
-  "errorid": "ID for feilen",
-  "body": "required"
-}
