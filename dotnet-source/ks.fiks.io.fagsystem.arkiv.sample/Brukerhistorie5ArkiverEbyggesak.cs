@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-using no.ks.fiks.io.arkivmelding;
-using no.ks.fiks.io.arkivmelding.sok;
-using Ks.Fiks.Maskinporten.Client;
+using System.Xml.Serialization;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
+using Ks.Fiks.Maskinporten.Client;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+using no.ks.fiks.io.arkivmelding;
+using no.ks.fiks.io.arkivmelding.sok;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
@@ -622,7 +621,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         public static string Serialize(object arkivmelding)
         {
-            var serializer = new System.Xml.Serialization.XmlSerializer(arkivmelding.GetType());
+            var serializer = new XmlSerializer(arkivmelding.GetType());
             var stringWriter = new StringWriter();
             serializer.Serialize(stringWriter, arkivmelding);
             return stringWriter.ToString();
