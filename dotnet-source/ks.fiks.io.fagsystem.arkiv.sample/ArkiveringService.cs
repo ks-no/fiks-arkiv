@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-using FIKS.eMeldingArkiv.eMeldingForenkletArkiv;
 using KS.Fiks.ASiC_E;
+using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
+using KS.Fiks.IO.Arkiv.Client.Sample;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
-using ks.fiks.io.arkivintegrasjon.sample.messages;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
-using ks.fiks.io.fagsystem.arkiv.sample.ForenkletArkivering;
 using Microsoft.Extensions.Hosting;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
@@ -67,7 +65,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Konverterer til arkivmelding xml
             var sok = MessageSamples.SokTittel("tittel*");
-            var payload = Arkivintegrasjon.Serialize(sok);
+            var payload = ArkivmeldingSerializeHelper.Serialize(sok);
             
             //Lager FIKS IO melding
             var payloads = new List<IPayload> {new StringPayload(payload, "sok.xml")};
@@ -92,10 +90,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                       meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.oppdatersaksmappe.v1"); // Message type as string
                                                                                                                                //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
            
-            //Konverterer til arkivmelding xml
+            //Konverterer OppdaterSaksmappe til arkivmelding xml
             var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPaaFagsystemnoekkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
-            var arkivmelding = Arkivintegrasjon.ConvertOppdaterSaksmappeToArkivmelding(inng);
-            var payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
+            
             //Lager FIKS IO melding
             var payloads = new List<IPayload> {new StringPayload(payload, "oppdatersaksmappe.xml")};
 
@@ -184,8 +183,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(inng);
-            var payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
             var payloads = new List<IPayload>
@@ -275,8 +274,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             };
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(inng);
-            var payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
             var payloads = new List<IPayload>
@@ -363,8 +362,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = Arkivintegrasjon.ConvertForenkletUtgaaendeToArkivmelding(utg);
-            var payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(utg);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
             var payloads = new List<IPayload>
@@ -453,11 +452,11 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = Arkivintegrasjon.ConvertForenkletUtgaaendeToArkivmelding(utg);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(utg);
 
             //TODO redigere arkivmelding
 
-            var payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
             var payloads = new List<IPayload>
