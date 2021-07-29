@@ -1,11 +1,13 @@
 # fiks-arkiv
 
 ## Hva er dette?
-Dette repositoriet inneholder dokumentasjon, eksempler og brukerhistorier for **fiks-arkiv**, samt applikasjonene **arkivsystem.sample** og **fagsystem.arkiv.sample** som er kjørbare eksempler på implementasjon.
+Dette repositoriet inneholder dokumentasjon, eksempler og brukerhistorier for **fiks-arkiv**, samt applikasjonene **arkivsystem.sample** og **fagsystem.arkiv.sample** som er kjørbare eksempler på implementasjon av FIKS IO integrasjon..
+
+Se [README.md](dotnet-source/README.md) under dotnet-source for mer informasjon om eksempel applikasjonene og dette arbeidet.
 
 Se [**wiki**](https://github.com/ks-no/fiks-arkiv/wiki) for dokumentasjon.
 
-Mappen [**eksempel**](https://github.com/ks-no/fiks-arkiv/tree/master/eksempel) finnes det eksempler på meldinger.  
+Se i mappen [**eksempel**](eksempel) for eksempler på meldinger.  
 
 ## Applikasjonene
 
