@@ -48,11 +48,11 @@ namespace ks.fiks.io.arkivsystem.sample
 
             // Process the message
             var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", Path.Combine("schema", "arkivmelding.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", Path.Combine("schema", "metadatakatalog.xsd"));
+            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", Path.Combine("Schema", "arkivmelding.xsd"));
+            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", Path.Combine("Schema", "metadatakatalog.xsd"));
 
             var sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("schema", "sok.xsd"));
+            sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("Schema", "sok.xsd"));
 
             var xmlValidationErrorOccured = false;
 
