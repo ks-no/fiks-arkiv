@@ -96,8 +96,8 @@ Eksempel
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = Arkivintegrasjon.ConvertForenkletInnkommendeToArkivmelding(inng);
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
             List<IPayload> payloads = new List<IPayload>();
@@ -223,8 +223,8 @@ Eksempel
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = Arkivintegrasjon.ConvertForenkletUtgaaendeToArkivmelding(utg);
-            string payload = Arkivintegrasjon.Serialize(arkivmelding);
+            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(utg);
+            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
             List<IPayload> payloads = new List<IPayload>();
