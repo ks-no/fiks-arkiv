@@ -29,7 +29,7 @@ Konto id man kan benytte:
 - Fagsystem arkiv: 4a416cde-2aca-4eef-bec4-efddcee0fcea
 
 ### Testing i Test miljø
-Man kan kjøre testene i Fiks-protokoll-validator [her.](https://forvaltning.fiks.dev.ks.no/fiks-validator/#/)
+Man kan kjøre testene i Fiks-protokoll-validator [her.](https://forvaltning.fiks.test.ks.no/fiks-validator/#/)
 
 Konto id man kan benytte:
 - Arkivsystem: 8752e128-0e2b-494c-8fab-8e3577aca13d
