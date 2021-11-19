@@ -19,7 +19,7 @@ using no.ks.fiks.io.arkivmelding;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
-    public class ArkivService : IHostedService, IDisposable
+    public class ArkivService : BackgroundService
     {
         private FiksIOClient client;
         private readonly AppSettings appSettings;
@@ -30,16 +30,11 @@ namespace ks.fiks.io.arkivsystem.sample
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings); //CreateFiksIoClient();
         }
         
-        public void Dispose()
-        {
-            client.Dispose();
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Arkiv Service is starting.");
-            SubscribeToFiksIOClient();
-            return Task.CompletedTask;
+            SubscribeToFiksIoClient();
+            await Task.CompletedTask;
         }
 
         private void OnReceivedMelding(object sender, MottattMeldingArgs mottatt)
@@ -257,18 +252,12 @@ namespace ks.fiks.io.arkivsystem.sample
             }
         }
 
-        private void SubscribeToFiksIOClient()
+        private void SubscribeToFiksIoClient()
         {
             Console.WriteLine("Starter abonnement for FIKS integrasjon for arkivsystem...");
             var accountId = appSettings.FiksIOConfig.FiksIoAccountId; 
             client.NewSubscription(OnReceivedMelding);
             Console.WriteLine("Abonnerer på meldinger på konto " + accountId + " ...");
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            Console.WriteLine("Arkiv Service is stopping.");
-            return Task.CompletedTask;
         }
     }
 }
