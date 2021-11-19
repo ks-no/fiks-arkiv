@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Reflection;
 using System.Threading.Tasks;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
@@ -11,6 +12,7 @@ using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
@@ -18,10 +20,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
     {
         private readonly FiksIOClient client;
         private readonly AppSettings appSettings;
+        private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
         public ArkiveringService(AppSettings appSettings)
         {
             this.appSettings = appSettings;
+            Log.Information("Setter opp FIKS integrasjon for arkivsystem...");
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
         }
         public void Dispose()
@@ -30,13 +34,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Fagsystem Service is starting.");
+            Log.Information("Fagsystem Service is starting.");
 
             var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
             
             client.NewSubscription(OnReceivedMelding);
 
-            Console.WriteLine("Abonnerer på meldinger på konto " + accountId + " ...");
+            Log.Information("Abonnerer på meldinger på konto " + accountId + " ...");
 
             SendInngående();
 
@@ -72,8 +76,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding tittel søk " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
-            Console.WriteLine(payload);
+            Log.Information("Melding tittel søk " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
+            Log.Information(payload);
         }
 
         private void SendOppdatering()
@@ -100,8 +104,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding OppdaterSaksmappeAnsvarligPaaFagsystemnoekkel " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
-            Console.WriteLine(payload);
+            Log.Information("Melding OppdaterSaksmappeAnsvarligPaaFagsystemnoekkel " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
+            Log.Information(payload);
         }
 
         private void SendInngående()
@@ -201,9 +205,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                                                                                                            //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding ny inngående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
-                " vedlegg");
-            Console.WriteLine(payload);
+            Log.Information("Melding ny inngående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
+                            " vedlegg");
+            Log.Information(payload);
         }
 
         private void SendInngåendeBrukerhistorie3_1()
@@ -287,8 +291,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
-            Console.WriteLine(payload);
+            Log.Information("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
+            Log.Information(payload);
 
         }
 
@@ -381,8 +385,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding ny utgående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
-            Console.WriteLine(payload);
+            Log.Information("Melding ny utgående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
+            Log.Information(payload);
 
         }
 
@@ -468,8 +472,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             //Sender til FIKS IO (arkiv løsning)
             var msg = client.Send(messageRequest, payloads).Result;
-            Console.WriteLine("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
-            Console.WriteLine(payload);
+            Log.Information("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
+            Log.Information(payload);
 
         }
         
@@ -477,142 +481,66 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         {
             //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
-            // Process the message
-            if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.mottatt.v1")
+            switch (fileArgs.Melding.MeldingType)
             {
-                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
+                // Process the message
+                case "no.ks.fiks.gi.arkivintegrasjon.mottatt.v1":
+                case "no.ks.fiks.gi.arkivintegrasjon.kvittering.v1":
+                case "no.ks.fiks.gi.arkivintegrasjon.feil.v1":
+                case "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1":
+                    MessagePayloadVerification(fileArgs);
+                    break;
+                default:
+                    Log.Information("Ubehandlet melding i køen " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType);
+                    //fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
+                    break;
+            }
+        }
 
-                //TODO håndtere meldingen med ønsket funksjonalitet
-                if (fileArgs.Melding.HasPayload)
-                { // Verify that message has payload
+        private static void MessagePayloadVerification(MottattMeldingArgs fileArgs)
+        {
+            Log.Information("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " +
+                            fileArgs.Melding.MeldingType + " mottas...");
 
-                    IAsicReader reader = new AsiceReader();
-                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
-                    using (var asice = reader.Read(inputStream))
+
+            if (fileArgs.Melding.HasPayload)
+            {
+                // Verify that message has payload
+
+                IAsicReader reader = new AsiceReader();
+                using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
+                using (var asice = reader.Read(inputStream))
+                {
+                    foreach (var asiceReadEntry in asice.Entries)
                     {
-                        foreach (var asiceReadEntry in asice.Entries)
+                        using (var entryStream = asiceReadEntry.OpenStream())
                         {
-
-                            using (var entryStream = asiceReadEntry.OpenStream())
-                            {
-                                StreamReader reader1 = new StreamReader(entryStream);
-                                string text = reader1.ReadToEnd();
-                                Console.WriteLine(text);
-                            }
+                            var reader1 = new StreamReader(entryStream);
+                            var text = reader1.ReadToEnd();
+                            Log.Information(text);
                         }
                     }
-                }
-                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
 
-                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
-
-            }
-            else if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.kvittering.v1")
-            {
-                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
-
-                //TODO håndtere meldingen med ønsket funksjonalitet
-                if (fileArgs.Melding.HasPayload)
-                { // Verify that message has payload
-
-                    IAsicReader reader = new AsiceReader();
-                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
-                    using (var asice = reader.Read(inputStream))
+                    // Check that all digests declared in the manifest are valid
+                    if (asice.DigestVerifier.Verification().AllValid)
                     {
-                        foreach (var asiceReadEntry in asice.Entries)
-                        {
-
-                            using (var entryStream = asiceReadEntry.OpenStream())
-                            {
-                                StreamReader reader1 = new StreamReader(entryStream);
-                                string text = reader1.ReadToEnd();
-                                Console.WriteLine(text);
-                            }
-                        }
+                        // Do something
+                    }
+                    else
+                    {
+                        // Handle error
                     }
                 }
-                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
-
-                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
-
             }
-            else if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.feil.v1")
-            {
-                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
 
-                //TODO håndtere meldingen med ønsket funksjonalitet
-                if (fileArgs.Melding.HasPayload)
-                { // Verify that message has payload
+            Log.Information("Melding er håndtert i fagsystem ok ......");
 
-                    IAsicReader reader = new AsiceReader();
-                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
-                    using (var asice = reader.Read(inputStream))
-                    {
-                        foreach (var asiceReadEntry in asice.Entries)
-                        {
-
-                            using (var entryStream = asiceReadEntry.OpenStream())
-                            {
-                                StreamReader reader1 = new StreamReader(entryStream);
-                                string text = reader1.ReadToEnd();
-                                Console.WriteLine(text);
-                            }
-                        }
-                    }
-                }
-                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
-
-                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
-
-            }
-            else if (fileArgs.Melding.MeldingType == "no.ks.fiks.gi.arkivintegrasjon.innsyn.sok.resultat.v1")
-            {
-                Console.WriteLine("(Svar på " + fileArgs.Melding.SvarPaMelding + ") Melding " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType + " mottas...");
-
-               
-                if (fileArgs.Melding.HasPayload)
-                { // Verify that message has payload
-
-                    IAsicReader reader = new AsiceReader();
-                    using (var inputStream = fileArgs.Melding.DecryptedStream.Result)
-                    using (var asice = reader.Read(inputStream))
-                    {
-                        foreach (var asiceReadEntry in asice.Entries)
-                        {
-                           
-                            using (var entryStream = asiceReadEntry.OpenStream())
-                            {
-                                StreamReader reader1 = new StreamReader(entryStream);
-                                string text = reader1.ReadToEnd();
-                                Console.WriteLine(text);
-                            }
-                        }
-                        // Check that all digests declared in the manifest are valid
-                        if (asice.DigestVerifier.Verification().AllValid)
-                        {
-                            // Do something
-                        }
-                        else
-                        {
-                            // Handle error
-                        }
-                    }
-                }
-
-                Console.WriteLine("Melding er håndtert i fagsystem ok ......");
-
-                fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
-            }
-            else
-            {
-                Console.WriteLine("Ubehandlet melding i køen " + fileArgs.Melding.MeldingId + " " + fileArgs.Melding.MeldingType);
-                //fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
-            }
+            fileArgs.SvarSender.Ack(); // Ack message to remove it from the queue
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Arkivering Service is stopping.2");
+            Log.Information("Arkivering Service is stopping.2");
             return Task.CompletedTask;
         }
     }
