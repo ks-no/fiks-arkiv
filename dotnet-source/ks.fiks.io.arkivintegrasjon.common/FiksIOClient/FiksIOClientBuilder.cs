@@ -12,7 +12,6 @@ namespace ks.fiks.io.arkivintegrasjon.common.FiksIOClient
     {
         public static KS.Fiks.IO.Client.FiksIOClient CreateFiksIoClient(AppSettings.AppSettings appSettings)
         {
-            Console.WriteLine("Setter opp FIKS integrasjon for arkivsystem...");
             var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
             var privateKey = File.ReadAllText(appSettings.FiksIOConfig.FiksIoPrivateKey);
             var integrationId = appSettings.FiksIOConfig.FiksIoIntegrationId; 
