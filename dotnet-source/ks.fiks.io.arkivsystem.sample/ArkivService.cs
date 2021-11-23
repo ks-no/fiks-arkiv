@@ -51,7 +51,7 @@ namespace ks.fiks.io.arkivsystem.sample
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", Path.Combine("Schema", "metadatakatalog.xsd"));
 
             var sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/sok", Path.Combine("Schema", "sok.xsd"));
+            sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
 
             var xmlValidationErrorOccured = false;
 
@@ -81,16 +81,40 @@ namespace ks.fiks.io.arkivsystem.sample
             bool xmlValidationErrorOccured)
         {
             var validationResult = new List<List<string>>();
-            var deserializedArkivmelding = new arkivmelding();
             Log.Information("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
 
-            //TODO håndtere meldingen med ønsket funksjonalitet
+           if (mottatt.Melding.HasPayload)
+            { // Verify that message has payload
 
-            if (mottatt.Melding.HasPayload)
-            {
-                // Verify that message has payload
-                validationResult = ValidereXmlMottattMelding(mottatt, sokXmlSchemaSet, ref xmlValidationErrorOccured, validationResult, ref deserializedArkivmelding);
-
+                IAsicReader reader = new AsiceReader();
+                using (var inputStream = mottatt.Melding.DecryptedStream.Result)
+                using (var asice = reader.Read(inputStream))
+                {
+                    foreach (var asiceReadEntry in asice.Entries)
+                    {
+                        using (var entryStream = asiceReadEntry.OpenStream())
+                        {
+                            if (asiceReadEntry.FileName.Contains(".xml")) //TODO regel på navning? alltid arkivmelding.xml?
+                            {
+                                    validationResult =  new XmlValidation().ValidateXml(
+                                        entryStream,
+                                        sokXmlSchemaSet
+                                    );
+                                    if (validationResult[0].Count > 0)
+                                    {
+                                        xmlValidationErrorOccured = true;
+                                    }
+                                    var reader1 = new StreamReader(entryStream);
+                                    var text = reader1.ReadToEnd();
+                                    Console.WriteLine("Søker etter: " + text);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Mottatt vedlegg: " + asiceReadEntry.FileName);
+                            }
+                        }
+                    }
+                }
                 if (xmlValidationErrorOccured)
                 {
                     var ugyldigforespørsel = new Ugyldigforespørsel
@@ -99,9 +123,8 @@ namespace ks.fiks.io.arkivsystem.sample
                         Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
                         CorrelationId = Guid.NewGuid().ToString()
                     };
-                    var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                        JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
-                    Log.Information($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
+                    var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                    Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 }
             }
@@ -204,7 +227,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
             var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.Kvittering, payload, "arkivmelding.xml")
                 .Result;
-            Log.Information("$Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
+            Log.Information($"Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
             Log.Information("Arkivering er ok ......");
         }
 
@@ -231,10 +254,15 @@ namespace ks.fiks.io.arkivsystem.sample
                                 xmlValidationErrorOccured = true;
                             }
                             
-                            var reader1 = new StreamReader(entryStream);
+                            var newEntryStream = asiceReadEntry.OpenStream();
+                            var reader1 = new StreamReader(newEntryStream);
                             var text = reader1.ReadToEnd();
+                            Log.Information("Parsing arkivmelding: {ArkivmeldingText}", text);
+                            if (string.IsNullOrEmpty(text))
+                            {
+                                Log.Error("Tom arkivmelding? Text: {ArkivmeldingText}", text);
+                            }
                             deserializedArkivmelding = ArkivmeldingSerializeHelper.DeSerialize(text);
-                            Log.Information(text);
                         }
                         else
                             Log.Information($"Mottatt vedlegg: {asiceReadEntry.FileName}");
