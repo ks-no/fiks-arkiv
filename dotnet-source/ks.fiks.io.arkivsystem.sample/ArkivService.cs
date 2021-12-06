@@ -55,20 +55,13 @@ namespace ks.fiks.io.arkivsystem.sample
 
             var xmlValidationErrorOccured = false;
 
-            if (ArkivintegrasjonMeldingTypeV1.IsBasis(mottatt.Melding.MeldingType))
+            if (ArkivintegrasjonMeldingTypeV1.IsArkiveringType(mottatt.Melding.MeldingType))
             {
-                HandleBasisMelding(mottatt, arkivmeldingXmlSchemaSet, xmlValidationErrorOccured);
+                HandleArkiveringMelding(mottatt, arkivmeldingXmlSchemaSet, xmlValidationErrorOccured);
             }
-            else if (ArkivintegrasjonMeldingTypeV1.IsSok(mottatt.Melding.MeldingType))
+            else if (ArkivintegrasjonMeldingTypeV1.IsInnsynType(mottatt.Melding.MeldingType))
             {
-                HandleSokMelding(mottatt, sokXmlSchemaSet, xmlValidationErrorOccured);
-            }
-            else if (ArkivintegrasjonMeldingTypeV1.IsAvansert(mottatt.Melding.MeldingType))
-            {
-                Log.Information("Melding " + mottatt.Melding.MeldingId + " " + mottatt.Melding.MeldingType + " mottas...");
-                //TODO håndtere meldingen med ønsket funksjonalitet
-                Log.Information("Melding er håndtert i arkiv ok ......");
-                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+                HandleInnsynMelding(mottatt, sokXmlSchemaSet, xmlValidationErrorOccured);
             }
             else
             {
@@ -77,7 +70,7 @@ namespace ks.fiks.io.arkivsystem.sample
             }
         }
 
-        private static void HandleSokMelding(MottattMeldingArgs mottatt, XmlSchemaSet sokXmlSchemaSet,
+        private static void HandleInnsynMelding(MottattMeldingArgs mottatt, XmlSchemaSet sokXmlSchemaSet,
             bool xmlValidationErrorOccured)
         {
             var validationResult = new List<List<string>>();
@@ -138,13 +131,13 @@ namespace ks.fiks.io.arkivsystem.sample
             payloads.Add(new StringPayload(payload, "arkivmelding.xml"));
 
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-            var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.InnsynSokResultat, payloads).Result;
+            var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet, payloads).Result;
             Log.Information("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
             Log.Information("Melding er håndtert i arkiv ok ......");
         }
 
 
-        private static void HandleBasisMelding(MottattMeldingArgs mottatt, XmlSchemaSet arkivmeldingXmlSchemaSet,
+        private static void HandleArkiveringMelding(MottattMeldingArgs mottatt, XmlSchemaSet arkivmeldingXmlSchemaSet,
             bool xmlValidationErrorOccured)
         {
             var validationResult = new List<List<string>>();
@@ -173,7 +166,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 else
                 {
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-                    var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.Mottatt).Result;
+                    var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt).Result;
                     Log.Information($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt...");
                     Log.Information("Melding er mottatt i arkiv ok ......");
                 }
@@ -225,7 +218,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
             string payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
 
-            var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.Kvittering, payload, "arkivmelding.xml")
+            var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering, payload, "arkivmelding.xml")
                 .Result;
             Log.Information($"Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
             Log.Information("Arkivering er ok ......");
