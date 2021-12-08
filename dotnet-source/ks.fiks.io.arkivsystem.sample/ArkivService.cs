@@ -188,7 +188,7 @@ namespace ks.fiks.io.arkivsystem.sample
             }
 
             if (xmlValidationErrorOccured) return;
-            var kvittering = new arkivmelding();
+            var kvittering = new arkivmelding(); //TODO her skal det være arkivmeldingKvittering
             kvittering.tidspunkt = DateTime.Now;
             var type = deserializedArkivmelding?.Items?[0]?.GetType();
 
@@ -216,8 +216,9 @@ namespace ks.fiks.io.arkivsystem.sample
             }
             //TODO simulerer at arkivet arkiverer og nøkler skal returneres
 
-            string payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
+            var payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
 
+            //TODO filnavn skal være arkivmeldingKvittering.xml
             var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering, payload, "arkivmelding.xml")
                 .Result;
             Log.Information($"Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
