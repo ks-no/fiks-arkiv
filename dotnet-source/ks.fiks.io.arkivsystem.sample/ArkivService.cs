@@ -100,6 +100,9 @@ namespace ks.fiks.io.arkivsystem.sample
                                     var reader1 = new StreamReader(entryStream);
                                     var text = reader1.ReadToEnd();
                                     Console.WriteLine("Søker etter: " + text);
+                                    //TODO parse xml og finne ut hvilket søk det er
+                                    
+                                    
                             }
                             else
                             {
@@ -121,16 +124,20 @@ namespace ks.fiks.io.arkivsystem.sample
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 }
             }
+           
+            //TODO Sjekk om det er et utvidet, minimum eller noekler søk som kommer inn og svar deretter
 
             //Konverterer til arkivmelding xml
             var simulertSokeresultat = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
-            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(simulertSokeresultat);
-            var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
+            var sokeResultatUtvidet = ArkivmeldingFactory.GetArkivmelding(simulertSokeresultat);
+            var payload = ArkivmeldingSerializeHelper.Serialize(sokeResultatUtvidet);
             //Lager FIKS IO melding
             List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "arkivmelding.xml"));
+            payloads.Add(new StringPayload(payload, "sokeresultatUtvidet.xml"));
 
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+            
+            
             var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet, payloads).Result;
             Log.Information("Svarmelding " + svarmsg.MeldingId + " " + svarmsg.MeldingType + " sendt...");
             Log.Information("Melding er håndtert i arkiv ok ......");
