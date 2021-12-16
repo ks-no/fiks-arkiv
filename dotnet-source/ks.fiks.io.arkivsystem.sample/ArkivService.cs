@@ -16,8 +16,10 @@ using KS.Fiks.IO.Client.Models;
 using KS.Fiks.IO.Client.Models.Feilmelding;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using no.ks.fiks.io.arkivmelding;
+using no.ks.fiks.io.arkiv.arkivering.arkivmelding;
+using no.ks.fiks.io.arkiv.arkivering.arkivmelding.kvittering;
 using Serilog;
+using systemID = no.ks.fiks.io.arkiv.arkivering.arkivmelding.systemID;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -195,7 +197,7 @@ namespace ks.fiks.io.arkivsystem.sample
             }
 
             if (xmlValidationErrorOccured) return;
-            var kvittering = new arkivmelding(); //TODO her skal det være arkivmeldingKvittering
+            var kvittering = new arkivmeldingKvittering(); //TODO her skal det være arkivmeldingKvittering
             kvittering.tidspunkt = DateTime.Now;
             var type = deserializedArkivmelding?.Items?[0]?.GetType();
 
@@ -226,7 +228,7 @@ namespace ks.fiks.io.arkivsystem.sample
             var payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
 
             //TODO filnavn skal være arkivmeldingKvittering.xml
-            var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering, payload, "arkivmelding.xml")
+            var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering, payload, "arkivmeldingKvittering.xml")
                 .Result;
             Log.Information($"Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
             Log.Information("Arkivering er ok ......");
