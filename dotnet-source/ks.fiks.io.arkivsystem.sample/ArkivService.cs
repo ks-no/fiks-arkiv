@@ -8,6 +8,9 @@ using System.Xml.Schema;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
 using KS.Fiks.IO.Arkiv.Client.Models;
+using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
+using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
 using KS.Fiks.IO.Arkiv.Client.Sample;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
@@ -16,10 +19,7 @@ using KS.Fiks.IO.Client.Models;
 using KS.Fiks.IO.Client.Models.Feilmelding;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using no.ks.fiks.io.arkiv.arkivering.arkivmelding;
-using no.ks.fiks.io.arkiv.arkivering.arkivmelding.kvittering;
 using Serilog;
-using systemID = no.ks.fiks.io.arkiv.arkivering.arkivmelding.systemID;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -150,7 +150,7 @@ namespace ks.fiks.io.arkivsystem.sample
             bool xmlValidationErrorOccured)
         {
             var validationResult = new List<List<string>>();
-            var deserializedArkivmelding = new arkivmelding();
+            var deserializedArkivmelding = new Arkivmelding();
             Log.Information($"Melding {mottatt.Melding.MeldingId} {mottatt.Melding.MeldingType} mottas...");
 
             //TODO håndtere meldingen med ønsket funksjonalitet
@@ -197,31 +197,38 @@ namespace ks.fiks.io.arkivsystem.sample
             }
 
             if (xmlValidationErrorOccured) return;
-            var kvittering = new arkivmeldingKvittering(); //TODO her skal det være arkivmeldingKvittering
-            kvittering.tidspunkt = DateTime.Now;
-            var type = deserializedArkivmelding?.Items?[0]?.GetType();
+            var kvittering = new ArkivmeldingKvittering(); //TODO her skal det være arkivmeldingKvittering
+            kvittering.Tidspunkt = DateTime.Now;
+            var isMappe = deserializedArkivmelding?.Mappe?.Count > 0;
 
-            if (type == typeof(saksmappe))
+            if (isMappe)
             {
-                var mp = new saksmappe();
-                mp.systemID = new systemID();
-                mp.systemID.Value = Guid.NewGuid().ToString();
-                mp.saksaar = DateTime.Now.Year.ToString();
-                mp.sakssekvensnummer = new Random().Next().ToString();
+                var mp = new MappeKvittering()
+                {
+                    SystemID = new SystemID
+                    {
+                        Value = Guid.NewGuid().ToString()
+                    },
+                    OpprettetDato = DateTime.Now
+                };
+                //mp.Sakssekvensnummer = new Random().Next().ToString();
 
-                kvittering.Items = new List<saksmappe>() {mp}.ToArray();
+                kvittering.MappeKvittering.Add(mp);
             }
-            else if (type == typeof(journalpost))
+            else
             {
-                var jp = new journalpost();
+                var jp = new JournalpostKvittering
+                {
+                    SystemID = new SystemID
+                    {
+                        Value = Guid.NewGuid().ToString()
+                    },
+                    Journalaar = DateTime.Now.Year.ToString(),
+                    Journalsekvensnummer = new Random().Next().ToString(),
+                    Journalpostnummer = new Random().Next(1, 100).ToString()
+                };
 
-                jp.systemID = new systemID();
-                jp.systemID.Value = Guid.NewGuid().ToString();
-                jp.journalaar = DateTime.Now.Year.ToString();
-                jp.journalsekvensnummer = new Random().Next().ToString();
-                jp.journalpostnummer = new Random().Next(1, 100).ToString();
-
-                kvittering.Items = new List<journalpost>() {jp}.ToArray();
+                kvittering.RegistreringKvittering.Add(jp);
             }
             //TODO simulerer at arkivet arkiverer og nøkler skal returneres
 
@@ -235,7 +242,7 @@ namespace ks.fiks.io.arkivsystem.sample
         }
 
         private static List<List<string>> ValidereXmlMottattMelding(MottattMeldingArgs mottatt, XmlSchemaSet arkivmeldingXmlSchemaSet,
-            ref bool xmlValidationErrorOccured, List<List<string>> validationResult, ref arkivmelding deserializedArkivmelding)
+            ref bool xmlValidationErrorOccured, List<List<string>> validationResult, ref Arkivmelding deserializedArkivmelding)
         {
             IAsicReader reader = new AsiceReader();
             using (var inputStream = mottatt.Melding.DecryptedStream.Result)
