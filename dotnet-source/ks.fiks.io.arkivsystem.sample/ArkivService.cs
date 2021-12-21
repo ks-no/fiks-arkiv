@@ -210,6 +210,7 @@ namespace ks.fiks.io.arkivsystem.sample
                         Value = Guid.NewGuid().ToString()
                     },
                     OpprettetDato = DateTime.Now,
+                    Saksaar = "2021",
                     Sakssekvensnummer = new Random().Next().ToString()
                 };
 
