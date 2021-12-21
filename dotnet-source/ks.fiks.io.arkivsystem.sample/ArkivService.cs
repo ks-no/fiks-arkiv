@@ -203,15 +203,15 @@ namespace ks.fiks.io.arkivsystem.sample
 
             if (isMappe)
             {
-                var mp = new SaksmappeKvittering()
+                var mp = new SaksmappeKvittering
                 {
                     SystemID = new SystemID
                     {
                         Value = Guid.NewGuid().ToString()
                     },
-                    OpprettetDato = DateTime.Now
+                    OpprettetDato = DateTime.Now,
+                    Sakssekvensnummer = new Random().Next().ToString()
                 };
-                mp.Sakssekvensnummer = new Random().Next().ToString();
 
                 kvittering.MappeKvittering.Add(mp);
             }
