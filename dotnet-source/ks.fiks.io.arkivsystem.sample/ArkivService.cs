@@ -203,7 +203,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
             if (isMappe)
             {
-                var mp = new MappeKvittering()
+                var mp = new SaksmappeKvittering()
                 {
                     SystemID = new SystemID
                     {
@@ -211,7 +211,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     },
                     OpprettetDato = DateTime.Now
                 };
-                //mp.Sakssekvensnummer = new Random().Next().ToString();
+                mp.Sakssekvensnummer = new Random().Next().ToString();
 
                 kvittering.MappeKvittering.Add(mp);
             }
