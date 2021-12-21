@@ -6,13 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using KS.Fiks.ASiC_E;
+using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
+using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
 using Ks.Fiks.Maskinporten.Client;
 using Microsoft.Extensions.Configuration;
-using no.ks.fiks.io.arkivmelding;
-using no.ks.fiks.io.arkivmelding.sok;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
@@ -96,31 +96,27 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var ekstsys = "eByggesak";
 
             // Existing case in the archive?
-            var finnSak = new no.ks.fiks.io.arkivmelding.sok.sok
+            var finnSak = new Sok
             {
-                respons = respons_type.mappe,
-                meldingId = Guid.NewGuid().ToString(),
-                system = "eByggesak",
-                tidspunkt = DateTime.Now,
-                skip = 0,
-                take = 2
+                Respons = Respons.Mappe,
+                MeldingId = Guid.NewGuid().ToString(),
+                System = "eByggesak",
+                Tidspunkt = DateTime.Now,
+                Skip = 0,
+                Take = 2
             };
 
-            var paramlist = new List<parameter>
-                {
-                    new parameter
+            finnSak.Parameter.Add(
+                    new Parameter
                     {
-                        felt = field_type.mappeeksternId,
-                        @operator = operator_type.equal,
-                        parameterverdier = new parameterverdier
+                        Felt = SokFelt.MappePeriodEksternId,
+                        Operator = OperatorType.Equal,
+                        Parameterverdier = new Parameterverdier
                         {
-                            Item = new stringvalues {value = new[] {ekstsys, saksid}}
+                            Stringvalues = {ekstsys, saksid}
                         }
-                    }
-                };
+                    });
 
-
-            finnSak.parameter = paramlist.ToArray();
 
             // TODO: Ensure search result as output from SendSok
             var payload = SendSok(finnSak);
@@ -149,65 +145,65 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private string nySak(string ekstsys, string saksid)
         {
-            klasse gnr = new klasse
+            var gnr = new Klassifikasjon()
             {
-                klasseID = "1234-12/1234",
-                klassifikasjonssystem = "GNR"
+                KlasseID = "1234-12/1234",
+                Klassifikasjonssystem = "GNR"
             };
 
-            Matrikkelnummer mn = new Matrikkelnummer
+            var mn = new Matrikkelnummer
             {
-                gaardsnummer = "123",
-                bruksnummer = "456"
+                Gardsnummer = "123",
+                Bruksnummer = "456"
             };
 
             // TODO: Missing fields vs GI 1.1
-            saksmappe sak = new saksmappe
+            var sak = new Saksmappe
             {
-                tittel = "Byggesak 123",
-                offentligTittel = "Byggesak 123",
-                administrativEnhet = "Byggesaksavdelingen",
-                saksansvarlig = "Byggesaksbehandler",
-                saksdato = new DateTime(),
-                saksstatus = "B",
-                dokumentmedium = "elektronisk", // Code object?
-                journalenhet = "BYG",
+                Tittel = "Byggesak 123",
+                OffentligTittel = "Byggesak 123",
+                AdministrativEnhet = "Byggesaksavdelingen",
+                Saksansvarlig = "Byggesaksbehandler",
+                Saksdato = new DateTime(),
+                Saksstatus = "B",
+                Dokumentmedium = "elektronisk", // Code object?
+                Journalenhet = "BYG",
                 // arkivdel = "BYGG", // Missing and should be a code object
-                referanseArkivdel = new string[] { "BYGG" },  // Should be 0-1, not 0-m as this is the archive part the case belongs to!
+                ReferanseArkivdel = { "BYGG" },  // Should be 0-1, not 0-m as this is the archive part the case belongs to!
                                                               // mappetype = new Kode
                                                               // { kodeverdi = "Saksmappe"}, // Part of simplified message only... Should it be standardized?
-                klasse = new klasse[] { gnr },
-                part = new part[]
+                Klassifikasjon = { gnr },
+                Part = 
                 {
-                        new part
+                        new Part
                         {
-                            partNavn = "Fr Tiltakshaver"    // "navn" as for korrespondansepart?
+                            PartNavn = "Fr Tiltakshaver"    // "navn" as for korrespondansepart?
                         }
                 },
-                merknad = new merknad[]
+                Merknad =
                 {
-                        new merknad
+                        new Merknad
                         {
-                            merknadstype = "BYGG",  // Code object?
-                            merknadstekst = "Saksnummer 20/123 i eByggesak"
+                            Merknadstype = "BYGG",  // Code object?
+                            Merknadstekst = "Saksnummer 20/123 i eByggesak"
                         }
                 },
-                matrikkelnummer = new Matrikkelnummer[] {mn},
+                Matrikkelnummer = {mn},
                 // punkt
                 // bevaringstid
                 // kassasjonsvedtak
-                skjerming = new skjerming
+                Skjerming = new Skjerming
                 {
-                    tilgangsrestriksjon = "13", // Set by server?
-                    skjermingshjemmel = "Ofl § 13, fvl § 123",
-                    skjermingMetadata = new string[] { "tittel" } // This should be coded
+                    Tilgangsrestriksjon = "13", // Set by server?
+                    Skjermingshjemmel = "Ofl § 13, fvl § 123",
+                    SkjermingMetadata = { "tittel" } // This should be coded
                 },
                 // prosjekt
                 // tilgangsgruppe
-                referanseEksternNoekkel = new eksternNoekkel
+                ReferanseEksternNoekkel = new EksternNoekkel
                 {
-                    fagsystem = ekstsys,
-                    noekkel = saksid
+                    Fagsystem = ekstsys,
+                    Noekkel = saksid
                 }
             };
 
@@ -218,125 +214,119 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private string nyInngaaendeJournalpost(string ekstsys, string nokkel, string saksid)
         {
-            journalpost inn = new journalpost   // Have diffent objekts for in/out/memo etc. as for simplified?
+            var inn = new Journalpost   // Have diffent objekts for in/out/memo etc. as for simplified?
             {
                 // Saksår
                 // Sakssekvensnummer
                 // referanseForelderMappe = saksid, // Exists in xsd
-                journalposttype = "I",  // Code object?
-                journalstatus = "J",    // Code object?
-                dokumentetsDato = new DateTime(),
-                journaldato = new DateTime(),
-                forfallsdato = new DateTime(),
-                korrespondansepart = new korrespondansepart[] {
-                    new korrespondansepart
+                Journalposttype = "I",  // Code object?
+                Journalstatus = "J",    // Code object?
+                DokumentetsDato = new DateTime(),
+                Journaldato = new DateTime(),
+                Forfallsdato = new DateTime(),
+                Korrespondansepart = {
+                    new Korrespondansepart
                     {
-                        korrespondanseparttype = "avsender",    // Code object?
-                        Item = new EnhetsidentifikatorType      // Field name should indicate that this is an ID
-                        {
-                            organisasjonsnummer = "123456789"
-                        },
-                        korrespondansepartNavn = "Testesen",
-                        postadresse = new string[] { "c/o Hei og hå", "Testveien 3" },
-                        postnummer = "1234",
-                        poststed = "Poststed",
+                        Korrespondanseparttype = "avsender",    // Code object?
+                        Organisasjonid = "123456789",
+                        KorrespondansepartNavn = "Testesen",
+                        Postadresse = { "c/o Hei og hå", "Testveien 3" },
+                        Postnummer = "1234",
+                        Poststed = "Poststed",
                     },
-                    new korrespondansepart
+                    new Korrespondansepart
                     {
-                        korrespondanseparttype = "kopimottager",    // Code object?
-                        Item = new FoedselsnummerType
-                        {
-                            foedselsnummer = "12345612345"
-                        },
-                        korrespondansepartNavn = "Advokat NN",  // How to indicate that a name is a person name if no ID number present?
-                        postadresse = new string[] { "Krøsusveien 3" },
-                        postnummer = "2345",
-                        poststed = "Poststedet",
+                        Korrespondanseparttype = "kopimottager",    // Code object?
+                        Personid = "12345612345",
+                        KorrespondansepartNavn = "Advokat NN",  // How to indicate that a name is a person name if no ID number present?
+                        Postadresse = { "Krøsusveien 3" },
+                        Postnummer = "2345",
+                        Poststed = "Poststedet",
                     },
-                    new korrespondansepart
+                    new Korrespondansepart
                     {
-                        saksbehandler = "SBBYGG",
-                        administrativEnhet = "BYGG"
+                        Saksbehandler = "SBBYGG",
+                        AdministrativEnhet = "BYGG"
                     }
                 },
-                merknad = new merknad[]
+                Merknad =
                     {
-                        new merknad
+                        new Merknad
                         {
-                            merknadstype = "BYGG",  // Code object?
-                            merknadstekst = "Journalpostnummer 20/123-5 i eByggesak"
+                            Merknadstype = "BYGG",  // Code object?
+                            Merknadstekst = "Journalpostnummer 20/123-5 i eByggesak"
                         }
                     },
-                referanseEksternNoekkel = new eksternNoekkel
+                ReferanseEksternNoekkel = new EksternNoekkel
                 {
-                    fagsystem = ekstsys,
-                    noekkel = nokkel
-                },
-                tittel = "Søknad om rammetillatelse 12/123",
-                offentligTittel = "Søknad om rammetillatelse 12/123",
-                skjerming = new skjerming
+                    Fagsystem = ekstsys,
+                    Noekkel = nokkel
+                }, 
+                Tittel = "Søknad om rammetillatelse 12/123",
+                OffentligTittel = "Søknad om rammetillatelse 12/123",
+                Skjerming = new Skjerming
                 {
-                    tilgangsrestriksjon = "13",
-                    skjermingshjemmel = "Off.loven § 13",
-                    skjermingsvarighet = "60"   // Number of years should be int
+                    Tilgangsrestriksjon = "13",
+                    Skjermingshjemmel = "Off.loven § 13",
+                    Skjermingsvarighet = "60"   // Number of years should be int
                 },
                 // Dokumenter
-                dokumentbeskrivelse = new dokumentbeskrivelse[]
+                Dokumentbeskrivelse = 
                 {
-                    new dokumentbeskrivelse
+                    new Dokumentbeskrivelse
                     {
-                        tilknyttetRegistreringSom = "H",    // Code object?
-                        dokumentnummer = "1",   // Number, should be int
-                        dokumenttype = "SØKNAD",  // Code object?
-                        dokumentstatus = "F",    // Code object?
-                        tittel = "Søknad om rammetillatelse",
-                        dokumentobjekt = new dokumentobjekt[]
+                        TilknyttetRegistreringSom = "H",    // Code object?
+                        Dokumentnummer = "1",   // Number, should be int
+                        Dokumenttype = "SØKNAD",  // Code object?
+                        Dokumentstatus = "F",    // Code object?
+                        Tittel = "Søknad om rammetillatelse",
+                        Dokumentobjekt =
                         {
-                            new dokumentobjekt
+                            new Dokumentobjekt
                             {
-                                versjonsnummer = "1",   // Number!
-                                variantformat = "A",    // Code object?
-                                format = "PDF",     // Arkade wants file type here...
-                                mimeType = "application/pdf",
-                                referanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
+                                Versjonsnummer = "1",   // Number!
+                                Variantformat = "A",    // Code object?
+                                Format = "PDF",     // Arkade wants file type here...
+                                MimeType = "application/pdf",
+                                ReferanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
                             }
                         }
                     },
-                    new dokumentbeskrivelse
+                    new Dokumentbeskrivelse
                     {
-                        tilknyttetRegistreringSom = "V",    // Code object?
-                        dokumentnummer = "2",   // Number!
-                        dokumenttype = "KART",  // Code object?
-                        dokumentstatus = "F",    // Code object?
-                        tittel = "Situasjonskart",
-                        dokumentobjekt = new dokumentobjekt[]
+                        TilknyttetRegistreringSom = "V",    // Code object?
+                        Dokumentnummer = "2",   // Number!
+                        Dokumenttype = "KART",  // Code object?
+                        Dokumentstatus = "F",    // Code object?
+                        Tittel = "Situasjonskart",
+                        Dokumentobjekt =
                         {
-                            new dokumentobjekt
+                            new Dokumentobjekt
                             {
-                                versjonsnummer = "1",   // Number!
-                                variantformat = "A",    // Number?
-                                format = "PDF",     // Arkade wants file type here...
-                                mimeType = "application/pdf",
-                                referanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
+                                Versjonsnummer = "1",   // Number!
+                                Variantformat = "A",    // Number?
+                                Format = "PDF",     // Arkade wants file type here...
+                                MimeType = "application/pdf",
+                                ReferanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
                             }
                         }
                     },
-                    new dokumentbeskrivelse
+                    new Dokumentbeskrivelse
                     {
-                        tilknyttetRegistreringSom = "V",    // Code object?
-                        dokumentnummer = "3",   // NUmber!
-                        dokumenttype = "TEGNING",  // Code object?
-                        dokumentstatus = "F",    // Code object?
-                        tittel = "Fasade",
-                        dokumentobjekt = new dokumentobjekt[]
+                        TilknyttetRegistreringSom = "V",    // Code object?
+                        Dokumentnummer = "3",   // NUmber!
+                        Dokumenttype = "TEGNING",  // Code object?
+                        Dokumentstatus = "F",    // Code object?
+                        Tittel = "Fasade",
+                        Dokumentobjekt =
                         {
-                            new dokumentobjekt
+                            new Dokumentobjekt
                             {
-                                versjonsnummer = "1",   // Number!
-                                variantformat = "A",    // Code object?
-                                format = "PDF",     // Arkade wants file type here...
-                                mimeType = "application/pdf",
-                                referanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
+                                Versjonsnummer = "1",   // Number!
+                                Variantformat = "A",    // Code object?
+                                Format = "PDF",     // Arkade wants file type here...
+                                MimeType = "application/pdf",
+                                ReferanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
                             }
                         }
                     }
@@ -515,7 +505,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             return Task.CompletedTask;
         }
 
-        private SendtMelding SendSok(sok _sok)
+        private SendtMelding SendSok(Sok _sok)
         {
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
@@ -545,7 +535,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             return msg;
         }
 
-        private SendtMelding SendNySak(saksmappe sak)
+        private SendtMelding SendNySak(Saksmappe saksmappe)
         {
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
@@ -559,13 +549,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                       meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingUtgaaende.v1"); // Message type as string
                                                                                                                     //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
-            var arkivmld = new arkivmelding();
+            var arkivmld = new Arkivmelding();
             // arkivmld.sluttbrukerIdentifikator = "Fagsystemets brukerid";
-            arkivmld.antallFiler = 0;
-            arkivmld.system = sak.referanseEksternNoekkel.fagsystem;
-            arkivmld.meldingId = sak.referanseEksternNoekkel.noekkel;
-            arkivmld.tidspunkt = DateTime.Now;
-            arkivmld.Items = new saksmappe[] { sak };
+            arkivmld.AntallFiler = 0;
+            arkivmld.System = saksmappe.ReferanseEksternNoekkel.Fagsystem;
+            arkivmld.MeldingId = saksmappe.ReferanseEksternNoekkel.Noekkel;
+            arkivmld.Tidspunkt = DateTime.Now;
+            arkivmld.Mappe.Add(saksmappe);
 
             string payload = Serialize(arkivmld);
 
@@ -582,7 +572,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             return null;
         }
 
-        private SendtMelding SendNyJournalpost(journalpost jp)
+        private SendtMelding SendNyJournalpost(Journalpost jp)
         {
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid
@@ -596,13 +586,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                       meldingType: "no.geointegrasjon.arkiv.oppdatering.arkivmeldingUtgaaende.v1"); // Message type as string
                                                                                                                     //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
-            var arkivmld = new arkivmelding();
+            var arkivmld = new Arkivmelding();
             // arkivmld.sluttbrukerIdentifikator = "Fagsystemets brukerid";
-            arkivmld.antallFiler = 0;
-            arkivmld.system = jp.referanseEksternNoekkel.fagsystem;
-            arkivmld.meldingId = jp.referanseEksternNoekkel.noekkel;
-            arkivmld.tidspunkt = DateTime.Now;
-            arkivmld.Items = new journalpost[] { jp };
+            arkivmld.AntallFiler = 0;
+            arkivmld.System = jp.ReferanseEksternNoekkel.Fagsystem;
+            arkivmld.MeldingId = jp.ReferanseEksternNoekkel.Noekkel;
+            arkivmld.Tidspunkt = DateTime.Now;
+            arkivmld.Registrering.Add(jp);
 
             string payload = Serialize(arkivmld);
 

@@ -126,8 +126,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     mottattDato = DateTime.Today,
                     dokumentetsDato = DateTime.Today.AddDays(-2),
                     offentlighetsvurdertDato = DateTime.Today,
-                    referanseEksternNoekkel =
-                        new EksternNoekkel
+                    referanseEksternNoekkelForenklet = 
+                        new EksternNoekkelForenklet()
                         {
                             fagsystem = "Fagsystem X", noekkel = "e4712424-883c-4068-9cb7-97ac679d7232"
                         },
@@ -141,9 +141,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             }
                         },
                     mottaker =
-                        new List<Korrespondansepart>
+                        new List<KorrespondansepartForenklet>
                         {
-                            new Korrespondansepart()
+                            new KorrespondansepartForenklet()
                             {
                                 navn = "Test kommune",
                                 enhetsidentifikator =
@@ -157,9 +157,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                 }
                             }
                         },
-                    avsender = new List<Korrespondansepart>
+                    avsender = new List<KorrespondansepartForenklet>
                     {
-                        new Korrespondansepart()
+                        new KorrespondansepartForenklet()
                         {
                             navn = "Anita Avsender",
                             personid = new Personidentifikator()
@@ -234,12 +234,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     mottattDato = DateTime.Today,
                     dokumentetsDato = DateTime.Today.AddDays(-2),
                     offentlighetsvurdertDato = DateTime.Today,
-                    referanseEksternNoekkel =
-                        new EksternNoekkel {fagsystem = "Fagsystem X", noekkel = "e4reke"},
+                    referanseEksternNoekkelForenklet = 
+                        new EksternNoekkelForenklet() {fagsystem = "Fagsystem X", noekkel = "e4reke"},
                     mottaker =
-                        new List<Korrespondansepart>
+                        new List<KorrespondansepartForenklet>
                         {
-                            new Korrespondansepart()
+                            new KorrespondansepartForenklet()
                             {
                                 navn = "Test kommune",
                                 enhetsidentifikator =
@@ -253,9 +253,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                 }
                             }
                         },
-                    avsender = new List<Korrespondansepart>
+                    avsender = new List<KorrespondansepartForenklet>
                     {
-                        new Korrespondansepart()
+                        new KorrespondansepartForenklet()
                         {
                             navn = "Anita Søker",
                             personid = new Personidentifikator()
@@ -312,7 +312,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             };
 
             utg.nyUtgaaendeJournalpost.tittel = "Tillatelse til ...";
-            utg.nyUtgaaendeJournalpost.referanseEksternNoekkel = new EksternNoekkel
+            utg.nyUtgaaendeJournalpost.referanseEksternNoekkelForenklet = new EksternNoekkelForenklet()
             {
                 fagsystem = "Fagsystem X",
                 noekkel = "759d7aab-6f41-487d-bdb9-dd177ee887c1"
@@ -326,16 +326,16 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 }
             };
 
-            utg.nyUtgaaendeJournalpost.mottaker = new List<Korrespondansepart>
+            utg.nyUtgaaendeJournalpost.mottaker = new List<KorrespondansepartForenklet>
             {
-                new Korrespondansepart() { 
+                new KorrespondansepartForenklet() { 
                     navn = "Mons Mottaker", 
                     postadresse = new EnkelAdresse() { 
                         adresselinje1 = "Gate 1", 
                         postnr = "3801", 
                         poststed = "Bø" } 
                 },
-                new Korrespondansepart() { 
+                new KorrespondansepartForenklet() { 
                     navn = "Foretak Mottaker",
                     enhetsidentifikator = new Enhetsidentifikator() {
                         organisasjonsnummer = "123456789"
@@ -410,7 +410,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 sluttbrukerIdentifikator = "Fagsystemets brukerid",
                 nyUtgaaendeJournalpost = new UtgaaendeJournalpost
                 {
-                    referanseEksternNoekkel = new EksternNoekkel
+                    referanseEksternNoekkelForenklet= new EksternNoekkelForenklet()
                     {
                         fagsystem = "Fagsystem X", noekkel = Guid.NewGuid().ToString()
                     }
@@ -424,9 +424,9 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 new KorrespondansepartIntern() {saksbehandler = "Sigve Saksbehandler"}
             };
 
-            utg.nyUtgaaendeJournalpost.mottaker = new List<Korrespondansepart>
+            utg.nyUtgaaendeJournalpost.mottaker = new List<KorrespondansepartForenklet>
             {
-                new Korrespondansepart()
+                new KorrespondansepartForenklet()
                 {
                     navn = "Mons Mottaker",
                     postadresse = new EnkelAdresse()
@@ -434,7 +434,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         adresselinje1 = "Gate 1", postnr = "3801", poststed = "Bø"
                     }
                 },
-                new Korrespondansepart()
+                new KorrespondansepartForenklet()
                 {
                     navn = "Foretak Mottaker",
                     postadresse = new EnkelAdresse()
