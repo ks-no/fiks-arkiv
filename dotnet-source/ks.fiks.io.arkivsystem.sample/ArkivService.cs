@@ -135,7 +135,7 @@ namespace ks.fiks.io.arkivsystem.sample
             var payload = ArkivmeldingSerializeHelper.Serialize(sokeResultatUtvidet);
             //Lager FIKS IO melding
             List<IPayload> payloads = new List<IPayload>();
-            payloads.Add(new StringPayload(payload, "sokeresultatUtvidet.xml"));
+            payloads.Add(new StringPayload(payload, "sokeresultat-utvidet.xml"));
 
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
             
