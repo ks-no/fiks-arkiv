@@ -121,7 +121,7 @@ namespace ks.fiks.io.arkivsystem.sample
                         Feilmelding = "Feilmelding:\n" + string.Join("\n ", validationResult[0]),
                         CorrelationId = Guid.NewGuid().ToString()
                     };
-                    var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                    var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "payload.json").Result;
                     Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 }
@@ -169,7 +169,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     };
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                     var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                        JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                        JsonConvert.SerializeObject(ugyldigforespørsel), "payload.json").Result;
                     Log.Error($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
                 }
                 else
@@ -192,7 +192,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
                 mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 var svarmsg = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                    JsonConvert.SerializeObject(ugyldigforespørsel), "ugyldigforespørsel.json").Result;
+                    JsonConvert.SerializeObject(ugyldigforespørsel), "payload.json").Result;
                 Log.Information($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt");
             }
 
