@@ -11,17 +11,20 @@ using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
 using KS.Fiks.IO.Arkiv.Client.Models;
 using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
 using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.IO.Arkiv.Client.Models.Arkivstruktur;
 using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
 using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
 using KS.Fiks.IO.Arkiv.Client.Sample;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
+using ks.fiks.io.arkivsystem.sample.Helpers;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using KS.Fiks.IO.Client.Models.Feilmelding;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
+using Mappe = KS.Fiks.IO.Arkiv.Client.Models.Arkivstruktur.Mappe;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -106,8 +109,6 @@ namespace ks.fiks.io.arkivsystem.sample
                                     var newEntryStream = asiceReadEntry.OpenStream();
                                     var reader1 = new StreamReader(newEntryStream);
                                     var text = reader1.ReadToEnd();
-                                    Console.WriteLine("Søker etter: " + text);
-                                    //TODO parse xml og finne ut hvilket søk det er
                                     Log.Information("Parsing sok: {SokText}", text);
                                     if (string.IsNullOrEmpty(text))
                                     {
@@ -119,7 +120,7 @@ namespace ks.fiks.io.arkivsystem.sample
                             }
                             else
                             {
-                                Console.WriteLine("Mottatt vedlegg: " + asiceReadEntry.FileName);
+                                Log.Information("Mottatt vedlegg: {Filename}", asiceReadEntry.FileName);
                             }
                         }
                     }
@@ -133,18 +134,12 @@ namespace ks.fiks.io.arkivsystem.sample
                         CorrelationId = Guid.NewGuid().ToString()
                     };
                     var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, JsonConvert.SerializeObject(ugyldigforespørsel), "payload.json").Result;
-                    Console.WriteLine($"Svarmelding {errorMessage.MeldingId} {errorMessage.MeldingType} sendt");
+                    Log.Information("Svarmelding {MeldingId} {MeldingType} sendt", errorMessage.MeldingId, errorMessage.MeldingType);
                     mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
                 }
             }
-           
-            //TODO Sjekk om det er et utvidet, minimum eller noekler søk som kommer inn og svar deretter
 
-            //Konverterer til arkivmelding xml
-            var simulertSokeresultat = MessageSamples.GetForenkletArkivmeldingInngåendeMedSaksreferanse();
-            var sokeResultatMinimum = ArkivmeldingFactory.GetArkivmelding(simulertSokeresultat); //TODO Håndtere utvidet, minimum og noekler forskjellig
-            var payload = ArkivmeldingSerializeHelper.Serialize(sokeResultatMinimum);
-            
+            object sokeResultat;
             
             //Lager FIKS IO melding
             var payloads = new List<IPayload>();
@@ -155,22 +150,26 @@ namespace ks.fiks.io.arkivsystem.sample
                 case ResponsType.Minimum:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
+                    sokeResultat = SokeresultatHelper.CreateSokeResultatMinimum();
                     break;
                 case ResponsType.Noekler:
                     filename = "sokeresultat-noekler.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatNoekler;
+                    sokeResultat = SokeresultatHelper.CreateSokeResultatUtvidet();
                     break;
                 case ResponsType.Utvidet:
                     filename = "sokeresultat-utvidet.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet;
+                    sokeResultat = SokeresultatHelper.CreateSokeResultatNoekler();
                     break;
                 default:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
+                    sokeResultat = SokeresultatHelper.CreateSokeResultatMinimum();
                     break;
             }
-             
-            payloads.Add(new StringPayload(payload, filename));
+            
+            payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(sokeResultat), filename));
 
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
             
@@ -178,7 +177,6 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt",  svarmsg.MeldingId, svarmsg.MeldingType );
             Log.Information("Melding er ferdig håndtert i arkiv");
         }
-
 
         private static void HandleArkiveringMelding(MottattMeldingArgs mottatt, XmlSchemaSet arkivmeldingXmlSchemaSet,
             bool xmlValidationErrorOccured)
