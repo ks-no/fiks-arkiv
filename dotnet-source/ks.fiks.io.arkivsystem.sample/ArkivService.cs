@@ -166,6 +166,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 default:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
+                    break;
             }
 
              
