@@ -103,7 +103,8 @@ namespace ks.fiks.io.arkivsystem.sample
                                     {
                                         xmlValidationErrorOccured = true;
                                     }
-                                    var reader1 = new StreamReader(entryStream);
+                                    var newEntryStream = asiceReadEntry.OpenStream();
+                                    var reader1 = new StreamReader(newEntryStream);
                                     var text = reader1.ReadToEnd();
                                     Console.WriteLine("Søker etter: " + text);
                                     //TODO parse xml og finne ut hvilket søk det er
@@ -168,7 +169,6 @@ namespace ks.fiks.io.arkivsystem.sample
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
                     break;
             }
-
              
             payloads.Add(new StringPayload(payload, filename));
 
