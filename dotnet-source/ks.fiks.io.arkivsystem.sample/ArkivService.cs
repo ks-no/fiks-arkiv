@@ -150,22 +150,22 @@ namespace ks.fiks.io.arkivsystem.sample
                 case ResponsType.Minimum:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
-                    sokeResultat = SokeresultatHelper.CreateSokeResultatMinimum();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatMinimum();
                     break;
                 case ResponsType.Noekler:
                     filename = "sokeresultat-noekler.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatNoekler;
-                    sokeResultat = SokeresultatHelper.CreateSokeResultatUtvidet();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatNoekler();
                     break;
                 case ResponsType.Utvidet:
                     filename = "sokeresultat-utvidet.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet;
-                    sokeResultat = SokeresultatHelper.CreateSokeResultatNoekler();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatUtvidet();
                     break;
                 default:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
-                    sokeResultat = SokeresultatHelper.CreateSokeResultatMinimum();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatMinimum();
                     break;
             }
             
