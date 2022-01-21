@@ -150,7 +150,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 case ResponsType.Minimum:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
-                    sokeResultat = SokeresultatGenerator.CreateSokeResultatMinimum();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons);
                     break;
                 case ResponsType.Noekler:
                     filename = "sokeresultat-noekler.xml";
@@ -165,7 +165,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 default:
                     filename = "sokeresultat-minimum.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum;
-                    sokeResultat = SokeresultatGenerator.CreateSokeResultatMinimum();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons);
                     break;
             }
             
