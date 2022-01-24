@@ -40,7 +40,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
             sokeresultatMinimum.ResultatListe.Add(
                 new ResultatMinimum()
                 {
-                    Mappe = new SaksmappeMinimum()
+                    Saksmappe = new SaksmappeMinimum()
                     {
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
@@ -49,13 +49,18 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         OpprettetAv = "Test",
                         AvsluttetDato = DateTime.Now,
                         AvsluttetAv = "Test",
-                        Saksdato = DateTime.Now
+                        Saksaar = DateTime.Now.Year.ToString(),
+                        Sakssekvensnummer = "1",
+                        Saksdato = DateTime.Now,
+                        AdministrativEnhet = "Test",
+                        Saksansvarlig = "Test",
+                        Saksstatus = "Test"
                     }
                 });
             sokeresultatMinimum.ResultatListe.Add(
                 new ResultatMinimum()
                 {
-                    Mappe = new SaksmappeMinimum()
+                    Saksmappe = new SaksmappeMinimum()
                     {
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
@@ -64,7 +69,12 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         OpprettetAv = "Test",
                         AvsluttetDato = DateTime.Now,
                         AvsluttetAv = "Test",
-                        Saksdato = DateTime.Now
+                        Saksaar = DateTime.Now.Year.ToString(),
+                        Sakssekvensnummer = "1",
+                        Saksdato = DateTime.Now,
+                        AdministrativEnhet = "Test",
+                        Saksansvarlig = "Test",
+                        Saksstatus = "Test"
                     }
                 });
         }
