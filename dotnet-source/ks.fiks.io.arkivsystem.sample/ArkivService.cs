@@ -160,7 +160,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 case ResponsType.Utvidet:
                     filename = "sokeresultat-utvidet.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet;
-                    sokeResultat = SokeresultatGenerator.CreateSokeResultatUtvidet();
+                    sokeResultat = SokeresultatGenerator.CreateSokeResultatUtvidet(sok.Respons);
                     break;
                 default:
                     filename = "sokeresultat-minimum.xml";
