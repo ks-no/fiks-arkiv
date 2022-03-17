@@ -24,7 +24,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 Log.Information("Parsing journalpostHent: {Xml}", text);
                 if (string.IsNullOrEmpty(text))
                 {
-                    Log.Error("Tom sok? Text: {Sok}", text);
+                    Log.Error("Tom journalpostHent? Xml: {Xml}", text);
                 }
 
                 using var textReader = (TextReader)new StringReader(text);

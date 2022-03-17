@@ -32,7 +32,7 @@ namespace ks.fiks.io.arkivsystem.sample
         private readonly AppSettings appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
-        public ArkivService(AppSettings appSettings)
+        public ArkivSimulator(AppSettings appSettings)
         {
             this.appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem...");
@@ -74,9 +74,9 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Melding med {MeldingId} og meldingstype {MeldingsType} mottas", mottatt.Melding.MeldingId, mottatt.Melding.MeldingType);
 
             var payloads = new List<IPayload>();
-            object resultatMelding;
-            string filename;
-            string meldingsType;
+            object resultatMelding = null;
+            var filename = string.Empty;
+            var meldingsType = string.Empty;
             
             switch (mottatt.Melding.MeldingType)
             {
@@ -116,11 +116,14 @@ namespace ks.fiks.io.arkivsystem.sample
                             break;
                     }
                     break;
+                
                 case ArkivintegrasjonMeldingTypeV1.JournalpostHent:
                     
                     var journalpostHentXmlSchemaSet = new XmlSchemaSet();
-                    journalpostHentXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "journalpostHent.xsd"));
+                    journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2", Path.Combine("Schema", "journalpostHent.xsd"));
+                    journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", Path.Combine("Schema", "metadatakatalog.xsd"));
 
+                    
                     var hentMelding = JournalpostHentHandler.GetPayload(mottatt, journalpostHentXmlSchemaSet, out xmlValidationErrorOccured, out validationResult);
                     
                     if(xmlValidationErrorOccured)
