@@ -14,8 +14,10 @@ using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
 using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
+using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Handlers;
 using ks.fiks.io.arkivsystem.sample.Helpers;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using ks.fiks.io.arkivsystem.sample.Validering;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
@@ -23,20 +25,24 @@ using KS.Fiks.IO.Client.Models.Feilmelding;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
+using EksternNoekkel = KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
     public class ArkivSimulator : BackgroundService
     {
+        private const string TestSessionId = "testSessionId";
         private FiksIOClient client;
         private readonly AppSettings appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
 
         public ArkivSimulator(AppSettings appSettings)
         {
             this.appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem...");
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings); //CreateFiksIoClient();
+            _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(10);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -131,9 +137,17 @@ namespace ks.fiks.io.arkivsystem.sample
                         SendUgyldigforespoersel(mottatt, validationResult);
                     }
                     
+                    // Hent arkivmelding fra "cache" hvis det er en testSessionId i headere
+                    Arkivmelding arkivmelding = null;
+                    string testSessionId;
+                    if (mottatt.Melding.Headere.TryGetValue(TestSessionId, out testSessionId))
+                    {
+                        _arkivmeldingCache.TryGetValue(testSessionId, out arkivmelding);
+                    }
+
+                    resultatMelding = arkivmelding == null ? JournalpostHentGenerator.Create(hentMelding) : JournalpostHentGenerator.Create(hentMelding, (Journalpost) arkivmelding.Registrering[0]);
                     filename = "resultat.xml";
                     meldingsType = ArkivintegrasjonMeldingTypeV1.JournalpostHentResultat;
-                    resultatMelding = JournalpostHentGenerator.Create(hentMelding);
                     
                     break;
             }
@@ -169,14 +183,14 @@ namespace ks.fiks.io.arkivsystem.sample
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", Path.Combine("Schema", "metadatakatalog.xsd"));
 
             var validationResult = new List<List<string>>();
-            var deserializedArkivmelding = new Arkivmelding();
+            var arkivmelding = new Arkivmelding();
             Log.Information($"Melding {mottatt.Melding.MeldingId} {mottatt.Melding.MeldingType} mottas...");
 
             //TODO håndtere meldingen med ønsket funksjonalitet
             if (mottatt.Melding.HasPayload)
             {
                 // Verify that message has payload
-                validationResult = Validator.ValidereXmlMottattMelding(mottatt, arkivmeldingXmlSchemaSet, ref xmlValidationErrorOccured, validationResult, ref deserializedArkivmelding);
+                validationResult = Validator.ValidereXmlMottattMelding(mottatt, arkivmeldingXmlSchemaSet, ref xmlValidationErrorOccured, validationResult, ref arkivmelding);
 
                 if (xmlValidationErrorOccured) // Ugyldig forespørsel
                 {
@@ -219,7 +233,7 @@ namespace ks.fiks.io.arkivsystem.sample
 
             var kvittering = new ArkivmeldingKvittering();
             kvittering.Tidspunkt = DateTime.Now;
-            var isMappe = deserializedArkivmelding?.Mappe?.Count > 0;
+            var isMappe = arkivmelding?.Mappe?.Count > 0;
 
             if (isMappe)
             {
@@ -246,14 +260,24 @@ namespace ks.fiks.io.arkivsystem.sample
                     },
                     Journalaar = DateTime.Now.Year.ToString(),
                     Journalsekvensnummer = new Random().Next().ToString(),
-                    Journalpostnummer = new Random().Next(1, 100).ToString()
+                    Journalpostnummer = new Random().Next(1, 100).ToString(),
+                    ReferanseEksternNoekkel = new EksternNoekkel()
+                    {
+                        Fagsystem = arkivmelding.Registrering[0].ReferanseEksternNoekkel.Fagsystem,
+                        Noekkel = arkivmelding.Registrering[0].ReferanseEksternNoekkel.Noekkel
+                    }
                 };
 
                 kvittering.RegistreringKvittering.Add(jp);
             }
-            //TODO simulerer at arkivet arkiverer og nøkler skal returneres
-
             var payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
+
+            // Lagre arkivmelding i "cache" hvis det er en testSessionId i headere
+            string testSessionId;
+            if (mottatt.Melding.Headere.TryGetValue(TestSessionId, out testSessionId))
+            {
+                _arkivmeldingCache.Add(testSessionId, arkivmelding);
+            }
 
             var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering, payload, "arkivmelding-kvittering.xml").Result;
             Log.Information($"Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
