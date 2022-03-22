@@ -42,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample
             this.appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem...");
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings); //CreateFiksIoClient();
-            _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(10);
+            _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
