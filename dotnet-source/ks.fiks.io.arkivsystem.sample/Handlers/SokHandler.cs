@@ -16,7 +16,6 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         public static Sok GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
-            Sok sok = null;
             if (mottatt.Melding.HasPayload)
             {
                 // Verify that message has payload
@@ -28,12 +27,12 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 }
 
                 using var textReader = (TextReader)new StringReader(text);
-                sok = (Sok)new XmlSerializer(typeof(Sok)).Deserialize(textReader);
+                return (Sok)new XmlSerializer(typeof(Sok)).Deserialize(textReader);
             }
 
             xmlValidationErrorOccured = false;
             validationResult = null;
-            return sok;
+            return null;
         }
     }
 }

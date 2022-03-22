@@ -16,7 +16,6 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         public static JournalpostHent GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
-            JournalpostHent journalpostHent = null;
             if (mottatt.Melding.HasPayload)
             {
                 var text = GetPayloadAsString(mottatt, xmlSchemaSet, out xmlValidationErrorOccured,
@@ -28,12 +27,12 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 }
 
                 using var textReader = (TextReader)new StringReader(text);
-                journalpostHent = (JournalpostHent) new XmlSerializer(typeof(JournalpostHent)).Deserialize(textReader);
+                return(JournalpostHent) new XmlSerializer(typeof(JournalpostHent)).Deserialize(textReader);
             }
 
             xmlValidationErrorOccured = false;
             validationResult = null;
-            return journalpostHent;
+            return null;
         }
     }
 }

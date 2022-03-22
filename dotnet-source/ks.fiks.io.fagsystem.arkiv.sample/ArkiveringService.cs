@@ -164,7 +164,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             navn = "Anita Avsender",
                             personid = new Personidentifikator()
                             {
-                                personidentifikatorType = "F", personidentifikatorNr = "12345678901"
+                                personidentifikatorLandkode = "NO", personidentifikatorNr = "12345678901"
                             },
                             postadresse = new EnkelAdresse()
                             {
@@ -260,7 +260,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             navn = "Anita Søker",
                             personid = new Personidentifikator()
                             {
-                                personidentifikatorType = "F", personidentifikatorNr = "12345678901"
+                                personidentifikatorLandkode = "NO", personidentifikatorNr = "12345678901"
                             },
                             postadresse = new EnkelAdresse()
                             {
