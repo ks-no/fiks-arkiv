@@ -16,6 +16,7 @@ using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Handlers;
 using ks.fiks.io.arkivsystem.sample.Helpers;
+using ks.fiks.io.arkivsystem.sample.Models;
 using ks.fiks.io.arkivsystem.sample.Storage;
 using ks.fiks.io.arkivsystem.sample.Validering;
 using KS.Fiks.IO.Client;
@@ -30,11 +31,11 @@ namespace ks.fiks.io.arkivsystem.sample
 {
     public class ArkivSimulator : BackgroundService
     {
-        private const string TestSessionId = "testSessionId";
+        public const string TestSessionIdHeader = "testSessionId";
         private FiksIOClient client;
         private readonly AppSettings appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-        private static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
+        public static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
 
         public ArkivSimulator(AppSettings appSettings)
         {
@@ -53,6 +54,9 @@ namespace ks.fiks.io.arkivsystem.sample
 
         private void OnReceivedMelding(object sender, MottattMeldingArgs mottatt)
         {
+            Log.Information("Melding med {MeldingId} og meldingstype {MeldingsType} mottas", mottatt.Melding.MeldingId,
+                mottatt.Melding.MeldingType);
+            
             if (ArkivintegrasjonMeldingTypeV1.IsArkiveringType(mottatt.Melding.MeldingType))
             {
                 HandleArkiveringMelding(mottatt);
@@ -62,25 +66,28 @@ namespace ks.fiks.io.arkivsystem.sample
                 HandleInnsynMelding(mottatt);
             }
             else
-            {
-                Log.Information("Ukjent melding i køen som avvises {MeldingId} {MeldingType}",
+            { // Ukjent meldingstype
+                Log.Information("Ukjent melding i køen. Sender ugyldigforespørsel {MeldingId} {MeldingType}",
                     mottatt.Melding.MeldingId, mottatt.Melding.MeldingType);
-                mottatt.SvarSender.Nack();
+                mottatt.SvarSender.Ack();
+                var payloads = new List<IPayload>();
+                payloads.Add(
+                    new StringPayload(
+                        ArkivmeldingSerializeHelper.Serialize(
+                            FeilmeldingGenerator.CreateUgyldigforespoerselMelding($"Ukjent meldingstype {mottatt.Melding.MeldingType} mottatt")),
+                        "payload.json"));
+                mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, payloads );
             }
         }
 
         private static void HandleInnsynMelding(MottattMeldingArgs mottatt)
         {
-            var validationResult = new List<List<string>>();
-            Log.Information("Melding med {MeldingId} og meldingstype {MeldingsType} mottas", mottatt.Melding.MeldingId,
-                mottatt.Melding.MeldingType);
-
             var payloads = new List<IPayload>();
 
             var melding = mottatt.Melding.MeldingType switch
             {
-                ArkivintegrasjonMeldingTypeV1.Sok => CreateSokResponseMelding(mottatt),
-                ArkivintegrasjonMeldingTypeV1.JournalpostHent => CreateJournalpostHentResultatMelding(mottatt),
+                ArkivintegrasjonMeldingTypeV1.Sok => SokGenerator.CreateSokResponseMelding(mottatt),
+                ArkivintegrasjonMeldingTypeV1.JournalpostHent => JournalpostHentGenerator.CreateJournalpostHentResultatMelding(mottatt),
                 _ => throw new ArgumentException("Case not handled")
             };
 
@@ -89,225 +96,38 @@ namespace ks.fiks.io.arkivsystem.sample
 
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
 
-            var svarmsg = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
-            Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt", svarmsg.MeldingId,
-                svarmsg.MeldingType);
+            var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
+            Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt", sendtMelding.MeldingId,
+                sendtMelding.MeldingType);
             Log.Information("Melding er ferdig håndtert i arkiv");
-        }
-
-        private static Melding CreateJournalpostHentResultatMelding(MottattMeldingArgs mottatt)
-        {
-            var journalpostHentXmlSchemaSet = new XmlSchemaSet();
-            journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2",
-                Path.Combine("Schema", "journalpostHent.xsd"));
-            journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-                Path.Combine("Schema", "metadatakatalog.xsd"));
-
-            var hentMelding = JournalpostHentHandler.GetPayload(mottatt, journalpostHentXmlSchemaSet,
-                out var xmlValidationErrorOccured, out var validationResult);
-
-            if (xmlValidationErrorOccured)
-            {
-                return new Melding
-                {
-                    ResultatMelding = CreateUgyldigforespoerselMelding(validationResult),
-                    FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                };
-            }
-
-            // Hent arkivmelding fra "cache" hvis det er en testSessionId i headere
-            Arkivmelding arkivmelding = null;
-            if (mottatt.Melding.Headere.TryGetValue(TestSessionId, out var testSessionId))
-            {
-                _arkivmeldingCache.TryGetValue(testSessionId, out arkivmelding);
-            }
-
-            return new Melding
-            {
-                ResultatMelding = arkivmelding == null
-                    ? JournalpostHentGenerator.Create(hentMelding)
-                    : JournalpostHentGenerator.Create(hentMelding, (Journalpost)arkivmelding.Registrering[0]),
-                FileName = "resultat.xml",
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.JournalpostHentResultat
-            };
-        }
-
-        private static Melding CreateSokResponseMelding(MottattMeldingArgs mottatt)
-        {
-            var sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
-
-            var sok = SokHandler.GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
-                out var validationResult);
-
-            if (xmlValidationErrorOccured)
-            {
-                return new Melding
-                {
-                    ResultatMelding = CreateUgyldigforespoerselMelding(validationResult),
-                    FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                };
-            }
-
-            return CreateSokResponseMelding(sok);
-        }
-
-        private static Melding CreateSokResponseMelding(Sok sok) =>
-            sok.ResponsType switch
-            {
-                ResponsType.Minimum =>
-                    new Melding
-                    {
-                        FileName = "sokeresultat-minimum.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons)
-                    },
-                ResponsType.Noekler =>
-                    new Melding
-                    {
-                        FileName = "sokeresultat-noekler.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatNoekler,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatNoekler(),
-                    },
-                ResponsType.Utvidet =>
-                    new Melding
-                    {
-                        FileName = "sokeresultat-utvidet.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatUtvidet(sok.Respons)
-                    },
-                _ =>
-                    new Melding
-                    {
-                        FileName = "sokeresultat-minimum.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons),
-                    }
-            };
-
-        private static Ugyldigforespørsel CreateUgyldigforespoerselMelding(IReadOnlyList<List<string>> validationResult)
-        {
-            return new Ugyldigforespørsel
-            {
-                ErrorId = Guid.NewGuid().ToString(),
-                Feilmelding = $"Feilmelding: {Environment.NewLine} {validationResult[0]}",
-                CorrelationId = Guid.NewGuid().ToString()
-            };
         }
 
         private static void HandleArkiveringMelding(MottattMeldingArgs mottatt)
         {
-            bool xmlValidationErrorOccured = false;
-            var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
-                Path.Combine("Schema", "arkivmelding.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-                Path.Combine("Schema", "metadatakatalog.xsd"));
-
-            var validationResult = new List<List<string>>();
-            var arkivmelding = new Arkivmelding();
-            Log.Information("Melding {MeldingId} {MeldingType} mottas", mottatt.Melding.MeldingId, mottatt.Melding.MeldingType);
-
-            if (mottatt.Melding.HasPayload)
+            var payloads = new List<IPayload>();
+            var melding = mottatt.Melding.MeldingType switch
             {
-                // Verify that message has payload
-                validationResult = Validator.ValidereXmlMottattMelding(mottatt, arkivmeldingXmlSchemaSet,
-                    ref xmlValidationErrorOccured, validationResult, ref arkivmelding);
+                ArkivintegrasjonMeldingTypeV1.Arkivmelding => ArkivmeldingGenerator.CreateArkivmelding(mottatt),
+                ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdater => JournalpostHentGenerator
+                    .CreateJournalpostHentResultatMelding(mottatt),
+                _ => throw new ArgumentException("Case not handled") //TODO Send en ugyldigforespørsel
+            };
 
-                if (xmlValidationErrorOccured) // Ugyldig forespørsel
-                {
-                    var ugyldigforespørsel = new Ugyldigforespørsel
-                    {
-                        ErrorId = Guid.NewGuid().ToString(),
-                        Feilmelding = $"Feilmelding:{Environment.NewLine} {validationResult[0]}",
-                        CorrelationId = Guid.NewGuid().ToString()
-                    };
-                    mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-                    var errorMessage = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                        JsonConvert.SerializeObject(ugyldigforespørsel), "payload.json").Result;
-                    Log.Error("Svarmelding {MeldingId}, {MeldingType} sendt", errorMessage.MeldingId, errorMessage.MeldingType);
-                }
-                else
-                {
-                    mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-                    var svarmsg = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt).Result;
-                    Log.Information($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt...");
-                    Log.Information("Melding er mottatt i arkiv ok ......");
-                }
-            }
-            else
-            {
-                // Ugyldig forespørsel
-                var ugyldigforespørsel = new Ugyldigforespørsel
-                {
-                    ErrorId = Guid.NewGuid().ToString(),
-                    Feilmelding = "Meldingen mangler innhold",
-                    CorrelationId = Guid.NewGuid().ToString()
-                };
+            mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+            var sendtMottattMelding = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt).Result;
+            Log.Information($"Svarmelding {sendtMottattMelding.MeldingId} {sendtMottattMelding.MeldingType} sendt...");
+            Log.Information("Melding er mottatt i arkiv ok ......");
 
-                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-                var svarmsg = mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                    JsonConvert.SerializeObject(ugyldigforespørsel), "payload.json").Result;
-                Log.Information($"Svarmelding {svarmsg.MeldingId} {svarmsg.MeldingType} sendt");
+            if (melding.ResultatMelding != null) {
+                payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
+                    melding.FileName));
             }
 
-            if (xmlValidationErrorOccured) return;
-
-            var kvittering = new ArkivmeldingKvittering();
-            kvittering.Tidspunkt = DateTime.Now;
-            var isMappe = arkivmelding?.Mappe?.Count > 0;
-
-            if (isMappe)
-            {
-                var mp = new SaksmappeKvittering
-                {
-                    SystemID = new SystemID
-                    {
-                        Value = Guid.NewGuid().ToString()
-                    },
-                    OpprettetDato = DateTime.Now,
-                    Saksaar = DateTime.Now.Year.ToString(),
-                    Sakssekvensnummer = new Random().Next().ToString()
-                };
-
-                kvittering.MappeKvittering.Add(mp);
-            }
-            else
-            {
-                var jp = new JournalpostKvittering
-                {
-                    SystemID = new SystemID
-                    {
-                        Value = Guid.NewGuid().ToString()
-                    },
-                    Journalaar = DateTime.Now.Year.ToString(),
-                    Journalsekvensnummer = new Random().Next().ToString(),
-                    Journalpostnummer = new Random().Next(1, 100).ToString(),
-                    ReferanseEksternNoekkel = new EksternNoekkel()
-                    {
-                        Fagsystem = arkivmelding.Registrering[0].ReferanseEksternNoekkel.Fagsystem,
-                        Noekkel = arkivmelding.Registrering[0].ReferanseEksternNoekkel.Noekkel
-                    }
-                };
-
-                kvittering.RegistreringKvittering.Add(jp);
-            }
-
-            var payload = ArkivmeldingSerializeHelper.Serialize(kvittering);
-
-            // Lagre arkivmelding i "cache" hvis det er en testSessionId i headere
-            string testSessionId;
-            if (mottatt.Melding.Headere.TryGetValue(TestSessionId, out testSessionId))
-            {
-                _arkivmeldingCache.Add(testSessionId, arkivmelding);
-            }
-
-            var svarmsg2 = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering, payload,
-                "arkivmelding-kvittering.xml").Result;
-            Log.Information($"Svarmelding {svarmsg2.MeldingId} {svarmsg2.MeldingType} sendt...");
-            Log.Information("Arkivering er ok ......");
+            var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
+            Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt", sendtMelding.MeldingId,
+                sendtMelding.MeldingType);
+            Log.Information("Melding er ferdig håndtert i arkiv");
+            
         }
 
         private void SubscribeToFiksIOClient()
@@ -316,13 +136,6 @@ namespace ks.fiks.io.arkivsystem.sample
             var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
             client.NewSubscription(OnReceivedMelding);
             Log.Information("Abonnerer på meldinger på konto " + accountId + " ...");
-        }
-
-        private class Melding
-        {
-            public string FileName { get; set; }
-            public string MeldingsType { get; set; }
-            public object ResultatMelding { get; set; }
         }
     }
 }
