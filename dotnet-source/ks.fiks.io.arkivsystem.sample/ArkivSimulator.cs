@@ -86,8 +86,8 @@ namespace ks.fiks.io.arkivsystem.sample
 
             var melding = mottatt.Melding.MeldingType switch
             {
-                ArkivintegrasjonMeldingTypeV1.Sok => SokGenerator.CreateSokResponseMelding(mottatt),
-                ArkivintegrasjonMeldingTypeV1.JournalpostHent => JournalpostHentGenerator.CreateJournalpostHentResultatMelding(mottatt),
+                ArkivintegrasjonMeldingTypeV1.Sok => SokHandler.HandleMelding(mottatt),
+                ArkivintegrasjonMeldingTypeV1.JournalpostHent => JournalpostHentHandler.HandleMelding(mottatt),
                 _ => throw new ArgumentException("Case not handled")
             };
 
@@ -107,12 +107,12 @@ namespace ks.fiks.io.arkivsystem.sample
             var payloads = new List<IPayload>();
             var melding = mottatt.Melding.MeldingType switch
             {
-                ArkivintegrasjonMeldingTypeV1.Arkivmelding => ArkivmeldingGenerator.CreateArkivmelding(mottatt),
-                ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdater => JournalpostHentGenerator
-                    .CreateJournalpostHentResultatMelding(mottatt),
-                _ => throw new ArgumentException("Case not handled") //TODO Send en ugyldigforespørsel
+                ArkivintegrasjonMeldingTypeV1.Arkivmelding => ArkivmeldingHandler.HandleMelding(mottatt),
+                ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdater => ArkivmeldingOppdaterHandler.HandleMelding(mottatt),
+                _ => throw new ArgumentException("Case not handled")
             };
 
+            // Både arkivmelding og arkivmeldingOppdater skal sende en mottatt melding
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
             var sendtMottattMelding = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt).Result;
             Log.Information($"Svarmelding {sendtMottattMelding.MeldingId} {sendtMottattMelding.MeldingType} sendt...");

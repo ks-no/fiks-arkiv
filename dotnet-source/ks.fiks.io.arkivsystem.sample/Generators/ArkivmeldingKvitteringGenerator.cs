@@ -1,14 +1,21 @@
 using System;
+using System.IO;
+using System.Xml.Schema;
+using KS.Fiks.IO.Arkiv.Client.Models;
 using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
 using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
 using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
+using ks.fiks.io.arkivsystem.sample.Handlers;
+using ks.fiks.io.arkivsystem.sample.Models;
+using KS.Fiks.IO.Client.Models;
+using KS.Fiks.IO.Client.Models.Feilmelding;
 using EksternNoekkel = KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
     public class ArkivmeldingKvitteringGenerator
     {
-        internal static SaksmappeKvittering CreateSaksmappeKvittering()
+        public static SaksmappeKvittering CreateSaksmappeKvittering()
         {
             var mp = new SaksmappeKvittering
             {
@@ -23,7 +30,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             return mp;
         }
 
-        internal static JournalpostKvittering CreateJournalpostKvittering(Arkivmelding arkivmelding)
+        public static JournalpostKvittering CreateJournalpostKvittering(Arkivmelding arkivmelding)
         {
             var jp = new JournalpostKvittering
             {

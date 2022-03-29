@@ -12,28 +12,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
 {
     public class SokGenerator
     {
-        public static Melding CreateSokResponseMelding(MottattMeldingArgs mottatt)
-        {
-            var sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
-
-            var sok = SokHandler.GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
-                out var validationResult);
-
-            if (xmlValidationErrorOccured)
-            {
-                return new Melding
-                {
-                    ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
-                    FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                };
-            }
-
-            return CreateSokResponseMelding(sok);
-        }
-
-        private static Melding CreateSokResponseMelding(Sok sok) =>
+        public static Melding CreateSokResponseMelding(Sok sok) =>
             sok.ResponsType switch
             {
                 ResponsType.Minimum =>
