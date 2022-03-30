@@ -42,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
         
-        public static Melding HandleMelding(MottattMeldingArgs mottatt)
+        public static List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
             var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
@@ -50,30 +50,35 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
                 Path.Combine("Schema", "metadatakatalog.xsd"));
 
+            List<Melding> meldinger = new List<Melding>();
+            
             Arkivmelding arkivmelding;
             if (mottatt.Melding.HasPayload)
             {
-                arkivmelding = ArkivmeldingHandler.GetPayload(mottatt, arkivmeldingXmlSchemaSet,
+                arkivmelding = GetPayload(mottatt, arkivmeldingXmlSchemaSet,
                     out var xmlValidationErrorOccured, out var validationResult);
 
                 if (xmlValidationErrorOccured) // Ugyldig forespørsel
                 {
-                    return new Melding
+                    meldinger.Add(new Melding
                     {
                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                         FileName = "payload.json",
                         MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                    };
+                    });
+                    return meldinger;
                 }
             }
             else
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
-                    ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Arkivmelding meldingen mangler innhold"),
+                    ResultatMelding =
+                        FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Arkivmelding meldingen mangler innhold"),
                     FileName = "payload.json",
                     MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                };
+                });
+                return meldinger;
             }
 
             var kvittering = new ArkivmeldingKvittering
@@ -97,12 +102,20 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 ArkivSimulator._arkivmeldingCache.Add(testSessionId, arkivmelding);
             }
             
-            return new Melding
+            // Det skal sendes også en mottatt melding
+            meldinger.Add(new Melding
+            {
+                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt
+            });
+            
+            meldinger.Add(new Melding
             {
                 ResultatMelding = kvittering,
                 FileName = "arkivmelding-kvittering.xml",
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering,
-            };
+                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering
+            });
+            
+            return meldinger;
         }
     }
 }

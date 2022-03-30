@@ -37,11 +37,11 @@ namespace ks.fiks.io.arkivsystem.sample
         {
             if (args.Severity == XmlSeverityType.Warning)
             {
-                xmlValidationMessages[1].Add("linje " + args.Exception.LineNumber + ", posisjon " + args.Exception.LinePosition + " " + args.Message);
+                xmlValidationMessages[1].Add("XSD Validation Warning: linje " + args.Exception.LineNumber + ", posisjon " + args.Exception.LinePosition + " " + args.Message);
             }
             else if (args.Severity == XmlSeverityType.Error)
             {
-                xmlValidationMessages[0].Add("linje " + args.Exception.LineNumber + ", posisjon " + args.Exception.LinePosition + " " + args.Message);
+                xmlValidationMessages[0].Add("XSD Validation Error: linje " + args.Exception.LineNumber + ", posisjon " + args.Exception.LinePosition + " " + args.Message);
             }
         }
     }

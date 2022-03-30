@@ -20,7 +20,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
-        public static Melding HandleMelding(MottattMeldingArgs mottatt)
+        public static List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
             var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2",
@@ -30,7 +30,8 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
                 Path.Combine("Schema", "metadatakatalog.xsd"));
 
-            ArkivmeldingOppdatering arkivmeldingOppdatering;
+            var meldinger = new List<Melding>();
+            ArkivmeldingOppdatering arkivmeldingOppdatering = new ArkivmeldingOppdatering();
             if (mottatt.Melding.HasPayload)
             {
                 arkivmeldingOppdatering = GetPayload(mottatt, arkivmeldingXmlSchemaSet,
@@ -38,22 +39,24 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
                 if (xmlValidationErrorOccured) // Ugyldig forespørsel
                 {
-                    return new Melding
+                    meldinger.Add(new Melding
                     {
                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                         FileName = "payload.json",
                         MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                    };
+                    });
+                    return meldinger;
                 }
             }
             else
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("ArkivmeldingOppdatering meldingen mangler innhold"),
                     FileName = "payload.json",
                     MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                };
+                });
+                return meldinger;
             }
 
             //TODO Hent arkivmelding i "cache" hvis det er en testSessionId i headere og oppdater den meldingen
@@ -92,12 +95,13 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                                 }
                                 else // ID mangler og vi sender ugyldigforespoersel
                                 {
-                                    return new Melding
+                                    meldinger.Add(new Melding
                                     {
                                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Mangler id for registrering"),
                                         FileName = "payload.json",
                                         MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                                    };
+                                    });
+                                    return meldinger;
                                 }
                             }
                         }
@@ -106,18 +110,27 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             }
             else
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("ArkivmeldingOppdatering ikke gyldig. Kunne ikke finne noe registrert i arkivet med gitt id"),
                     FileName = "payload.json",
                     MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                };
+                });
+                return meldinger;
             }
             
-            return new Melding
+            // Mottatt
+            meldinger.Add(new Melding
+            {
+                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt,
+            });
+            
+            // Kvittering
+            meldinger.Add(new Melding
             {
                 MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdaterKvittering,
-            };
+            });
+            return meldinger;
         }
         
         public static ArkivmeldingOppdatering GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,

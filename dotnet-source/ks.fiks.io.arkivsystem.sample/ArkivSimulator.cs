@@ -112,37 +112,37 @@ namespace ks.fiks.io.arkivsystem.sample
         private static void HandleArkiveringMelding(MottattMeldingArgs mottatt)
         {
             var payloads = new List<IPayload>();
-            var melding = mottatt.Melding.MeldingType switch
+            var meldinger = mottatt.Melding.MeldingType switch
             {
                 ArkivintegrasjonMeldingTypeV1.Arkivmelding => ArkivmeldingHandler.HandleMelding(mottatt),
                 ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdater => ArkivmeldingOppdaterHandler.HandleMelding(mottatt),
                 _ => throw new ArgumentException("Case not handled")
             };
 
-            // Både arkivmelding og arkivmeldingOppdater skal sende en mottatt melding
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
-            var sendtMottattMelding = mottatt.SvarSender.Svar(ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt).Result;
-            Log.Information($"Svarmelding {sendtMottattMelding.MeldingId} {sendtMottattMelding.MeldingType} sendt...");
-            Log.Information("Melding er mottatt i arkiv ok ......");
 
-            if (melding.ResultatMelding != null) {
-                if (melding.MeldingsType == FeilmeldingMeldingTypeV1.Ugyldigforespørsel)
+            foreach (var melding in meldinger)
+            {
+                if (melding.ResultatMelding != null)
                 {
-                    payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
-                        melding.FileName));
+                    if (melding.MeldingsType == FeilmeldingMeldingTypeV1.Ugyldigforespørsel)
+                    {
+                        payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
+                            melding.FileName));
+                    }
+                    else
+                    {
+                        payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
+                            melding.FileName));
+                    }
                 }
-                else
-                {
-                    payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
-                        melding.FileName));
-                }
+
+                var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
+                Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt",
+                    sendtMelding.MeldingId,
+                    sendtMelding.MeldingType);
+                
             }
-
-            var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
-            Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt", sendtMelding.MeldingId,
-                sendtMelding.MeldingType);
-            Log.Information("Melding er ferdig håndtert i arkiv");
-            
         }
 
         private void SubscribeToFiksIOClient()
