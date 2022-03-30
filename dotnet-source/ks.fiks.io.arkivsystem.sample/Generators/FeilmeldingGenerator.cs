@@ -6,9 +6,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
 {
     public class FeilmeldingGenerator
     {
-        public static Ugyldigforespørsel CreateUgyldigforespoerselMelding(IReadOnlyList<List<string>> validationResult)
+        public static Ugyldigforespoersel CreateUgyldigforespoerselMelding(IReadOnlyList<List<string>> validationResult)
         {
-            return new Ugyldigforespørsel
+            return new Ugyldigforespoersel()
             {
                 ErrorId = Guid.NewGuid().ToString(),
                 Feilmelding = $"Feilmelding: {Environment.NewLine} {validationResult[0]}",
@@ -16,9 +16,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             };
         }
 
-        public static Ugyldigforespørsel CreateUgyldigforespoerselMelding(string feilmelding)
+        public static Ugyldigforespoersel CreateUgyldigforespoerselMelding(string feilmelding)
         {
-            return new Ugyldigforespørsel
+            return new Ugyldigforespoersel()
             {
                 ErrorId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,

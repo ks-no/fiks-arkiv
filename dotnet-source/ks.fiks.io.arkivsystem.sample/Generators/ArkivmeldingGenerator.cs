@@ -32,17 +32,32 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 {
                     new Dokumentbeskrivelse()
                     {
-                        Dokumenttype = "SØKNAD",
-                        Dokumentstatus = "F",
+                        Dokumenttype = new Dokumenttype()
+                        {
+                            KodeProperty= "SØKNAD"
+                        },
+                        Dokumentstatus = new Dokumentstatus()
+                        {
+                            KodeProperty= "F"
+                        },
                         Tittel = "Rekvisisjon av oppmålingsforretning",
-                        TilknyttetRegistreringSom = "H",
+                        TilknyttetRegistreringSom = new TilknyttetRegistreringSom()
+                        {
+                            KodeProperty= "H"
+                        },
                         Dokumentobjekt =
                         {
                             new Dokumentobjekt()
                             {
                                 Versjonsnummer = "1",
-                                Variantformat = "P",
-                                Format = "PDF",
+                                Variantformat = new Variantformat()
+                                {
+                                    KodeProperty= "P"
+                                },
+                                Format = new Format()
+                                {
+                                    KodeProperty= "PDF"
+                                },
                                 Filnavn = "rekvisjon.pdf",
                                 ReferanseDokumentfil = "rekvisisjon.pdf"
                             }
@@ -54,14 +69,23 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 {
                     new Korrespondansepart()
                     {
-                        Korrespondanseparttype = "IM",
+                        Korrespondanseparttype = new Korrespondanseparttype()
+                        {
+                            KodeProperty= "IM"
+                        },
                         KorrespondansepartNavn = "Oppmålingsetaten",
                         AdministrativEnhet = "Oppmålingsetaten",
                         Saksbehandler = "Ingrid Mottaker"
                     }
                 },
-                Journalposttype = "X",
-                Journalstatus = "F",
+                Journalposttype = new Journalposttype()
+                {
+                    KodeProperty= "X"
+                },
+                Journalstatus = new Journalstatus()
+                {
+                    KodeProperty= "F"
+                },
                 DokumentetsDato = DateTime.Now.Date,
                 MottattDato = DateTime.Now,
             };

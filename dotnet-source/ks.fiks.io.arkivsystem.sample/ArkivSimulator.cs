@@ -73,8 +73,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 var payloads = new List<IPayload>();
                 payloads.Add(
                     new StringPayload(
-                        ArkivmeldingSerializeHelper.Serialize(
-                            FeilmeldingGenerator.CreateUgyldigforespoerselMelding($"Ukjent meldingstype {mottatt.Melding.MeldingType} mottatt")),
+                        JsonConvert.SerializeObject(FeilmeldingGenerator.CreateUgyldigforespoerselMelding($"Ukjent meldingstype {mottatt.Melding.MeldingType} mottatt")),
                         "payload.json"));
                 mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, payloads );
             }
@@ -91,8 +90,16 @@ namespace ks.fiks.io.arkivsystem.sample
                 _ => throw new ArgumentException("Case not handled")
             };
 
-            payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
-                melding.FileName));
+            if (melding.MeldingsType == FeilmeldingMeldingTypeV1.Ugyldigforespørsel)
+            {
+                payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
+                    melding.FileName));
+            }
+            else
+            {
+                payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
+                    melding.FileName));
+            }
 
             mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
 
@@ -119,8 +126,16 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Melding er mottatt i arkiv ok ......");
 
             if (melding.ResultatMelding != null) {
-                payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
-                    melding.FileName));
+                if (melding.MeldingsType == FeilmeldingMeldingTypeV1.Ugyldigforespørsel)
+                {
+                    payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
+                        melding.FileName));
+                }
+                else
+                {
+                    payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
+                        melding.FileName));
+                }
             }
 
             var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
