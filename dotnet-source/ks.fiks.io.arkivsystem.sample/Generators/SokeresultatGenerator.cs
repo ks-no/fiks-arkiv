@@ -54,7 +54,10 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         Saksdato = DateTime.Now,
                         AdministrativEnhet = "Test",
                         Saksansvarlig = "Test",
-                        Saksstatus = "Test"
+                        Saksstatus = new Saksstatus()
+                        {
+                            KodeProperty= "Test"
+                        }
                     }
                 });
             sokeresultatMinimum.ResultatListe.Add(
@@ -74,7 +77,10 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         Saksdato = DateTime.Now,
                         AdministrativEnhet = "Test",
                         Saksansvarlig = "Test",
-                        Saksstatus = "Test"
+                        Saksstatus = new Saksstatus()
+                        {
+                            KodeProperty= "Test"
+                        }
                     }
                 });
         }
@@ -154,7 +160,10 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         Saksdato = DateTime.Now,
                         AdministrativEnhet = "Test",
                         Saksansvarlig = "Test",
-                        Saksstatus = "Test"
+                        Saksstatus = new Saksstatus()
+                        {
+                            KodeProperty= "Test"
+                        }
                     }
                 });
             
@@ -175,7 +184,10 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         Saksdato = DateTime.Now,
                         AdministrativEnhet = "Test",
                         Saksansvarlig = "Test",
-                        Saksstatus = "Test"
+                        Saksstatus = new Saksstatus()
+                        {
+                            KodeProperty= "Test"
+                        }
                     }
                 });
         }

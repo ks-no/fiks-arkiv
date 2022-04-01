@@ -30,7 +30,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton(AppSettingsBuilder.CreateAppSettings(hostContext.Configuration));
-                    services.AddHostedService<ArkivService>();
+                    services.AddHostedService<ArkivSimulator>();
                 })
                 .RunConsoleAsync();
         }

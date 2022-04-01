@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
 using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
+using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
@@ -33,6 +34,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         {
             client.Dispose();
         }
+        
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Fagsystem Service is starting.");
@@ -165,13 +167,19 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 AdministrativEnhet = "Byggesaksavdelingen",
                 Saksansvarlig = "Byggesaksbehandler",
                 Saksdato = new DateTime(),
-                Saksstatus = "B",
-                Dokumentmedium = "elektronisk", // Code object?
+                Saksstatus = new Saksstatus()
+                {
+                    KodeProperty= "B"
+                },
+                Dokumentmedium = new Dokumentmedium()
+                {
+                    KodeProperty= "elektronisk"
+                }, // Code object?
                 Journalenhet = "BYG",
                 // arkivdel = "BYGG", // Missing and should be a code object
                 ReferanseArkivdel = { "BYGG" },  // Should be 0-1, not 0-m as this is the archive part the case belongs to!
                                                               // mappetype = new Kode
-                                                              // { kodeverdi = "Saksmappe"}, // Part of simplified message only... Should it be standardized?
+                                                              // { kodeKodeProperty= "Saksmappe"}, // Part of simplified message only... Should it be standardized?
                 Klassifikasjon = { gnr },
                 Part = 
                 {
@@ -184,7 +192,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 {
                         new Merknad
                         {
-                            Merknadstype = "BYGG",  // Code object?
+                            Merknadstype = new Merknadstype()
+                            {
+                                KodeProperty= "BYGG"
+                            },  // Code object?
                             Merknadstekst = "Saksnummer 20/123 i eByggesak"
                         }
                 },
@@ -194,9 +205,12 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 // kassasjonsvedtak
                 Skjerming = new Skjerming
                 {
-                    Tilgangsrestriksjon = "13", // Set by server?
+                    Tilgangsrestriksjon = new Tilgangsrestriksjon()
+                    {
+                        KodeProperty= "13"
+                    }, // Set by server?
                     Skjermingshjemmel = "Ofl § 13, fvl § 123",
-                    SkjermingMetadata = { "tittel" } // This should be coded
+                    SkjermingMetadata = { new SkjermingMetadata() {KodeProperty= "tittel" }} // This should be coded
                 },
                 // prosjekt
                 // tilgangsgruppe
@@ -219,15 +233,24 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 // Saksår
                 // Sakssekvensnummer
                 // referanseForelderMappe = saksid, // Exists in xsd
-                Journalposttype = "I",  // Code object?
-                Journalstatus = "J",    // Code object?
+                Journalposttype = new Journalposttype()
+                {
+                    KodeProperty= "I"
+                },  // Code object?
+                Journalstatus = new Journalstatus()
+                {
+                    KodeProperty= "J"
+                },    // Code object?
                 DokumentetsDato = new DateTime(),
                 Journaldato = new DateTime(),
                 Forfallsdato = new DateTime(),
                 Korrespondansepart = {
                     new Korrespondansepart
                     {
-                        Korrespondanseparttype = "avsender",    // Code object?
+                        Korrespondanseparttype = new Korrespondanseparttype()
+                        {
+                            KodeProperty= "avsender"  
+                        },    // Code object?
                         Organisasjonid = "123456789",
                         KorrespondansepartNavn = "Testesen",
                         Postadresse = { "c/o Hei og hå", "Testveien 3" },
@@ -236,7 +259,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     },
                     new Korrespondansepart
                     {
-                        Korrespondanseparttype = "kopimottager",    // Code object?
+                        Korrespondanseparttype = new Korrespondanseparttype()
+                        {
+                            KodeProperty= "kopimottager" 
+                        },    // Code object?
                         Personid = "12345612345",
                         KorrespondansepartNavn = "Advokat NN",  // How to indicate that a name is a person name if no ID number present?
                         Postadresse = { "Krøsusveien 3" },
@@ -253,7 +279,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     {
                         new Merknad
                         {
-                            Merknadstype = "BYGG",  // Code object?
+                            Merknadstype = new Merknadstype()
+                            {
+                                KodeProperty= "BYGG" 
+                            },  // Code object?
                             Merknadstekst = "Journalpostnummer 20/123-5 i eByggesak"
                         }
                     },
@@ -266,7 +295,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 OffentligTittel = "Søknad om rammetillatelse 12/123",
                 Skjerming = new Skjerming
                 {
-                    Tilgangsrestriksjon = "13",
+                    Tilgangsrestriksjon = new Tilgangsrestriksjon()
+                    {
+                        KodeProperty= "13" 
+                    },
                     Skjermingshjemmel = "Off.loven § 13",
                     Skjermingsvarighet = "60"   // Number of years should be int
                 },
@@ -275,18 +307,34 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 {
                     new Dokumentbeskrivelse
                     {
-                        TilknyttetRegistreringSom = "H",    // Code object?
+                        TilknyttetRegistreringSom = new TilknyttetRegistreringSom()
+                        {
+                            KodeProperty= "H"
+                            
+                        },    // Code object?
                         Dokumentnummer = "1",   // Number, should be int
-                        Dokumenttype = "SØKNAD",  // Code object?
-                        Dokumentstatus = "F",    // Code object?
+                        Dokumenttype = new Dokumenttype()
+                        {
+                            KodeProperty= "SØKNAD"
+                        },  // Code object?
+                        Dokumentstatus = new Dokumentstatus()
+                        {
+                            KodeProperty= "F"
+                        },    // Code object?
                         Tittel = "Søknad om rammetillatelse",
                         Dokumentobjekt =
                         {
                             new Dokumentobjekt
                             {
                                 Versjonsnummer = "1",   // Number!
-                                Variantformat = "A",    // Code object?
-                                Format = "PDF",     // Arkade wants file type here...
+                                Variantformat = new Variantformat()
+                                {
+                                    KodeProperty= "A"
+                                },    // Code object?
+                                Format = new Format()
+                                {
+                                    KodeProperty= "PDF"
+                                },     // Arkade wants file type here...
                                 MimeType = "application/pdf",
                                 ReferanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
                             }
@@ -294,18 +342,33 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     },
                     new Dokumentbeskrivelse
                     {
-                        TilknyttetRegistreringSom = "V",    // Code object?
+                        TilknyttetRegistreringSom = new TilknyttetRegistreringSom()
+                        {
+                            KodeProperty= "V"
+                        },    // Code object?
                         Dokumentnummer = "2",   // Number!
-                        Dokumenttype = "KART",  // Code object?
-                        Dokumentstatus = "F",    // Code object?
+                        Dokumenttype =  new Dokumenttype()
+                        {
+                            KodeProperty= "KART"
+                        },  // Code object?
+                        Dokumentstatus = new Dokumentstatus()
+                        {
+                            KodeProperty= "F"
+                        },    // Code object?
                         Tittel = "Situasjonskart",
                         Dokumentobjekt =
                         {
                             new Dokumentobjekt
                             {
                                 Versjonsnummer = "1",   // Number!
-                                Variantformat = "A",    // Number?
-                                Format = "PDF",     // Arkade wants file type here...
+                                Variantformat = new Variantformat()
+                                {
+                                    KodeProperty= "A"
+                                },    // Number?
+                                Format = new Format()
+                                {
+                                    KodeProperty= "PDF"
+                                },     // Arkade wants file type here...
                                 MimeType = "application/pdf",
                                 ReferanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
                             }
@@ -313,18 +376,33 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     },
                     new Dokumentbeskrivelse
                     {
-                        TilknyttetRegistreringSom = "V",    // Code object?
+                        TilknyttetRegistreringSom = new TilknyttetRegistreringSom()
+                        {
+                            KodeProperty= "V"
+                        },    // Code object?
                         Dokumentnummer = "3",   // NUmber!
-                        Dokumenttype = "TEGNING",  // Code object?
-                        Dokumentstatus = "F",    // Code object?
+                        Dokumenttype = new Dokumenttype()
+                        {
+                            KodeProperty= "TEGNING"
+                        },  // Code object?
+                        Dokumentstatus = new Dokumentstatus()
+                        {
+                            KodeProperty= "F"
+                        },    // Code object?
                         Tittel = "Fasade",
                         Dokumentobjekt =
                         {
                             new Dokumentobjekt
                             {
                                 Versjonsnummer = "1",   // Number!
-                                Variantformat = "A",    // Code object?
-                                Format = "PDF",     // Arkade wants file type here...
+                                Variantformat = new Variantformat()
+                                {
+                                    KodeProperty= "A"
+                                },    // Code object?
+                                Format = new Format()
+                                {
+                                    KodeProperty= "PDF"
+                                },     // Arkade wants file type here...
                                 MimeType = "application/pdf",
                                 ReferanseDokumentfil = "https://ebyggesak.no/hentFil?id=12345&token=67890"
                             }

@@ -18,27 +18,29 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 {
     public class ArkiveringService : IHostedService, IDisposable
     {
-        private readonly FiksIOClient client;
-        private readonly AppSettings appSettings;
+        private readonly FiksIOClient _client;
+        private readonly AppSettings _appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly ArkivmeldingFactory _arkivmeldingFactory;
 
         public ArkiveringService(AppSettings appSettings)
         {
-            this.appSettings = appSettings;
+            this._appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem...");
-            client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
+            _client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
+            _arkivmeldingFactory = new ArkivmeldingFactory();
         }
         public void Dispose()
         {
-            client.Dispose();
+            _client.Dispose();
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Log.Information("Fagsystem Service is starting.");
 
-            var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
+            var accountId = _appSettings.FiksIOConfig.FiksIoAccountId;
             
-            client.NewSubscription(OnReceivedMelding);
+            _client.NewSubscription(OnReceivedMelding);
 
             Log.Information("Abonnerer på meldinger på konto " + accountId + " ...");
 
@@ -55,10 +57,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendSok()
         {
-            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
-            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
+            var receiverId = _appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = _appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.innsyn.v1", 3)); //TODO for å finne receiverId
+            var konto = _client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.innsyn.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
@@ -75,17 +77,17 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var payloads = new List<IPayload> {new StringPayload(payload, "sok.xml")};
 
             //Sender til FIKS IO (arkiv løsning)
-            var msg = client.Send(messageRequest, payloads).Result;
+            var msg = _client.Send(messageRequest, payloads).Result;
             Log.Information("Melding tittel søk " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
             Log.Information(payload);
         }
 
         private void SendOppdatering()
         {
-            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
-            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
+            var receiverId = _appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = _appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = _client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
@@ -96,24 +98,24 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
            
             //Konverterer OppdaterSaksmappe til arkivmelding xml
             var inng = MessageSamples.GetOppdaterSaksmappeAnsvarligPaaFagsystemnoekkel("Fagsystem X", "1234", "Testing Testesen", "id343463346");
-            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var arkivmelding = _arkivmeldingFactory.GetArkivmelding(inng);
             var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
             
             //Lager FIKS IO melding
             var payloads = new List<IPayload> {new StringPayload(payload, "oppdatersaksmappe.xml")};
 
             //Sender til FIKS IO (arkiv løsning)
-            var msg = client.Send(messageRequest, payloads).Result;
+            var msg = _client.Send(messageRequest, payloads).Result;
             Log.Information("Melding OppdaterSaksmappeAnsvarligPaaFagsystemnoekkel " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType);
             Log.Information(payload);
         }
 
         private void SendInngående()
         {
-            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
-            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
+            var receiverId = _appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = _appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
+            var konto = _client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.forenklet.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             //Fagsystem definerer ønsket struktur
@@ -164,7 +166,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             navn = "Anita Avsender",
                             personid = new Personidentifikator()
                             {
-                                personidentifikatorType = "F", personidentifikatorNr = "12345678901"
+                                personidentifikatorLandkode = "NO", personidentifikatorNr = "12345678901"
                             },
                             postadresse = new EnkelAdresse()
                             {
@@ -187,7 +189,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var arkivmelding = _arkivmeldingFactory.GetArkivmelding(inng);
             var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
@@ -204,7 +206,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                           meldingType: "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.arkivmelding.v1"); // Message type as string
                                                                                                                            //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
             //Sender til FIKS IO (arkiv løsning)
-            var msg = client.Send(messageRequest, payloads).Result;
+            var msg = _client.Send(messageRequest, payloads).Result;
             Log.Information("Melding ny inngående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2" +
                             " vedlegg");
             Log.Information(payload);
@@ -212,10 +214,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendInngåendeBrukerhistorie3_1()
         {
-            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
-            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
+            var receiverId = _appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = _appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
+            var konto = _client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
@@ -260,7 +262,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             navn = "Anita Søker",
                             personid = new Personidentifikator()
                             {
-                                personidentifikatorType = "F", personidentifikatorNr = "12345678901"
+                                personidentifikatorLandkode = "NO", personidentifikatorNr = "12345678901"
                             },
                             postadresse = new EnkelAdresse()
                             {
@@ -278,7 +280,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             };
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(inng);
+            var arkivmelding = _arkivmeldingFactory.GetArkivmelding(inng);
             var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
@@ -290,7 +292,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             };
 
             //Sender til FIKS IO (arkiv løsning)
-            var msg = client.Send(messageRequest, payloads).Result;
+            var msg = _client.Send(messageRequest, payloads).Result;
             Log.Information("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Log.Information(payload);
 
@@ -298,10 +300,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendUtgående()
         {
-            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
-            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
+            var receiverId = _appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = _appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
+            var konto = _client.Lookup(new LookupRequest("KOMM:0825", "no.ks.fiks.gi.arkivintegrasjon.oppdatering.basis.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             //Fagsystem definerer ønsket struktur
@@ -366,7 +368,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(utg);
+            var arkivmelding = _arkivmeldingFactory.GetArkivmelding(utg);
             var payload = ArkivmeldingSerializeHelper.Serialize(arkivmelding);
 
             //Lager FIKS IO melding
@@ -384,7 +386,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                                                                                                                          //Se oversikt over meldingstyper på https://github.com/ks-no/fiks-io-meldingstype-katalog/tree/test/schema
 
             //Sender til FIKS IO (arkiv løsning)
-            var msg = client.Send(messageRequest, payloads).Result;
+            var msg = _client.Send(messageRequest, payloads).Result;
             Log.Information("Melding ny utgående journalpost " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Log.Information(payload);
 
@@ -392,10 +394,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
         private void SendUtgåendeUtvidet()
         {
-            var receiverId = appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
-            var senderId = appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
+            var receiverId = _appSettings.FiksIOConfig.SendToAccountId; // Receiver id as Guid
+            var senderId = _appSettings.FiksIOConfig.FiksIoAccountId; // Sender id as Guid
 
-            var konto = client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmelding.v1", 3)); //TODO for å finne receiverId
+            var konto = _client.Lookup(new LookupRequest("KOMM:0825", "no.geointegrasjon.arkiv.oppdatering.arkivmelding.v1", 3)); //TODO for å finne receiverId
             //Prosess også?
 
             var messageRequest = new MeldingRequest(
@@ -456,7 +458,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             //osv...
 
             //Konverterer til arkivmelding xml
-            var arkivmelding = ArkivmeldingFactory.GetArkivmelding(utg);
+            var arkivmelding = _arkivmeldingFactory.GetArkivmelding(utg);
 
             //TODO redigere arkivmelding
 
@@ -471,7 +473,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             };
 
             //Sender til FIKS IO (arkiv løsning)
-            var msg = client.Send(messageRequest, payloads).Result;
+            var msg = _client.Send(messageRequest, payloads).Result;
             Log.Information("Melding " + msg.MeldingId.ToString() + " sendt..." + msg.MeldingType + "...med 2 vedlegg");
             Log.Information(payload);
 
