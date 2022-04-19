@@ -3,9 +3,9 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Hent.Journalpost;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
+using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -48,7 +48,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
                 Path.Combine("Schema", "metadatakatalog.xsd"));
 
-            var hentMelding = JournalpostHentHandler.GetPayload(mottatt, journalpostHentXmlSchemaSet,
+            var hentMelding = GetPayload(mottatt, journalpostHentXmlSchemaSet,
                 out var xmlValidationErrorOccured, out var validationResult);
 
             if (xmlValidationErrorOccured)
@@ -74,7 +74,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ? JournalpostHentGenerator.Create(hentMelding)
                     : JournalpostHentGenerator.Create(hentMelding, (Journalpost)arkivmelding.Registrering[0]),
                 FileName = "resultat.xml",
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.JournalpostHentResultat
+                MeldingsType = FiksArkivV1Meldingtype.JournalpostHentResultat
             };
         }
     }

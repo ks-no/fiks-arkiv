@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding.Oppdatering;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
+using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -122,13 +120,13 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Mottatt
             meldinger.Add(new Melding
             {
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt,
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
             });
             
             // Kvittering
             meldinger.Add(new Melding
             {
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdaterKvittering,
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
             });
             return meldinger;
         }

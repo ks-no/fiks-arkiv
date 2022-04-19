@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.ASiC_E;
-using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
+using ks.fiks.io.arkivintegrasjon.common.Helpers;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 

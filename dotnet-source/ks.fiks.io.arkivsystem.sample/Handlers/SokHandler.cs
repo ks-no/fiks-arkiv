@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -43,7 +43,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             var sokXmlSchemaSet = new XmlSchemaSet();
             sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
 
-            var sok = SokHandler.GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
+            var sok = GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
                 out var validationResult);
 
             if (xmlValidationErrorOccured)

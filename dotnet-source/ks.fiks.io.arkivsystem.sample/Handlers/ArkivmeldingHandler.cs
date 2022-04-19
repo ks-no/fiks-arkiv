@@ -4,10 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Hent.Journalpost;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -105,14 +104,14 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Det skal sendes også en mottatt melding
             meldinger.Add(new Melding
             {
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt
             });
             
             meldinger.Add(new Melding
             {
                 ResultatMelding = kvittering,
                 FileName = "arkivmelding-kvittering.xml",
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingKvittering
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingKvittering
             });
             
             return meldinger;
