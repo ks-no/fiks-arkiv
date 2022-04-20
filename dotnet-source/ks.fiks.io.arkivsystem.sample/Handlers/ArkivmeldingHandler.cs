@@ -20,8 +20,27 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     public class ArkivmeldingHandler : BaseHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly XmlSchemaSet _arkivmeldingXmlSchemaSet;
+        
+        public ArkivmeldingHandler()
+        {
+            _arkivmeldingXmlSchemaSet = new XmlSchemaSet();
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
+                }
+            }
+        }
 
-        public static Arkivmelding GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
+        private Arkivmelding GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
             if (mottatt.Melding.HasPayload)
@@ -43,29 +62,14 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
         
-        public static List<Melding> HandleMelding(MottattMeldingArgs mottatt)
+        public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
-            var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
-            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
-            
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", schemaReader);
-                }
-            }
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
-                }
-            }
-
             var meldinger = new List<Melding>();
             
             Arkivmelding arkivmelding;
             if (mottatt.Melding.HasPayload)
             {
-                arkivmelding = GetPayload(mottatt, arkivmeldingXmlSchemaSet,
+                arkivmelding = GetPayload(mottatt, _arkivmeldingXmlSchemaSet,
                     out var xmlValidationErrorOccured, out var validationResult);
 
                 if (xmlValidationErrorOccured) // Ugyldig forespørsel

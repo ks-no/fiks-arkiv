@@ -18,8 +18,23 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     public class SokHandler : BaseHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly XmlSchemaSet sokXmlSchemaSet;
+        
+        public SokHandler()
+        {
+            sokXmlSchemaSet = new XmlSchemaSet();
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.sok.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", schemaReader);
+                }
+            }
+    
+        }
 
-        public static Sok GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
+        private Sok GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
             if (mottatt.Melding.HasPayload)
@@ -41,18 +56,8 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
         
-        public static Melding HandleMelding(MottattMeldingArgs mottatt)
+        public Melding HandleMelding(MottattMeldingArgs mottatt)
         {
-            var sokXmlSchemaSet = new XmlSchemaSet();
-            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
-            
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.sok.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", schemaReader);
-                }
-            }
-
             var sok = GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
                 out var validationResult);
 
