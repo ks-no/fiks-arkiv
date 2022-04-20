@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
@@ -21,15 +24,33 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         public static List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
             var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2",
-                Path.Combine("Schema", "arkivmeldingOppdatering.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
-                Path.Combine("Schema", "arkivmelding.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-                Path.Combine("Schema", "metadatakatalog.xsd"));
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmeldingOppdatering.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2", schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
+                }
+            }
+            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2",
+            //     Path.Combine("Schema", "arkivmeldingOppdatering.xsd"));
+            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
+            //     Path.Combine("Schema", "arkivmelding.xsd"));
+            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
+            //     Path.Combine("Schema", "metadatakatalog.xsd"));
 
             var meldinger = new List<Melding>();
-            ArkivmeldingOppdatering arkivmeldingOppdatering = new ArkivmeldingOppdatering();
+            var arkivmeldingOppdatering = new ArkivmeldingOppdatering();
             if (mottatt.Melding.HasPayload)
             {
                 arkivmeldingOppdatering = GetPayload(mottatt, arkivmeldingXmlSchemaSet,

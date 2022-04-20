@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
@@ -41,7 +44,15 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         public static Melding HandleMelding(MottattMeldingArgs mottatt)
         {
             var sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.sok.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", schemaReader);
+                }
+            }
+            // sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
 
             var sok = GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
                 out var validationResult);

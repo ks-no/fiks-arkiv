@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
@@ -43,10 +46,23 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         public static Melding HandleMelding(MottattMeldingArgs mottatt)
         {
             var journalpostHentXmlSchemaSet = new XmlSchemaSet();
-            journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2",
-                Path.Combine("Schema", "journalpostHent.xsd"));
-            journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-                Path.Combine("Schema", "metadatakatalog.xsd"));
+            // journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2",
+            //     Path.Combine("Schema", "journalpostHent.xsd"));
+            // journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
+            //     Path.Combine("Schema", "metadatakatalog.xsd"));
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.journalpostHent.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2", schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
+                }
+            }
 
             var hentMelding = GetPayload(mottatt, journalpostHentXmlSchemaSet,
                 out var xmlValidationErrorOccured, out var validationResult);
