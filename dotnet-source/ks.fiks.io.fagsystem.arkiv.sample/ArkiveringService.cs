@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
+using KS.Fiks.Arkiv.Forenklet.Arkivering.V1;
+using KS.Fiks.Arkiv.Forenklet.Arkivering.V1.Samples;
 using KS.Fiks.ASiC_E;
-using KS.Fiks.IO.Arkiv.Client.Sample;
+using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
 using ks.fiks.io.arkivintegrasjon.common.Helpers;
