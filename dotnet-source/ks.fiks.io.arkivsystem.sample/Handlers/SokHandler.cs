@@ -52,7 +52,6 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", schemaReader);
                 }
             }
-            // sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
 
             var sok = GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
                 out var validationResult);

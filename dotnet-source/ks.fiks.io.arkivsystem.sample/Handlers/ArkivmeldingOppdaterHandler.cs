@@ -42,12 +42,6 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
                 }
             }
-            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2",
-            //     Path.Combine("Schema", "arkivmeldingOppdatering.xsd"));
-            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
-            //     Path.Combine("Schema", "arkivmelding.xsd"));
-            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-            //     Path.Combine("Schema", "metadatakatalog.xsd"));
 
             var meldinger = new List<Melding>();
             var arkivmeldingOppdatering = new ArkivmeldingOppdatering();

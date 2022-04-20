@@ -46,11 +46,6 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         public static List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
             var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
-            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
-            //     Path.Combine("Schema", "arkivmelding.xsd"));
-            // arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-            //     Path.Combine("Schema", "metadatakatalog.xsd"));
-            
             var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
             
