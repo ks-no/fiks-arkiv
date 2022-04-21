@@ -1,31 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Schema;
-using KS.Fiks.IO.Arkiv.Client.ForenkletArkivering;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
-using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
+using ks.fiks.io.arkivintegrasjon.common.Helpers;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Handlers;
-using ks.fiks.io.arkivsystem.sample.Helpers;
-using ks.fiks.io.arkivsystem.sample.Models;
 using ks.fiks.io.arkivsystem.sample.Storage;
-using ks.fiks.io.arkivsystem.sample.Validering;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using KS.Fiks.IO.Client.Models.Feilmelding;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
-using EksternNoekkel = KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -36,6 +27,10 @@ namespace ks.fiks.io.arkivsystem.sample
         private readonly AppSettings appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         public static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
+        private JournalpostHentHandler _journalpostHentHandler;
+        private SokHandler _sokHandler;
+        private ArkivmeldingHandler _arkivmeldingHandler;
+        private ArkivmeldingOppdaterHandler _arkivmeldingOppdaterHandler;
 
         public ArkivSimulator(AppSettings appSettings)
         {
@@ -43,6 +38,10 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Setter opp FIKS integrasjon for arkivsystem");
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
             _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
+            _journalpostHentHandler = new JournalpostHentHandler();
+            _sokHandler = new SokHandler();
+            _arkivmeldingHandler = new ArkivmeldingHandler();
+            _arkivmeldingOppdaterHandler = new ArkivmeldingOppdaterHandler();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -57,11 +56,11 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Melding med {MeldingId} og meldingstype {MeldingsType} mottas", mottatt.Melding.MeldingId,
                 mottatt.Melding.MeldingType);
             
-            if (ArkivintegrasjonMeldingTypeV1.IsArkiveringType(mottatt.Melding.MeldingType))
+            if (FiksArkivV1Meldingtype.IsArkiveringType(mottatt.Melding.MeldingType))
             {
                 HandleArkiveringMelding(mottatt);
             }
-            else if (ArkivintegrasjonMeldingTypeV1.IsInnsynType(mottatt.Melding.MeldingType))
+            else if (FiksArkivV1Meldingtype.IsInnsynType(mottatt.Melding.MeldingType))
             {
                 HandleInnsynMelding(mottatt);
             }
@@ -79,14 +78,14 @@ namespace ks.fiks.io.arkivsystem.sample
             }
         }
 
-        private static void HandleInnsynMelding(MottattMeldingArgs mottatt)
+        private void HandleInnsynMelding(MottattMeldingArgs mottatt)
         {
             var payloads = new List<IPayload>();
 
             var melding = mottatt.Melding.MeldingType switch
             {
-                ArkivintegrasjonMeldingTypeV1.Sok => SokHandler.HandleMelding(mottatt),
-                ArkivintegrasjonMeldingTypeV1.JournalpostHent => JournalpostHentHandler.HandleMelding(mottatt),
+                FiksArkivV1Meldingtype.Sok => _sokHandler.HandleMelding(mottatt),
+                FiksArkivV1Meldingtype.JournalpostHent => _journalpostHentHandler.HandleMelding(mottatt),
                 _ => throw new ArgumentException("Case not handled")
             };
 
@@ -109,13 +108,13 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Melding er ferdig håndtert i arkiv");
         }
 
-        private static void HandleArkiveringMelding(MottattMeldingArgs mottatt)
+        private void HandleArkiveringMelding(MottattMeldingArgs mottatt)
         {
             var payloads = new List<IPayload>();
             var meldinger = mottatt.Melding.MeldingType switch
             {
-                ArkivintegrasjonMeldingTypeV1.Arkivmelding => ArkivmeldingHandler.HandleMelding(mottatt),
-                ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdater => ArkivmeldingOppdaterHandler.HandleMelding(mottatt),
+                FiksArkivV1Meldingtype.Arkivmelding => _arkivmeldingHandler.HandleMelding(mottatt),
+                FiksArkivV1Meldingtype.ArkivmeldingOppdater => _arkivmeldingOppdaterHandler.HandleMelding(mottatt),
                 _ => throw new ArgumentException("Case not handled")
             };
 

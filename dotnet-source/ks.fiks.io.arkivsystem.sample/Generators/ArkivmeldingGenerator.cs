@@ -1,16 +1,6 @@
 using System;
-using System.IO;
-using System.Xml.Schema;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
-using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
-using ks.fiks.io.arkivsystem.sample.Handlers;
-using ks.fiks.io.arkivsystem.sample.Models;
-using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
-using Dokumentobjekt = KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding.Dokumentobjekt;
-using EksternNoekkel = KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding.EksternNoekkel;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {

@@ -1,12 +1,7 @@
-using System.IO;
-using System.Xml.Schema;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
-using ks.fiks.io.arkivsystem.sample.Handlers;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
+using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Helpers;
 using ks.fiks.io.arkivsystem.sample.Models;
-using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -19,28 +14,28 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                     new Melding
                     {
                         FileName = "sokeresultat-minimum.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum,
+                        MeldingsType = FiksArkivV1Meldingtype.SokResultatMinimum,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons)
                     },
                 ResponsType.Noekler =>
                     new Melding
                     {
                         FileName = "sokeresultat-noekler.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatNoekler,
+                        MeldingsType = FiksArkivV1Meldingtype.SokResultatNoekler,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatNoekler(),
                     },
                 ResponsType.Utvidet =>
                     new Melding
                     {
                         FileName = "sokeresultat-utvidet.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatUtvidet,
+                        MeldingsType = FiksArkivV1Meldingtype.SokResultatUtvidet,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatUtvidet(sok.Respons)
                     },
                 _ =>
                     new Melding
                     {
                         FileName = "sokeresultat-minimum.xml",
-                        MeldingsType = ArkivintegrasjonMeldingTypeV1.SokResultatMinimum,
+                        MeldingsType = FiksArkivV1Meldingtype.SokResultatMinimum,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons),
                     }
             };

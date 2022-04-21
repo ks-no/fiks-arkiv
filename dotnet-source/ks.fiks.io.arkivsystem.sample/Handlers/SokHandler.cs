@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -15,8 +18,23 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     public class SokHandler : BaseHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly XmlSchemaSet sokXmlSchemaSet;
+        
+        public SokHandler()
+        {
+            sokXmlSchemaSet = new XmlSchemaSet();
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.sok.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", schemaReader);
+                }
+            }
+    
+        }
 
-        public static Sok GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
+        private Sok GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
             if (mottatt.Melding.HasPayload)
@@ -38,12 +56,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
         
-        public static Melding HandleMelding(MottattMeldingArgs mottatt)
+        public Melding HandleMelding(MottattMeldingArgs mottatt)
         {
-            var sokXmlSchemaSet = new XmlSchemaSet();
-            sokXmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", Path.Combine("Schema", "sok.xsd"));
-
-            var sok = SokHandler.GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
+            var sok = GetPayload(mottatt, sokXmlSchemaSet, out var xmlValidationErrorOccured,
                 out var validationResult);
 
             if (xmlValidationErrorOccured)

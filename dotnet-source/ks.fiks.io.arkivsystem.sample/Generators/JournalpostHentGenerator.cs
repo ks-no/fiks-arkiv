@@ -1,6 +1,5 @@
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Hent.Journalpost;
-using EksternNoekkel = KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding.EksternNoekkel;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -16,7 +15,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         {
             if (journalpostHent.ReferanseEksternNoekkel != null)
             {
-                journalpost.ReferanseEksternNoekkel = new EksternNoekkel()
+                journalpost.ReferanseEksternNoekkel = new KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel()
                 {   
                     Fagsystem = journalpostHent.ReferanseEksternNoekkel.Fagsystem,
                     Noekkel = journalpostHent.ReferanseEksternNoekkel.Noekkel

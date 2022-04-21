@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.IO.Arkiv.Client.Models;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmelding.Oppdatering;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
+using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -19,22 +20,38 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     public class ArkivmeldingOppdaterHandler : BaseHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        private readonly XmlSchemaSet _arkivmeldingXmlSchemaSet;
 
-        public static List<Melding> HandleMelding(MottattMeldingArgs mottatt)
+        public ArkivmeldingOppdaterHandler()
         {
-            var arkivmeldingXmlSchemaSet = new XmlSchemaSet();
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2",
-                Path.Combine("Schema", "arkivmeldingOppdatering.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
-                Path.Combine("Schema", "arkivmelding.xsd"));
-            arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
-                Path.Combine("Schema", "metadatakatalog.xsd"));
-
+            _arkivmeldingXmlSchemaSet = new XmlSchemaSet();
+            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmeldingOppdatering.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2", schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
+                }
+            }
+        } 
+            
+        public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
+        {
             var meldinger = new List<Melding>();
-            ArkivmeldingOppdatering arkivmeldingOppdatering = new ArkivmeldingOppdatering();
+            var arkivmeldingOppdatering = new ArkivmeldingOppdatering();
             if (mottatt.Melding.HasPayload)
             {
-                arkivmeldingOppdatering = GetPayload(mottatt, arkivmeldingXmlSchemaSet,
+                arkivmeldingOppdatering = GetPayload(mottatt, _arkivmeldingXmlSchemaSet,
                     out var xmlValidationErrorOccured, out var validationResult);
 
                 if (xmlValidationErrorOccured) // Ugyldig forespørsel
@@ -122,18 +139,18 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Mottatt
             meldinger.Add(new Melding
             {
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingMottatt,
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
             });
             
             // Kvittering
             meldinger.Add(new Melding
             {
-                MeldingsType = ArkivintegrasjonMeldingTypeV1.ArkivmeldingOppdaterKvittering,
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
             });
             return meldinger;
         }
-        
-        public static ArkivmeldingOppdatering GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
+
+        private ArkivmeldingOppdatering GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
             if (mottatt.Melding.HasPayload)

@@ -1,10 +1,7 @@
 using System;
-using System.Collections.ObjectModel;
-using KS.Fiks.IO.Arkiv.Client.Models.Arkivstruktur;
-using KS.Fiks.IO.Arkiv.Client.Models.Innsyn.Sok;
-using KS.Fiks.IO.Arkiv.Client.Models.Metadatakatalog;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.VisualBasic;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
+using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Helpers
 {
