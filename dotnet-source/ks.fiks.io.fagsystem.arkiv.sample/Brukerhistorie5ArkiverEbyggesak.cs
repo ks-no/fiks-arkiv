@@ -191,7 +191,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 Klassifikasjon = { gnr },
                 Part = 
                 {
-                        new KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Part
+                        new Part
                         {
                             PartNavn = "Fr Tiltakshaver"    // "navn" as for korrespondansepart?
                         }
