@@ -28,14 +28,31 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
             
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2", schemaReader);
+            using (var schemaStream = arkivModelsAssembly?.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd"))
+            {
+                if (schemaStream != null)
+                {
+                    using var schemaReader = XmlReader.Create(schemaStream);
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
+                        schemaReader);
                 }
             }
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
+            using (var schemaStream = arkivModelsAssembly?.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd"))
+            {
+                if (schemaStream != null)
+                {
+                    using var schemaReader = XmlReader.Create(schemaStream);
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
+                        schemaReader);
+                }
+            }
+            using (var schemaStream = arkivModelsAssembly?.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivstruktur.xsd"))
+            {
+                if (schemaStream != null)
+                {
+                    using var schemaReader = XmlReader.Create(schemaStream);
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivstruktur",
+                        schemaReader);
                 }
             }
         }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
@@ -14,6 +15,13 @@ using KS.Fiks.IO.Client.Configuration;
 using KS.Fiks.IO.Client.Models;
 using Ks.Fiks.Maskinporten.Client;
 using Microsoft.Extensions.Configuration;
+using Dokumentbeskrivelse = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentbeskrivelse;
+using Dokumentobjekt = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentobjekt;
+using Journalpost = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost;
+using Korrespondansepart = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Korrespondansepart;
+using Part = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Part;
+using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
+using Saksmappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Saksmappe;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
@@ -183,7 +191,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 Klassifikasjon = { gnr },
                 Part = 
                 {
-                        new Part
+                        new KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Part
                         {
                             PartNavn = "Fr Tiltakshaver"    // "navn" as for korrespondansepart?
                         }
@@ -650,7 +658,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             return null;
         }
 
-        private SendtMelding SendNyJournalpost(Journalpost jp)
+        private SendtMelding SendNyJournalpost(Registrering jp)
         {
             Guid receiverId = Guid.Parse(config["sendToAccountId"]); // Receiver id as Guid
             Guid senderId = Guid.Parse(config["accountId"]); // Sender id as Guid

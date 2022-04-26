@@ -43,6 +43,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
                 }
             }
+            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivstruktur.xsd")) {
+                using (var schemaReader = XmlReader.Create(schemaStream)) {
+                    _arkivmeldingXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivstruktur", schemaReader);
+                }
+            }
         } 
             
         public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
