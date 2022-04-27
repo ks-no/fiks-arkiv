@@ -7,11 +7,18 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
 {
     public class JournalpostHentGenerator
     {
+        private const string DokumentbeskrivelseOpprettetAvDefault = "Foo";
+        private const string JournalpostnummerDefault = "1";
+        private const string DokumentbeskrivelseDokumentnummerDefault = "1";
+        private const string DokumentbeskrivelseTilknyttetAvDefault = "foo";
+        private const string DokumentobjektOpprettetAvDefault = "foo";
+        private const string DokumentobjektSjekksumDefault = "foo";
+        private const string DokumentobjektSjekksumAlgoritmeDefault = "MD5";
+        private const string DokumentobjektFilstoerrelseDefault = "100";
+
         public static JournalpostHentResultat Create(JournalpostHent journalpostHent)
         {
             var journalpost = CreateJournalpost();
-                
-            //ArkivmeldingGenerator.CreateJournalpost();
             return Create(journalpostHent, journalpost);
         }
         
@@ -49,8 +56,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 },
                 Tittel = arkivmeldingJournalpost.Tittel,
                 Journalaar = DateTime.Now.Year.ToString(),
-                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? "1",
-                Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer ?? "1",
+                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? DateTime.Now.ToString(), //Setter denne til noe unikt via DateTime.Now
+                Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer ?? JournalpostnummerDefault,
                 Journalposttype = new Journalposttype()
                 {
                     KodeProperty = arkivmeldingJournalpost.Journalposttype.KodeProperty
@@ -93,14 +100,14 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                     },
                     Tittel = dokumentbeskrivelse.Tittel,
                     OpprettetDato = dokumentbeskrivelse.OpprettetDato,
-                    OpprettetAv = dokumentbeskrivelse.OpprettetAv ?? "foo",
+                    OpprettetAv = dokumentbeskrivelse.OpprettetAv ?? DokumentbeskrivelseOpprettetAvDefault,
                     TilknyttetRegistreringSom = new TilknyttetRegistreringSom()
                     {
                         KodeProperty = dokumentbeskrivelse.TilknyttetRegistreringSom.KodeProperty
                     },
-                    Dokumentnummer = dokumentbeskrivelse.Dokumentnummer ?? "1",
+                    Dokumentnummer = dokumentbeskrivelse.Dokumentnummer ?? DokumentbeskrivelseDokumentnummerDefault,
                     TilknyttetDato = dokumentbeskrivelse.TilknyttetDato,
-                    TilknyttetAv = dokumentbeskrivelse.TilknyttetAv ?? "foo"
+                    TilknyttetAv = dokumentbeskrivelse.TilknyttetAv ?? DokumentbeskrivelseTilknyttetAvDefault
                 };
                 
                 //TODO legg til part, merknad fra "lagret" journalpost
@@ -121,11 +128,11 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         },
                         Filnavn = dokumentobjekt.Filnavn,
                         OpprettetDato = dokumentobjekt.OpprettetDato,
-                        OpprettetAv = dokumentobjekt.OpprettetAv ?? "foo",
+                        OpprettetAv = dokumentobjekt.OpprettetAv ?? DokumentobjektOpprettetAvDefault,
                         ReferanseDokumentfil = dokumentobjekt.ReferanseDokumentfil,
-                        Sjekksum = dokumentobjekt.Sjekksum ?? "foo",
-                        SjekksumAlgoritme = dokumentobjekt.SjekksumAlgoritme ?? "MD5",
-                        Filstoerrelse = dokumentobjekt.Filstoerrelse ?? "100"
+                        Sjekksum = dokumentobjekt.Sjekksum ?? DokumentobjektSjekksumDefault,
+                        SjekksumAlgoritme = dokumentobjekt.SjekksumAlgoritme ?? DokumentobjektSjekksumAlgoritmeDefault,
+                        Filstoerrelse = dokumentobjekt.Filstoerrelse ?? DokumentobjektFilstoerrelseDefault
                     });
                 }
                 // Den må få en SystemID som er påkrevd
