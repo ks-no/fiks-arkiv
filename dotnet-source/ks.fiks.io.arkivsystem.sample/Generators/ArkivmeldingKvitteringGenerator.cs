@@ -1,8 +1,8 @@
 using System;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {

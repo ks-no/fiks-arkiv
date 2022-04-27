@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
@@ -20,26 +17,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     public class JournalpostHentHandler : BaseHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-        private readonly XmlSchemaSet _journalpostHentXmlSchemaSet;
         
-        public JournalpostHentHandler()
-        {
-            _journalpostHentXmlSchemaSet = new XmlSchemaSet();
-            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
-            
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.journalpostHent.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    _journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2", schemaReader);
-                }
-            }
-            using (var schemaStream = arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.metadatakatalog.xsd")) {
-                using (var schemaReader = XmlReader.Create(schemaStream)) {
-                    _journalpostHentXmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2", schemaReader);
-                }
-            }
-        }
-
         private JournalpostHent GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
@@ -64,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
         public Melding HandleMelding(MottattMeldingArgs mottatt)
         {
-            var hentMelding = GetPayload(mottatt, _journalpostHentXmlSchemaSet,
+            var hentMelding = GetPayload(mottatt, XmlSchemaSet,
                 out var xmlValidationErrorOccured, out var validationResult);
 
             if (xmlValidationErrorOccured)
@@ -88,7 +66,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 ResultatMelding = arkivmelding == null
                     ? JournalpostHentGenerator.Create(hentMelding)
-                    : JournalpostHentGenerator.Create(hentMelding, (Journalpost)arkivmelding.Registrering[0]),
+                    : JournalpostHentGenerator.Create(hentMelding, JournalpostHentGenerator.CreateHentJournalpostArkivmeldingJournalpost((Journalpost) arkivmelding.Registrering[0])),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivV1Meldingtype.JournalpostHentResultat
             };
