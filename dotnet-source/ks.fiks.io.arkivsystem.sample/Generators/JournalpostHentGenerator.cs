@@ -9,6 +9,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
     {
         private const string DokumentbeskrivelseOpprettetAvDefault = "Foo";
         private const string JournalpostnummerDefault = "1";
+        private const string JournalsekvensnummerDefault = "1";
         private const string DokumentbeskrivelseDokumentnummerDefault = "1";
         private const string DokumentbeskrivelseTilknyttetAvDefault = "foo";
         private const string DokumentobjektOpprettetAvDefault = "foo";
@@ -56,7 +57,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 },
                 Tittel = arkivmeldingJournalpost.Tittel,
                 Journalaar = DateTime.Now.Year.ToString(),
-                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? DateTime.Now.ToString(), //Setter denne til noe unikt via DateTime.Now
+                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? JournalsekvensnummerDefault, //Setter denne til noe unikt via DateTime.Now
                 Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer ?? JournalpostnummerDefault,
                 Journalposttype = new Journalposttype()
                 {
@@ -152,7 +153,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             
             return jp;
         }
-        
+
         public static Journalpost CreateJournalpost()
         {
             return new Journalpost()

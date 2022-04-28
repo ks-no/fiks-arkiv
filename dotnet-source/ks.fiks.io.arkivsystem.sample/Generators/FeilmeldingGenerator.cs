@@ -31,5 +31,15 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 CorrelationId = Guid.NewGuid().ToString()
             };
         }
+        
+        public static ServerFeil CreateServerFeilMelding(string feilmelding)
+        {
+            return new ServerFeil()
+            {
+                ErrorId = Guid.NewGuid().ToString(),
+                Feilmelding = feilmelding,
+                CorrelationId = Guid.NewGuid().ToString()
+            };
+        }
     }
 }

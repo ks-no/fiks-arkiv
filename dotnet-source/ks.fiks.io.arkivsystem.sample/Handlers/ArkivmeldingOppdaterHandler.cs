@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
@@ -25,105 +23,235 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         {
             var meldinger = new List<Melding>();
             var arkivmeldingOppdatering = new ArkivmeldingOppdatering();
-            if (mottatt.Melding.HasPayload)
-            {
-                arkivmeldingOppdatering = GetPayload(mottatt, XmlSchemaSet,
-                    out var xmlValidationErrorOccured, out var validationResult);
 
-                if (xmlValidationErrorOccured) // Ugyldig forespørsel
+            if (!mottatt.Melding.HasPayload)
+            {
+                meldinger.Add(new Melding
+                {
+                    ResultatMelding =
+                        FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
+                            "ArkivmeldingOppdatering meldingen mangler innhold"),
+                    FileName = "payload.json",
+                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                });
+                return meldinger;
+            }
+
+            arkivmeldingOppdatering = GetPayload(mottatt, XmlSchemaSet,
+                out var xmlValidationErrorOccured, out var validationResult);
+
+            if (xmlValidationErrorOccured) // Ugyldig forespørsel
+            {
+                meldinger.Add(new Melding
+                {
+                    ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
+                    FileName = "payload.json",
+                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                });
+                return meldinger;
+            }
+            
+            // Melding er validert i henhold til xsd, vi sender tilbake mottatt melding
+            meldinger.Add(new Melding
+            {
+                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
+            });
+
+            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
+            {
+                Arkivmelding lagretArkivmelding;
+                ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkivmelding);
+
+                // Journalpost oppdatering?
+                try
+                {
+                    if (arkivmeldingOppdatering.RegistreringOppdateringer.Count > 0)
+                    {
+                        meldinger = OppdaterRegistreringer(arkivmeldingOppdatering, lagretArkivmelding);
+                    }
+                    else if (arkivmeldingOppdatering.MappeOppdateringer.Count > 0) // Mappe oppdatering
+                    {
+                        meldinger = OppdaterMapper(arkivmeldingOppdatering, lagretArkivmelding);
+                    }
+                }
+                catch (Exception e)
                 {
                     meldinger.Add(new Melding
                     {
-                        ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
+                        ResultatMelding =
+                            FeilmeldingGenerator.CreateServerFeilMelding(
+                                $"Noe gikk galt: {e.Message}"),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                        MeldingsType = FeilmeldingMeldingTypeV1.Serverfeil,
                     });
                     return meldinger;
                 }
             }
             else
             {
+                // Fant ikke noen melding å oppdatere
                 meldinger.Add(new Melding
                 {
-                    ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("ArkivmeldingOppdatering meldingen mangler innhold"),
+                    ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
+                        "ArkivmeldingOppdatering ikke gyldig. Kunne ikke finne noe registrert i arkivet med gitt id"),
                     FileName = "payload.json",
                     MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
+            
+            return meldinger;
+        }
 
-            //TODO Hent arkivmelding i "cache" hvis det er en testSessionId i headere og oppdater den meldingen
-            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
+        private static List<Melding> OppdaterMapper(ArkivmeldingOppdatering arkivmeldingOppdatering,
+            Arkivmelding lagretArkivmelding)
+        {
+            var meldinger = new List<Melding>();
+            var found = false;
+            var success = false;
+            foreach (var mappeOppdatering in arkivmeldingOppdatering.MappeOppdateringer)
             {
-                Arkivmelding arkivmelding;
-                ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out arkivmelding);
-                
-                // Journalpost oppdatering?
-                if (arkivmeldingOppdatering.RegistreringOppdateringer.Count > 0)
+                foreach (var lagretMappe in lagretArkivmelding.Mappe)
                 {
-                     
-                    foreach (var registreringOppdatering in arkivmeldingOppdatering.RegistreringOppdateringer)
+                    if(AreEqual(lagretMappe, mappeOppdatering))
                     {
-                        // Tittel som skal oppdateres?
-                        if (!string.IsNullOrEmpty(registreringOppdatering.Tittel))
+                        if(mappeOppdatering.Tittel != null) { lagretMappe.Tittel = mappeOppdatering.Tittel; }
+                        if(mappeOppdatering.OffentligTittel != null) { lagretMappe.OffentligTittel = mappeOppdatering.OffentligTittel; }
+                        if(mappeOppdatering.Beskrivelse != null) { lagretMappe.Beskrivelse = mappeOppdatering.Beskrivelse; }
+                        
+                        //TODO Etter hvert: legge til mulighet for å kunne oppdatere virksomhetsspesifikkeMetadata og partOppdatering + evt andre som mangler her
+                        
+                        found = true;
+                        
+                        if (mappeOppdatering is SaksmappeOppdatering oppdatering)
                         {
-                            foreach (var registrering in arkivmelding.Registrering)
+                            if (oppdatering.Saksansvarlig != null)
                             {
-                                // referanseEksternNoekkel er nøkkel
-                                if (registreringOppdatering.ReferanseEksternNoekkel != null)
-                                {
-                                    if (registrering.ReferanseEksternNoekkel.Fagsystem ==
-                                        registreringOppdatering.ReferanseEksternNoekkel.Fagsystem &&
-                                        registrering.ReferanseEksternNoekkel.Noekkel ==
-                                        registreringOppdatering.ReferanseEksternNoekkel.Noekkel)
-                                    {
-                                        registrering.Tittel = registreringOppdatering.Tittel;
-                                    }
-                                } else if (registreringOppdatering.SystemID != null) // SystemID er nøkkel
-                                {
-                                    if (registrering.SystemID == registreringOppdatering.SystemID)
-                                    {
-                                        registrering.Tittel = registreringOppdatering.Tittel;
-                                    }
-                                }
-                                else // ID mangler og vi sender ugyldigforespoersel
-                                {
-                                    meldinger.Add(new Melding
-                                    {
-                                        ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Mangler id for registrering"),
-                                        FileName = "payload.json",
-                                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
-                                    });
-                                    return meldinger;
-                                }
+                                ((Saksmappe)lagretMappe).Saksansvarlig = oppdatering.Saksansvarlig;
                             }
+                            //TODO Etter hvert: legge til resten av oppdateringsmuligheter for Saksmappe
                         }
+
+                        success = true;
                     }
                 }
+
+                if (!found)
+                {
+                    Log.Warning("Fant ikke noen mappe å oppdatere basert på enten SystemID eller ReferanseEksternNoekkel");
+                    meldinger.Add(new Melding
+                    {
+                        ResultatMelding =
+                            FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
+                                "Mangler enten ReferanseEksternNoekkel eller SystemID for enten lagret mappe i 'arkivet' eller innkommende oppdatering. Kunne ikke matche forespørsel."),
+                        FileName = "payload.json",
+                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    });
+                }
             }
-            else
+
+            if (success)
             {
+                // Kvittering melding
                 meldinger.Add(new Melding
                 {
-                    ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding("ArkivmeldingOppdatering ikke gyldig. Kunne ikke finne noe registrert i arkivet med gitt id"),
-                    FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
                 });
-                return meldinger;
+            }
+
+            return meldinger;
+        }
+
+        private static List<Melding> OppdaterRegistreringer(ArkivmeldingOppdatering arkivmeldingOppdatering,
+            Arkivmelding lagretArkivmelding)
+        {
+            var success = false;
+            var meldinger = new List<Melding>();
+            foreach (var registreringOppdatering in arkivmeldingOppdatering.RegistreringOppdateringer)
+            {
+                var found = false;
+                foreach (var registrering in lagretArkivmelding.Registrering)
+                {
+                    if (AreEqual(registrering, registreringOppdatering))
+                    {
+                        if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
+                        if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
+                        if(registreringOppdatering.Skjerming != null) { registrering.Skjerming = registreringOppdatering.Skjerming; }
+                        if(registreringOppdatering.Gradering != null) { registrering.Gradering = registreringOppdatering.Gradering; }
+                        
+                        //TODO legge til de som mangler
+                        
+                        found = true;
+                        success = true;
+                    }   
+                }
+
+                if (!found)
+                {
+                    meldinger.Add(new Melding
+                    {
+                        ResultatMelding =
+                            FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
+                                "Mangler enten ReferanseEksternNoekkel eller SystemID for enten lagret registrering i 'arkivet' eller innkommende oppdatering. Kunne ikke matche forespørsel."),
+                        FileName = "payload.json",
+                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    });
+                }
             }
             
-            // Mottatt
-            meldinger.Add(new Melding
+            if (success)
             {
-                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
-            });
-            
-            // Kvittering
-            meldinger.Add(new Melding
-            {
-                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
-            });
+                // Kvittering melding
+                meldinger.Add(new Melding
+                {
+                    MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
+                });
+            }
             return meldinger;
+        }
+
+        private static bool AreEqual(Registrering lagretRegistrering, RegistreringOppdatering registreringOppdatering)
+        {
+            if (registreringOppdatering.ReferanseEksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
+            {
+                if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
+                    registreringOppdatering.ReferanseEksternNoekkel.Fagsystem &&
+                    lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
+                    registreringOppdatering.ReferanseEksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            }
+            else if (registreringOppdatering.SystemID != null && lagretRegistrering.SystemID != null)
+            {
+                if (lagretRegistrering.SystemID == registreringOppdatering.SystemID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private static bool AreEqual(Mappe lagretMappe, MappeOppdatering mappeOppdatering)
+        {
+            if (mappeOppdatering.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
+            {
+                if (lagretMappe.ReferanseEksternNoekkel.Fagsystem ==
+                    mappeOppdatering.ReferanseEksternNoekkel.Fagsystem &&
+                    lagretMappe.ReferanseEksternNoekkel.Noekkel ==
+                    mappeOppdatering.ReferanseEksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            }
+            else if (mappeOppdatering.SystemID != null && lagretMappe.SystemID != null)
+            {
+                if (lagretMappe.SystemID == mappeOppdatering.SystemID)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private ArkivmeldingOppdatering GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
@@ -140,7 +268,8 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 }
 
                 using var textReader = (TextReader)new StringReader(text);
-                return(ArkivmeldingOppdatering) new XmlSerializer(typeof(ArkivmeldingOppdatering)).Deserialize(textReader);
+                return (ArkivmeldingOppdatering)new XmlSerializer(typeof(ArkivmeldingOppdatering)).Deserialize(
+                    textReader);
             }
 
             xmlValidationErrorOccured = false;

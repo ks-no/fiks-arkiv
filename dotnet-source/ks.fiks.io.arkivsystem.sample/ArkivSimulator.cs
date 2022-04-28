@@ -28,6 +28,7 @@ namespace ks.fiks.io.arkivsystem.sample
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         public static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
         private JournalpostHentHandler _journalpostHentHandler;
+        private MappeHentHandler _mappeHentHandler;
         private SokHandler _sokHandler;
         private ArkivmeldingHandler _arkivmeldingHandler;
         private ArkivmeldingOppdaterHandler _arkivmeldingOppdaterHandler;
@@ -39,6 +40,7 @@ namespace ks.fiks.io.arkivsystem.sample
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
             _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
             _journalpostHentHandler = new JournalpostHentHandler();
+            _mappeHentHandler = new MappeHentHandler();
             _sokHandler = new SokHandler();
             _arkivmeldingHandler = new ArkivmeldingHandler();
             _arkivmeldingOppdaterHandler = new ArkivmeldingOppdaterHandler();
@@ -86,6 +88,7 @@ namespace ks.fiks.io.arkivsystem.sample
             {
                 FiksArkivV1Meldingtype.Sok => _sokHandler.HandleMelding(mottatt),
                 FiksArkivV1Meldingtype.JournalpostHent => _journalpostHentHandler.HandleMelding(mottatt),
+                FiksArkivV1Meldingtype.MappeHent => _mappeHentHandler.HandleMelding(mottatt),
                 _ => throw new ArgumentException("Case not handled")
             };
 
