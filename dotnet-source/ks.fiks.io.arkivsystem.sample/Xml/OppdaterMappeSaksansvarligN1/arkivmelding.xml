@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<arkivmelding xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2">
+    <system>Fagsystem X</system>
+    <meldingId>af8f08cc-9a9d-40ff-99e8-c3459170c3c9</meldingId>
+    <tidspunkt>0001-01-01T00:00:00</tidspunkt>
+    <antallFiler>1</antallFiler>
+    <mappe xsi:type="saksmappe">
+        <tittel>En ny saksmappe fra integrasjonstest</tittel>
+        <referanseEksternNoekkel>
+            <fagsystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Fiks protokoll validator</fagsystem>
+            <noekkel xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">ca3ce092-0bfa-46bb-ad18-b00a340cdd8c</noekkel>
+        </referanseEksternNoekkel>
+        <registrering xsi:type="journalpost">
+            <opprettetAv>En brukerid</opprettetAv>
+            <arkivertAv>En brukerid</arkivertAv>
+            <referanseForelderMappe label="">a8ab6c95-9f90-41be-a408-f6b7d65345e4</referanseForelderMappe>
+            <dokumentbeskrivelse>
+                <dokumenttype>
+                    <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">SØKNAD</kode>
+                </dokumenttype>
+                <dokumentstatus>
+                    <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">F</kode>
+                </dokumentstatus>
+                <tittel>Rekvisisjon av oppmålingsforretning</tittel>
+                <tilknyttetRegistreringSom>
+                    <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">H</kode>
+                </tilknyttetRegistreringSom>
+                <dokumentobjekt>
+                    <versjonsnummer>1</versjonsnummer>
+                    <variantformat>
+                        <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">P</kode>
+                    </variantformat>
+                    <format>
+                        <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">PDF</kode>
+                    </format>
+                    <filnavn>rekvisjon.pdf</filnavn>
+                    <referanseDokumentfil>rekvisisjon.pdf</referanseDokumentfil>
+                </dokumentobjekt>
+            </dokumentbeskrivelse>
+            <tittel>Internt notat</tittel>
+            <korrespondansepart>
+                <korrespondanseparttype>
+                    <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">IM</kode>
+                </korrespondanseparttype>
+                <korrespondansepartNavn>Oppmålingsetaten</korrespondansepartNavn>
+                <administrativEnhet>Oppmålingsetaten</administrativEnhet>
+                <saksbehandler>Ingrid Mottaker</saksbehandler>
+            </korrespondansepart>
+            <referanseEksternNoekkel>
+                <fagsystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Fagsystem X</fagsystem>
+                <noekkel xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">
+                    6ea38455-48b1-4a94-9881-3cc2a065f04d
+                </noekkel>
+            </referanseEksternNoekkel>
+            <journalposttype>
+                <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">X</kode>
+            </journalposttype>
+            <journalstatus>
+                <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">F</kode>
+            </journalstatus>
+        </registrering>
+        <saksansvarlig>Sara Saksansvarlig</saksansvarlig>
+    </mappe>
+</arkivmelding>

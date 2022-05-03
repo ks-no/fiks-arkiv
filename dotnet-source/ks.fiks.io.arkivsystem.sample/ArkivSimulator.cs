@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
@@ -27,6 +31,7 @@ namespace ks.fiks.io.arkivsystem.sample
         private readonly AppSettings appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         public static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
+        public static Dictionary<string, Arkivmelding> _arkivmeldingProtokollValidatorStorage;
         private JournalpostHentHandler _journalpostHentHandler;
         private MappeHentHandler _mappeHentHandler;
         private SokHandler _sokHandler;
@@ -39,11 +44,24 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Setter opp FIKS integrasjon for arkivsystem");
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
             _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
+            _arkivmeldingProtokollValidatorStorage = new Dictionary<string, Arkivmelding>();
             _journalpostHentHandler = new JournalpostHentHandler();
             _mappeHentHandler = new MappeHentHandler();
             _sokHandler = new SokHandler();
             _arkivmeldingHandler = new ArkivmeldingHandler();
             _arkivmeldingOppdaterHandler = new ArkivmeldingOppdaterHandler();
+            InitArkivmeldingStorage();
+        }
+
+        private void InitArkivmeldingStorage()
+        {
+       
+            var serializer = new XmlSerializer(typeof(Arkivmelding));
+            var xml = File.ReadAllText("Xml/OppdaterMappeSaksansvarligN1/arkivmelding.xml", Encoding.UTF8);
+            Arkivmelding arkivmelding;
+            using TextReader reader = new StringReader(xml);
+            arkivmelding = (Arkivmelding)serializer.Deserialize(reader);
+            _arkivmeldingProtokollValidatorStorage.Add("0717a74b-b429-46ce-b05b-f0ae36dacfe0", arkivmelding); // Innkommende meldingId er key
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

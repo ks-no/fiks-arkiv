@@ -50,28 +50,33 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 });
                 return meldinger;
             }
-            
+
             // Melding er validert i henhold til xsd, vi sender tilbake mottatt melding
             meldinger.Add(new Melding
             {
                 MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
             });
 
+            Arkivmelding lagretArkivmelding = null;
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                Arkivmelding lagretArkivmelding;
                 ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkivmelding);
-
-                // Journalpost oppdatering?
+            }
+            else if (ArkivSimulator._arkivmeldingProtokollValidatorStorage.ContainsKey(arkivmeldingOppdatering.MeldingId)) {
+                lagretArkivmelding =
+                    ArkivSimulator._arkivmeldingProtokollValidatorStorage[arkivmeldingOppdatering.MeldingId];
+            } 
+        
+            if(lagretArkivmelding != null) {
                 try
                 {
                     if (arkivmeldingOppdatering.RegistreringOppdateringer.Count > 0)
                     {
-                        meldinger = OppdaterRegistreringer(arkivmeldingOppdatering, lagretArkivmelding);
+                        meldinger.AddRange(OppdaterRegistreringer(arkivmeldingOppdatering, lagretArkivmelding));
                     }
                     else if (arkivmeldingOppdatering.MappeOppdateringer.Count > 0) // Mappe oppdatering
                     {
-                        meldinger = OppdaterMapper(arkivmeldingOppdatering, lagretArkivmelding);
+                        meldinger.AddRange(OppdaterMapper(arkivmeldingOppdatering, lagretArkivmelding));
                     }
                 }
                 catch (Exception e)
