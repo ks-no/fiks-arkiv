@@ -1,6 +1,7 @@
 using System;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
+using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
@@ -16,6 +17,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         private const string DokumentobjektSjekksumDefault = "foo";
         private const string DokumentobjektSjekksumAlgoritmeDefault = "MD5";
         private const string DokumentobjektFilstoerrelseDefault = "100";
+        private const string SaksbehandlerKorrespondansepartDefault = "Ingrid Mottaker";
 
         public static JournalpostHentResultat Create(JournalpostHent journalpostHent)
         {
@@ -43,10 +45,11 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             };
         }
         
-        public static Journalpost CreateHentJournalpostArkivmeldingJournalpost (KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost arkivmeldingJournalpost)
+        public static Journalpost CreateHentJournalpostFraArkivmeldingJournalpost (KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost arkivmeldingJournalpost)
         {
             var jp = new Journalpost()
             {
+                SystemID = arkivmeldingJournalpost.SystemID ?? new SystemID() { Value = Guid.NewGuid().ToString() }, 
                 OpprettetAv = arkivmeldingJournalpost.OpprettetAv,
                 ArkivertAv = arkivmeldingJournalpost.ArkivertAv,
                 ReferanseForelderMappe = new SystemID() { Label = arkivmeldingJournalpost.ReferanseForelderMappe.Label, Value = arkivmeldingJournalpost.ReferanseForelderMappe.Value },
@@ -57,8 +60,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 },
                 Tittel = arkivmeldingJournalpost.Tittel,
                 Journalaar = DateTime.Now.Year.ToString(),
-                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? JournalsekvensnummerDefault, //Setter denne til noe unikt via DateTime.Now
-                Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer ?? JournalpostnummerDefault,
+                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? JournalsekvensnummerDefault,
+                Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer ?? DateTime.Now.Year + DateTime.Now.Millisecond.ToString(),
                 Journalposttype = new Journalposttype()
                 {
                     KodeProperty = arkivmeldingJournalpost.Journalposttype.KodeProperty
@@ -90,6 +93,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 var nyDokumentbeskrivelse = new Dokumentbeskrivelse()
                 {
+                    SystemID = dokumentbeskrivelse.SystemID ?? new SystemID() { Value = Guid.NewGuid().ToString() },
                     Dokumenttype = new Dokumenttype()
                     {
                         KodeProperty = dokumentbeskrivelse.Dokumenttype.KodeProperty
@@ -136,21 +140,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         Filstoerrelse = dokumentobjekt.Filstoerrelse ?? DokumentobjektFilstoerrelseDefault
                     });
                 }
-                // Den må få en SystemID som er påkrevd
-                nyDokumentbeskrivelse.SystemID = new SystemID()
-                {
-                    Value = Guid.NewGuid().ToString()
-                };
-                
                 jp.Dokumentbeskrivelse.Add(nyDokumentbeskrivelse);
             }
-
-            // Den må få en SystemID som er påkrevd
-            jp.SystemID = new SystemID()
-            {
-                Value = Guid.NewGuid().ToString()
-            };
-            
             return jp;
         }
 
@@ -158,6 +149,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         {
             return new Journalpost()
             {
+                SystemID = new SystemID() { Value = Guid.NewGuid().ToString() },
                 OpprettetAv = "En brukerid",
                 ArkivertAv = "En brukerid",
                 ReferanseForelderMappe = new SystemID() { Label = "", Value = Guid.NewGuid().ToString() },
@@ -170,6 +162,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 {
                     new Dokumentbeskrivelse()
                     {
+                        SystemID = new SystemID() { Value = Guid.NewGuid().ToString() },
                         Dokumenttype = new Dokumenttype()
                         {
                             KodeProperty= "SØKNAD"
@@ -178,26 +171,37 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         {
                             KodeProperty= "F"
                         },
+                        Dokumentnummer = "1",
+                        TilknyttetDato = new DateTime(),
+                        TilknyttetAv = DokumentbeskrivelseTilknyttetAvDefault,
                         Tittel = "Rekvisisjon av oppmålingsforretning",
                         TilknyttetRegistreringSom = new TilknyttetRegistreringSom()
                         {
                             KodeProperty= "H"
                         },
+                        OpprettetDato = DateTime.Now,
+                        OpprettetAv = DokumentbeskrivelseOpprettetAvDefault,
                         Dokumentobjekt =
                         {
                             new Dokumentobjekt()
                             {
+                                SystemID = new SystemID() { Value = Guid.NewGuid().ToString() },
                                 Versjonsnummer = "1",
                                 Variantformat = new Variantformat()
                                 {
-                                    KodeProperty= "P"
+                                    KodeProperty = VariantformatKoder.Arkivformat.Verdi
                                 },
                                 Format = new Format()
                                 {
-                                    KodeProperty= "PDF"
+                                    KodeProperty = FormatKoder.PDFA.Verdi
                                 },
-                                Filnavn = "rekvisjon.pdf",
-                                ReferanseDokumentfil = "rekvisisjon.pdf"
+                                Filnavn = "Test.pdf",
+                                OpprettetDato = DateTime.Now,
+                                OpprettetAv = DokumentobjektOpprettetAvDefault,
+                                ReferanseDokumentfil = "test.pdf",
+                                Sjekksum = DokumentobjektSjekksumDefault,
+                                SjekksumAlgoritme = DokumentobjektSjekksumAlgoritmeDefault,
+                                Filstoerrelse = DokumentobjektFilstoerrelseDefault
                             }
                         }
                     }
@@ -213,9 +217,12 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         },
                         KorrespondansepartNavn = "Oppmålingsetaten",
                         AdministrativEnhet = "Oppmålingsetaten",
-                        Saksbehandler = "Ingrid Mottaker"
+                        Saksbehandler = SaksbehandlerKorrespondansepartDefault
                     }
                 },
+                Journalaar = DateTime.Now.Year.ToString(),
+                Journalsekvensnummer = "1",
+                Journalpostnummer = DateTime.Now.Year + DateTime.Now.Millisecond.ToString(),
                 Journalposttype = new Journalposttype()
                 {
                     KodeProperty= "X"

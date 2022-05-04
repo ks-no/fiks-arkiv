@@ -62,9 +62,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkivmelding);
             }
-            else if (ArkivSimulator._arkivmeldingProtokollValidatorStorage.ContainsKey(arkivmeldingOppdatering.MeldingId)) {
-                lagretArkivmelding =
-                    ArkivSimulator._arkivmeldingProtokollValidatorStorage[arkivmeldingOppdatering.MeldingId];
+            else if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
+            {
+                ArkivSimulator._arkivmeldingProtokollValidatorStorage.TryGetValue(testName, out lagretArkivmelding);
             } 
         
             if(lagretArkivmelding != null) {

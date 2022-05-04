@@ -14,28 +14,28 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 ResponsType.Minimum =>
                     new Melding
                     {
-                        FileName = "sokeresultat-minimum.xml",
+                        FileName = "resultat.xml",
                         MeldingsType = FiksArkivV1Meldingtype.SokResultatMinimum,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons)
                     },
                 ResponsType.Noekler =>
                     new Melding
                     {
-                        FileName = "sokeresultat-noekler.xml",
+                        FileName = "resultat.xml",
                         MeldingsType = FiksArkivV1Meldingtype.SokResultatNoekler,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatNoekler(),
                     },
                 ResponsType.Utvidet =>
                     new Melding
                     {
-                        FileName = "sokeresultat-utvidet.xml",
+                        FileName = "resultat.xml",
                         MeldingsType = FiksArkivV1Meldingtype.SokResultatUtvidet,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatUtvidet(sok.Respons)
                     },
                 _ =>
                     new Melding
                     {
-                        FileName = "sokeresultat-minimum.xml",
+                        FileName = "resultat.xml",
                         MeldingsType = FiksArkivV1Meldingtype.SokResultatMinimum,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons),
                     }

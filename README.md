@@ -13,7 +13,7 @@ Se i mappen [**eksempel**](eksempel) for eksempler på meldinger.
 
 Applikasjonene er console applikasjoner som kjører i bakgrunnen eller man kan kjøre de vha docker-compose.
 
-Nuget biblioteket som inneholder modeller og xsd'er for Fiks-Arkiv, **KS.Fiks.Arkiv.Models.V1** som brukes er tilgjengelig på Github [her.](https://www.nuget.org/packages/KS.Fiks.Arkiv.Models.V1/)
+Nuget biblioteket som inneholder modeller og xsd'er for Fiks-Arkiv, **KS.Fiks.Arkiv.Models.V1** som brukes er tilgjengelig på NuGet [her.](https://www.nuget.org/packages/KS.Fiks.Arkiv.Models.V1/)
 
 
 ### Arkiv simulator (ks.fiks.io.arkivsystem.sample)
