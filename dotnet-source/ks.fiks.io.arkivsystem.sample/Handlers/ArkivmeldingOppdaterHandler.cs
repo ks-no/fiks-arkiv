@@ -57,16 +57,8 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
             });
 
-            Arkivmelding lagretArkivmelding = null;
-            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
-            {
-                ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkivmelding);
-            }
-            else if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
-            {
-                ArkivSimulator._arkivmeldingProtokollValidatorStorage.TryGetValue(testName, out lagretArkivmelding);
-            } 
-        
+            var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
+            
             if(lagretArkivmelding != null) {
                 try
                 {

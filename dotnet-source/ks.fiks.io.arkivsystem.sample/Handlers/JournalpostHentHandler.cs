@@ -56,17 +56,13 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             }
 
             // Hent arkivmelding fra "cache" hvis det er en testSessionId i headere
-            Arkivmelding arkivmeldingLagret = null;
-            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
-            {
-                ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out arkivmeldingLagret);
-            }
+            var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
 
             return new Melding
             {
-                ResultatMelding = arkivmeldingLagret == null
+                ResultatMelding = lagretArkivmelding == null
                     ? JournalpostHentGenerator.Create(hentMelding)
-                    : JournalpostHentGenerator.Create(hentMelding, JournalpostHentGenerator.CreateHentJournalpostFraArkivmeldingJournalpost((Journalpost) arkivmeldingLagret.Registrering[0])),
+                    : JournalpostHentGenerator.Create(hentMelding, JournalpostHentGenerator.CreateHentJournalpostFraArkivmeldingJournalpost((Journalpost) lagretArkivmelding.Registrering[0])),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivV1Meldingtype.JournalpostHentResultat
             };

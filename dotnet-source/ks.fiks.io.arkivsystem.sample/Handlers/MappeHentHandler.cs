@@ -56,14 +56,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 };
             }
 
-            // Hent arkivmelding fra "cache" hvis det er en testSessionId i headere
-            Arkivmelding arkivmelding = null;
-            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
-            {
-                ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out arkivmelding);
-            }
+            var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
 
-            if (arkivmelding != null && arkivmelding.Mappe.Count <= 0)
+            if (lagretArkivmelding != null && lagretArkivmelding.Mappe.Count <= 0)
             {
                 return new Melding
                 {
@@ -75,9 +70,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
             return new Melding
             {
-                ResultatMelding = arkivmelding == null
+                ResultatMelding = lagretArkivmelding == null
                     ? MappeHentGenerator.Create(hentMelding)
-                    : MappeHentGenerator.CreateFromCache(hentMelding, arkivmelding),
+                    : MappeHentGenerator.CreateFromCache(hentMelding, lagretArkivmelding),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivV1Meldingtype.MappeHentResultat
             };
