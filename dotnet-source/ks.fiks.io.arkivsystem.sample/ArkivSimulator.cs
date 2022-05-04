@@ -53,9 +53,12 @@ namespace ks.fiks.io.arkivsystem.sample
             InitArkivmeldingStorage();
         }
 
+        /*
+         * Fyller opp _arkivmeldingProtokollValidatorStorage med arkivmeldinger som validator trenger for å kunne svare på enkeltstående requests
+         * som hent- og oppdater-meldinger
+         */
         private void InitArkivmeldingStorage()
         {
-       
             var serializer = new XmlSerializer(typeof(Arkivmelding));
             var xml = File.ReadAllText("Xml/OppdaterMappeSaksansvarligN1/arkivmelding.xml", Encoding.UTF8);
             Arkivmelding arkivmelding;
