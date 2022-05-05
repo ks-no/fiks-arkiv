@@ -45,11 +45,18 @@
 
   <ItemGroup>
     <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12')" />
+    <Content Include="Xml\OppdaterMappeSaksansvarligN1\arkivmelding.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Remove="etc\fiks\fiks-io\privatekey.pem" />
     <Content Include="etc\fiks\fiks-io\development\privatekey.pem" Condition="Exists('etc\fiks\fiks-io\development\privatekey.pem')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\fiks-io\privatekey.pem')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Xml\OppdaterMappeSaksansvarligN1\arkivmelding.xml" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
@@ -132,6 +133,24 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             }
             validationResult = null;
             return string.Empty;
+        }
+
+        protected Arkivmelding TryGetLagretArkivmelding(MottattMeldingArgs mottatt)
+        {
+            
+            // Er det en testSession fra integrasjonstester? 
+            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
+            {
+                return ArkivSimulator._arkivmeldingCache[testSessionId];
+            }
+
+            // Er det test fra protokoll-validator?
+            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
+            {
+                return ArkivSimulator._arkivmeldingProtokollValidatorStorage[testName];
+            }
+
+            return null;
         }
     }
 }
