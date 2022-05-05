@@ -69,7 +69,6 @@ namespace ks.fiks.io.arkivsystem.sample
                 using TextReader reader = new StringReader(xml);
                 var arkivmelding = (Arkivmelding)serializer.Deserialize(reader);
                 var key = directoryName.Split(Path.DirectorySeparatorChar)[1];
-                Log.Information($"key:{key} \n xml:\n{xml}");
                 _arkivmeldingProtokollValidatorStorage.Add(key, arkivmelding); // Innkommende meldingId er key
             }
         }
