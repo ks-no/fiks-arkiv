@@ -53,6 +53,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\fiks-io\privatekey.pem')" />
+    <None Remove="Xml\HentJournalpostN1\arkivmelding.xml" />
+    <Content Include="Xml\HentJournalpostN1\arkivmelding.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

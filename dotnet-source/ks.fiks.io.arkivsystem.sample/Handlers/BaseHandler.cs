@@ -141,13 +141,13 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Er det en testSession fra integrasjonstester? 
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                return ArkivSimulator._arkivmeldingCache[testSessionId];
+                return ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId) ? ArkivSimulator._arkivmeldingCache[testSessionId] : null;
             }
 
             // Er det test fra protokoll-validator?
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
             {
-                return ArkivSimulator._arkivmeldingProtokollValidatorStorage[testName];
+                return ArkivSimulator._arkivmeldingProtokollValidatorStorage.ContainsKey(testName) ? ArkivSimulator._arkivmeldingProtokollValidatorStorage[testName] : null;
             }
 
             return null;
