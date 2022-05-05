@@ -68,13 +68,10 @@ namespace ks.fiks.io.arkivsystem.sample
                 var xml = File.ReadAllText($"{directoryName}/arkivmelding.xml", Encoding.UTF8);
                 using TextReader reader = new StringReader(xml);
                 var arkivmelding = (Arkivmelding)serializer.Deserialize(reader);
-                _arkivmeldingProtokollValidatorStorage.Add(directoryName.Split(Path.DirectorySeparatorChar)[1], arkivmelding); // Innkommende meldingId er key
+                var key = directoryName.Split(Path.DirectorySeparatorChar)[1];
+                Log.Information($"key:{key} \n xml:\n{xml}");
+                _arkivmeldingProtokollValidatorStorage.Add(key, arkivmelding); // Innkommende meldingId er key
             }
-            // var xml = File.ReadAllText("Xml/OppdaterMappeSaksansvarligN1/arkivmelding.xml", Encoding.UTF8);
-            // Arkivmelding arkivmelding;
-            // using TextReader reader = new StringReader(xml);
-            // arkivmelding = (Arkivmelding)serializer.Deserialize(reader);
-            // _arkivmeldingProtokollValidatorStorage.Add("0717a74b-b429-46ce-b05b-f0ae36dacfe0", arkivmelding); // Innkommende meldingId er key
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
