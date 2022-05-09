@@ -25,8 +25,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         protected BaseHandler()
         {
             XmlSchemaSet = new XmlSchemaSet();
-            var arkivModelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .SingleOrDefault(assembly => assembly.GetName().Name == "KS.Fiks.Arkiv.Models.V1");
+            var arkivModelsAssembly = Assembly.Load("KS.Fiks.Arkiv.Models.V1");
             
             using (var schemaStream =
                 arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd"))
