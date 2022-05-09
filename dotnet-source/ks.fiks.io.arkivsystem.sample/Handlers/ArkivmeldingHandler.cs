@@ -1,16 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
-using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -57,7 +55,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     {
                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                        MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                     });
                     return meldinger;
                 }
@@ -69,26 +67,14 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ResultatMelding =
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Arkivmelding meldingen mangler innhold"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
 
-            var kvittering = new ArkivmeldingKvittering
-            {
-                Tidspunkt = DateTime.Now
-            };
-            var isMappe = arkivmelding?.Mappe?.Count > 0;
-
-            if (isMappe)
-            {
-                kvittering.MappeKvittering.Add(ArkivmeldingKvitteringGenerator.CreateSaksmappeKvittering());
-            }
-            else
-            {
-                kvittering.RegistreringKvittering.Add(ArkivmeldingKvitteringGenerator.CreateJournalpostKvittering(arkivmelding));
-            }
-
+            SetMissingSystemID(arkivmelding);
+            var kvittering = ArkivmeldingKvitteringGenerator.CreateArkivmeldingKvittering(arkivmelding);
+            
             // Lagre arkivmelding i "cache" hvis det er en testSessionId i headere
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {

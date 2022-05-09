@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -9,7 +10,7 @@ using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -40,6 +41,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
 
+        private bool HarJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
+        {
+            return lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering => AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID));
+        }
+
         public Melding HandleMelding(MottattMeldingArgs mottatt)
         {
             var hentMelding = GetPayload(mottatt, XmlSchemaSet,
@@ -51,18 +57,28 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 };
             }
 
-            // Hent arkivmelding fra "cache" hvis det er en testSessionId i headere
+            // Forsøk å hente arkivmelding fra lokal lagring
             var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
+            
+            if (lagretArkivmelding != null && (lagretArkivmelding.Registrering.Count <= 0 || !HarJournalpost(lagretArkivmelding, hentMelding)))
+            {
+                return new Melding
+                {
+                    ResultatMelding = "Kunne ikke finne noen journalpost som tilsvarer det som er etterspurt i hentmelding",
+                    FileName = "payload.json",
+                    MeldingsType = FeilmeldingType.Ikkefunnet,
+                };
+            }
 
             return new Melding
             {
                 ResultatMelding = lagretArkivmelding == null
-                    ? JournalpostHentGenerator.Create(hentMelding)
-                    : JournalpostHentGenerator.Create(hentMelding, JournalpostHentGenerator.CreateHentJournalpostFraArkivmeldingJournalpost((Journalpost) lagretArkivmelding.Registrering[0])),
+                    ? JournalpostHentResultatGenerator.Create(hentMelding)
+                    : JournalpostHentResultatGenerator.Create(hentMelding, JournalpostHentResultatGenerator.CreateHentJournalpostFraArkivmeldingJournalpost((Journalpost) lagretArkivmelding.Registrering[0])),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivV1Meldingtype.JournalpostHentResultat
             };

@@ -10,7 +10,7 @@ using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -32,7 +32,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                             "ArkivmeldingOppdatering meldingen mangler innhold"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
@@ -46,7 +46,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
@@ -79,7 +79,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             FeilmeldingGenerator.CreateServerFeilMelding(
                                 $"Noe gikk galt: {e.Message}"),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingMeldingTypeV1.Serverfeil,
+                        MeldingsType = FeilmeldingType.Serverfeil,
                     });
                     return meldinger;
                 }
@@ -92,7 +92,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                         "ArkivmeldingOppdatering ikke gyldig. Kunne ikke finne noe registrert i arkivet med gitt id"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
@@ -142,7 +142,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                                 "Mangler enten ReferanseEksternNoekkel eller SystemID for enten lagret mappe i 'arkivet' eller innkommende oppdatering. Kunne ikke matche forespørsel."),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                        MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                     });
                 }
             }
@@ -169,7 +169,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 var found = false;
                 foreach (var registrering in lagretArkivmelding.Registrering)
                 {
-                    if (AreEqual(registrering, registreringOppdatering))
+                    if (AreEqual(registrering, registreringOppdatering.ReferanseEksternNoekkel, registreringOppdatering.SystemID))
                     {
                         if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
                         if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
@@ -191,7 +191,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                                 "Mangler enten ReferanseEksternNoekkel eller SystemID for enten lagret registrering i 'arkivet' eller innkommende oppdatering. Kunne ikke matche forespørsel."),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                        MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                     });
                 }
             }
@@ -205,50 +205,6 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 });
             }
             return meldinger;
-        }
-
-        private static bool AreEqual(Registrering lagretRegistrering, RegistreringOppdatering registreringOppdatering)
-        {
-            if (registreringOppdatering.ReferanseEksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
-            {
-                if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
-                    registreringOppdatering.ReferanseEksternNoekkel.Fagsystem &&
-                    lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
-                    registreringOppdatering.ReferanseEksternNoekkel.Noekkel)
-                {
-                    return true;
-                }
-            }
-            else if (registreringOppdatering.SystemID != null && lagretRegistrering.SystemID != null)
-            {
-                if (lagretRegistrering.SystemID == registreringOppdatering.SystemID)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        private static bool AreEqual(Mappe lagretMappe, MappeOppdatering mappeOppdatering)
-        {
-            if (mappeOppdatering.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
-            {
-                if (lagretMappe.ReferanseEksternNoekkel.Fagsystem ==
-                    mappeOppdatering.ReferanseEksternNoekkel.Fagsystem &&
-                    lagretMappe.ReferanseEksternNoekkel.Noekkel ==
-                    mappeOppdatering.ReferanseEksternNoekkel.Noekkel)
-                {
-                    return true;
-                }
-            }
-            else if (mappeOppdatering.SystemID != null && lagretMappe.SystemID != null)
-            {
-                if (lagretMappe.SystemID == mappeOppdatering.SystemID)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private ArkivmeldingOppdatering GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,

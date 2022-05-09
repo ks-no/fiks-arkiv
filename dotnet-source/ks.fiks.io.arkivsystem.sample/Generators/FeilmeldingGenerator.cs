@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {

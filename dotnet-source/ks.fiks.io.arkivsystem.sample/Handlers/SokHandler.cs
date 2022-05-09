@@ -7,7 +7,7 @@ using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -53,7 +53,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 };
             }
 

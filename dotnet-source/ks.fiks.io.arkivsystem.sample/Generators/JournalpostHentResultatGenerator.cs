@@ -6,7 +6,7 @@ using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
-    public class JournalpostHentGenerator
+    public class JournalpostHentResultatGenerator
     {
         private const string DokumentbeskrivelseOpprettetAvDefault = "Foo";
         private const string JournalpostnummerDefault = "1";

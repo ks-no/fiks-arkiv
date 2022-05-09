@@ -1,44 +1,62 @@
 using System;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
-using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
-using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
     public class ArkivmeldingKvitteringGenerator
     {
-        public static SaksmappeKvittering CreateSaksmappeKvittering()
+        public static ArkivmeldingKvittering CreateArkivmeldingKvittering(Arkivmelding arkivmelding)
+        {
+            var kvittering = new ArkivmeldingKvittering
+            {
+                Tidspunkt = DateTime.Now
+            };
+            var isMappe = arkivmelding?.Mappe?.Count > 0;
+
+            if (isMappe)
+            {
+                foreach (var mappe in arkivmelding.Mappe)
+                {
+                    kvittering.MappeKvittering.Add(CreateSaksmappeKvittering(mappe));
+                }
+                
+            }
+            else
+            {
+                foreach (var registrering in arkivmelding.Registrering)
+                {
+                    kvittering.RegistreringKvittering.Add(CreateJournalpostKvittering(registrering));    
+                }
+                
+            }
+
+            return kvittering;
+        }
+        
+        private static SaksmappeKvittering CreateSaksmappeKvittering(Mappe mappe)
         {
             var mp = new SaksmappeKvittering
             {
-                SystemID = new SystemID
-                {
-                    Value = Guid.NewGuid().ToString()
-                },
+                SystemID = mappe.SystemID,
                 OpprettetDato = DateTime.Now,
                 Saksaar = DateTime.Now.Year.ToString(),
-                Sakssekvensnummer = new Random().Next().ToString()
+                Sakssekvensnummer = new Random().Next().ToString(),
+                ReferanseForeldermappe = mappe.ReferanseForeldermappe,
+                ReferanseEksternNoekkel = mappe.ReferanseEksternNoekkel,
             };
             return mp;
         }
 
-        public static JournalpostKvittering CreateJournalpostKvittering(Arkivmelding arkivmelding)
+        private static RegistreringKvittering CreateJournalpostKvittering(Registrering journalpost)
         {
             var jp = new JournalpostKvittering
             {
-                SystemID = new SystemID
-                {
-                    Value = Guid.NewGuid().ToString()
-                },
+                SystemID = journalpost.SystemID,
                 Journalaar = DateTime.Now.Year.ToString(),
                 Journalsekvensnummer = new Random().Next().ToString(),
                 Journalpostnummer = new Random().Next(1, 100).ToString(),
-                ReferanseEksternNoekkel = new EksternNoekkel()
-                {
-                    Fagsystem = arkivmelding.Registrering[0].ReferanseEksternNoekkel.Fagsystem,
-                    Noekkel = arkivmelding.Registrering[0].ReferanseEksternNoekkel.Noekkel
-                }
+                ReferanseEksternNoekkel = journalpost.ReferanseEksternNoekkel,
             };
             return jp;
         }

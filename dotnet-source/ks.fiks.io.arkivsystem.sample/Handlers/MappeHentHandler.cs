@@ -3,14 +3,12 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
-using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -52,10 +50,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 };
             }
 
+            // Forsøk å hente arkivmelding fra lokal lagring
             var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
 
             if (lagretArkivmelding != null && lagretArkivmelding.Mappe.Count <= 0)
@@ -64,15 +63,15 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = "Kunne ikke finne noen mappe som tilsvarer det som er etterspurt i hentmelding",
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ikkefunnet,
                 };
             }
 
             return new Melding
             {
                 ResultatMelding = lagretArkivmelding == null
-                    ? MappeHentGenerator.Create(hentMelding)
-                    : MappeHentGenerator.CreateFromCache(hentMelding, lagretArkivmelding),
+                    ? MappeHentResultatGenerator.Create(hentMelding)
+                    : MappeHentResultatGenerator.CreateFromCache(hentMelding, lagretArkivmelding),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivV1Meldingtype.MappeHentResultat
             };
