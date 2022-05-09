@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
-using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using ks.fiks.io.arkivintegrasjon.common.FiksIOClient;
@@ -18,7 +17,7 @@ using ks.fiks.io.arkivsystem.sample.Models;
 using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.IO.Client.Models.Feilmelding;
+using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
@@ -103,7 +102,7 @@ namespace ks.fiks.io.arkivsystem.sample
                     new StringPayload(
                         JsonConvert.SerializeObject(FeilmeldingGenerator.CreateUgyldigforespoerselMelding($"Ukjent meldingstype {mottatt.Melding.MeldingType} mottatt")),
                         "payload.json"));
-                mottatt.SvarSender.Svar(FeilmeldingMeldingTypeV1.Ugyldigforespørsel, payloads );
+                mottatt.SvarSender.Svar(FeilmeldingType.Ugyldigforespørsel, payloads );
             }
         }
 
@@ -130,11 +129,11 @@ namespace ks.fiks.io.arkivsystem.sample
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                             $"Klarte ikke håndtere innkommende melding. Feilmelding: {e.Message}"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 };
             }
 
-            if (melding.MeldingsType == FeilmeldingMeldingTypeV1.Ugyldigforespørsel)
+            if (melding.MeldingsType == FeilmeldingType.Ugyldigforespørsel)
             {
                 payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
                     melding.FileName));
@@ -173,7 +172,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding($"Klarte ikke håndtere innkommende melding. Feilmelding: {e.Message}"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingMeldingTypeV1.Ugyldigforespørsel,
+                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
                 });
             }
 
@@ -183,7 +182,7 @@ namespace ks.fiks.io.arkivsystem.sample
             {
                 if (melding.ResultatMelding != null)
                 {
-                    if (melding.MeldingsType == FeilmeldingMeldingTypeV1.Ugyldigforespørsel)
+                    if (melding.MeldingsType == FeilmeldingType.Ugyldigforespørsel)
                     {
                         payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
                             melding.FileName));

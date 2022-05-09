@@ -6,9 +6,14 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
+using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
+using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
+using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
@@ -152,5 +157,87 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
             return null;
         }
+        
+        protected Arkivmelding AreEqual(MottattMeldingArgs mottatt)
+        {
+            
+            // Er det en testSession fra integrasjonstester? 
+            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
+            {
+                return ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId) ? ArkivSimulator._arkivmeldingCache[testSessionId] : null;
+            }
+
+            // Er det test fra protokoll-validator?
+            if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
+            {
+                return ArkivSimulator._arkivmeldingProtokollValidatorStorage.ContainsKey(testName) ? ArkivSimulator._arkivmeldingProtokollValidatorStorage[testName] : null;
+            }
+
+            return null;
+        }
+        
+        protected static bool AreEqual(Registrering lagretRegistrering, EksternNoekkel eksternNoekkel, SystemID systemId)
+        {
+            if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
+            {
+                if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
+                    eksternNoekkel.Fagsystem &&
+                    lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
+                    eksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            }
+            else if (systemId != null && lagretRegistrering.SystemID != null)
+            {
+                if (lagretRegistrering.SystemID.Value == systemId.Value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        protected static bool AreEqual(Mappe lagretMappe, MappeOppdatering mappeOppdatering)
+        {
+            if (mappeOppdatering.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
+            {
+                if (lagretMappe.ReferanseEksternNoekkel.Fagsystem ==
+                    mappeOppdatering.ReferanseEksternNoekkel.Fagsystem &&
+                    lagretMappe.ReferanseEksternNoekkel.Noekkel ==
+                    mappeOppdatering.ReferanseEksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            }
+            else if (mappeOppdatering.SystemID != null && lagretMappe.SystemID != null)
+            {
+                if (lagretMappe.SystemID == mappeOppdatering.SystemID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        protected static void SetMissingSystemID(Arkivmelding arkivmelding)
+        {
+            foreach (var registrering in arkivmelding.Registrering)
+            {
+                if (registrering.SystemID?.Value == null)
+                {
+                    registrering.SystemID = new SystemID() { Value = Guid.NewGuid().ToString() };
+                }
+            }
+
+            foreach (var mappe in arkivmelding.Mappe)
+            {
+                if (mappe.SystemID?.Value == null)
+                {
+                    mappe.SystemID = new SystemID() { Value = Guid.NewGuid().ToString() };
+                }
+            }
+        }
+
     }
 }

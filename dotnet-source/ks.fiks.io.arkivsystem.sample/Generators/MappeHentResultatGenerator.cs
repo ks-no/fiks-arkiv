@@ -7,7 +7,7 @@ using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
-    public class MappeHentGenerator
+    public class MappeHentResultatGenerator
     {
         public static MappeHentResultat Create(MappeHent mappeHent)
         {
