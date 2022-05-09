@@ -5,6 +5,7 @@
   <tidspunkt>0001-01-01T00:00:00</tidspunkt>
   <antallFiler>1</antallFiler>
   <registrering xsi:type="journalpost">
+    <systemID>6f358ced-036d-4c9b-b372-a2b7d83c5cc5</systemID>
     <opprettetAv>En brukerid</opprettetAv>
     <arkivertAv>En brukerid</arkivertAv>
     <referanseForelderMappe label="">c43e18dc-0224-4fac-9f80-01709f906b3d</referanseForelderMappe>
