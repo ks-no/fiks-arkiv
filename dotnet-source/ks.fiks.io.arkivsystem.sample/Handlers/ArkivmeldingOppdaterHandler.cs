@@ -54,7 +54,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Melding er validert i henhold til xsd, vi sender tilbake mottatt melding
             meldinger.Add(new Melding
             {
-                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt,
+                MeldingsType = FiksArkivMeldingtype.ArkivmeldingMottatt,
             });
 
             var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
@@ -152,7 +152,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 // Kvittering melding
                 meldinger.Add(new Melding
                 {
-                    MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
+                    MeldingsType = FiksArkivMeldingtype.ArkivmeldingOppdaterKvittering,
                 });
             }
 
@@ -201,7 +201,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 // Kvittering melding
                 meldinger.Add(new Melding
                 {
-                    MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingOppdaterKvittering,
+                    MeldingsType = FiksArkivMeldingtype.ArkivmeldingOppdaterKvittering,
                 });
             }
             return meldinger;

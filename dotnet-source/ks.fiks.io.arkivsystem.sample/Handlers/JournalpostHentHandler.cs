@@ -43,7 +43,52 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
         private bool HarJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
         {
+            if (lagretArkivmelding == null)
+            {
+                return false;
+            }
+            if (lagretArkivmelding.Mappe.Count >= 0)
+            {
+                foreach (var mappe in lagretArkivmelding.Mappe)
+                {
+                    foreach (var registrering in mappe.Registrering)
+                    {
+                        if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
             return lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering => AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID));
+        }
+        
+        private Journalpost GetJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
+        {
+            if (lagretArkivmelding.Mappe.Count >= 0)
+            {
+                foreach (var mappe in lagretArkivmelding.Mappe)
+                {
+                    foreach (var registrering in mappe.Registrering)
+                    {
+                        if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                        {
+                            return (Journalpost) registrering;
+                        }
+                    }
+                }
+            }
+            if (lagretArkivmelding.Registrering.Count >= 0)
+            {
+                foreach (var registrering in lagretArkivmelding.Registrering)
+                {
+                    if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                    {
+                        return (Journalpost) registrering;
+                    }
+                }
+            }
+            return null;
         }
 
         public Melding HandleMelding(MottattMeldingArgs mottatt)
@@ -64,11 +109,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Forsøk å hente arkivmelding fra lokal lagring
             var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
             
-            if (lagretArkivmelding != null && (lagretArkivmelding.Registrering.Count <= 0 || !HarJournalpost(lagretArkivmelding, hentMelding)))
+            if (!HarJournalpost(lagretArkivmelding, hentMelding))
             {
                 return new Melding
                 {
-                    ResultatMelding = "Kunne ikke finne noen journalpost som tilsvarer det som er etterspurt i hentmelding",
+                    ResultatMelding = FeilmeldingGenerator.CreateIkkefunnetMelding("Kunne ikke finne noen journalpost som tilsvarer det som er etterspurt i hentmelding"),
                     FileName = "payload.json",
                     MeldingsType = FeilmeldingType.Ikkefunnet,
                 };
@@ -78,9 +123,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 ResultatMelding = lagretArkivmelding == null
                     ? JournalpostHentResultatGenerator.Create(hentMelding)
-                    : JournalpostHentResultatGenerator.Create(hentMelding, JournalpostHentResultatGenerator.CreateHentJournalpostFraArkivmeldingJournalpost((Journalpost) lagretArkivmelding.Registrering[0])),
+                    : JournalpostHentResultatGenerator.Create(hentMelding, JournalpostHentResultatGenerator.CreateHentJournalpostFraArkivmeldingJournalpost(GetJournalpost(lagretArkivmelding, hentMelding))),
                 FileName = "resultat.xml",
-                MeldingsType = FiksArkivV1Meldingtype.JournalpostHentResultat
+                MeldingsType = FiksArkivMeldingtype.JournalpostHentResultat
             };
         }
     }

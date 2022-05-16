@@ -185,9 +185,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                 }, // Code object?
                 Journalenhet = "BYG",
                 // arkivdel = "BYGG", // Missing and should be a code object
-                ReferanseArkivdel = { "BYGG" },  // Should be 0-1, not 0-m as this is the archive part the case belongs to!
-                                                              // mappetype = new Kode
-                                                              // { kodeKodeProperty= "Saksmappe"}, // Part of simplified message only... Should it be standardized?
                 Klassifikasjon = { gnr },
                 Part = 
                 {
@@ -218,7 +215,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         KodeProperty= "13"
                     }, // Set by server?
                     Skjermingshjemmel = "Ofl § 13, fvl § 123",
-                    SkjermingMetadata = { new SkjermingMetadata() {KodeProperty= "tittel" }} // This should be coded
                 },
                 // prosjekt
                 // tilgangsgruppe
@@ -308,7 +304,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         KodeProperty= "13" 
                     },
                     Skjermingshjemmel = "Off.loven § 13",
-                    Skjermingsvarighet = "60"   // Number of years should be int
                 },
                 // Dokumenter
                 Dokumentbeskrivelse = 

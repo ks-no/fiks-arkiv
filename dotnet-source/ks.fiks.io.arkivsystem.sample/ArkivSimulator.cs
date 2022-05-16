@@ -84,11 +84,11 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("Melding med {MeldingId} og meldingstype {MeldingsType} mottas", mottatt.Melding.MeldingId,
                 mottatt.Melding.MeldingType);
             
-            if (FiksArkivV1Meldingtype.IsArkiveringType(mottatt.Melding.MeldingType))
+            if (FiksArkivMeldingtype.IsArkiveringType(mottatt.Melding.MeldingType))
             {
                 HandleArkiveringMelding(mottatt);
             }
-            else if (FiksArkivV1Meldingtype.IsInnsynType(mottatt.Melding.MeldingType))
+            else if (FiksArkivMeldingtype.IsInnsynType(mottatt.Melding.MeldingType))
             {
                 HandleInnsynMelding(mottatt);
             }
@@ -115,9 +115,9 @@ namespace ks.fiks.io.arkivsystem.sample
             {
                 melding = mottatt.Melding.MeldingType switch
                 {
-                    FiksArkivV1Meldingtype.Sok => _sokHandler.HandleMelding(mottatt),
-                    FiksArkivV1Meldingtype.JournalpostHent => _journalpostHentHandler.HandleMelding(mottatt),
-                    FiksArkivV1Meldingtype.MappeHent => _mappeHentHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.Sok => _sokHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.JournalpostHent => _journalpostHentHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.MappeHent => _mappeHentHandler.HandleMelding(mottatt),
                     _ => throw new ArgumentException("Case not handled")
                 };
             }
@@ -133,12 +133,13 @@ namespace ks.fiks.io.arkivsystem.sample
                 };
             }
 
-            if (melding.MeldingsType == FeilmeldingType.Ugyldigforespørsel)
+            // Json format
+            if (melding.MeldingsType == FeilmeldingType.Ugyldigforespørsel || melding.MeldingsType == FeilmeldingType.Ikkefunnet || melding.MeldingsType == FeilmeldingType.Serverfeil)
             {
                 payloads.Add(new StringPayload(JsonConvert.SerializeObject(melding.ResultatMelding),
                     melding.FileName));
             }
-            else
+            else // Xml format
             {
                 payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
                     melding.FileName));
@@ -161,8 +162,8 @@ namespace ks.fiks.io.arkivsystem.sample
             {
                 meldinger = mottatt.Melding.MeldingType switch
                 {
-                    FiksArkivV1Meldingtype.Arkivmelding => _arkivmeldingHandler.HandleMelding(mottatt),
-                    FiksArkivV1Meldingtype.ArkivmeldingOppdater => _arkivmeldingOppdaterHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.Arkivmelding => _arkivmeldingHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.ArkivmeldingOppdater => _arkivmeldingOppdaterHandler.HandleMelding(mottatt),
                     _ => throw new ArgumentException("Case not handled")
                 };
             }

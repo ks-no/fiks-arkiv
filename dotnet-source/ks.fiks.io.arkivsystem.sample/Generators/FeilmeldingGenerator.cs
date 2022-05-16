@@ -32,6 +32,17 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             };
         }
         
+        public static Ikkefunnet CreateIkkefunnetMelding(string feilmelding)
+        {
+            return new Ikkefunnet()
+            {
+                ErrorId = Guid.NewGuid().ToString(),
+                Feilmelding = feilmelding,
+                CorrelationId = Guid.NewGuid().ToString()
+            };
+        }
+
+        
         public static ServerFeil CreateServerFeilMelding(string feilmelding)
         {
             return new ServerFeil()

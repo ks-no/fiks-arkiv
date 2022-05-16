@@ -3,6 +3,7 @@ using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
 using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
+using Kode = KS.Fiks.Arkiv.Models.V1.Metadatakatalog.Kode;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -52,7 +53,6 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 SystemID = arkivmeldingJournalpost.SystemID ?? new SystemID() { Value = Guid.NewGuid().ToString() }, 
                 OpprettetAv = arkivmeldingJournalpost.OpprettetAv,
                 ArkivertAv = arkivmeldingJournalpost.ArkivertAv,
-                ReferanseForelderMappe = new SystemID() { Label = arkivmeldingJournalpost.ReferanseForelderMappe.Label, Value = arkivmeldingJournalpost.ReferanseForelderMappe.Value },
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
                     Fagsystem = arkivmeldingJournalpost.ReferanseEksternNoekkel.Fagsystem,
@@ -74,6 +74,24 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 DokumentetsDato = DateTime.Now.Date,
                 MottattDato = DateTime.Now,
             };
+
+            if (arkivmeldingJournalpost.ReferanseForelderMappe != null)
+            {
+                jp.ReferanseForelderMappe = new SystemID()
+                {
+                    Label = arkivmeldingJournalpost.ReferanseForelderMappe.Label,
+                    Value = arkivmeldingJournalpost.ReferanseForelderMappe.Value
+                };
+            }
+
+            if (arkivmeldingJournalpost.Arkivdel != null)
+            {
+                jp.Arkivdel = new Kode()
+                {
+                    Beskrivelse = arkivmeldingJournalpost.Arkivdel.Beskrivelse,
+                    KodeProperty = arkivmeldingJournalpost.Arkivdel.KodeProperty
+                };
+            }
 
             foreach (var korrespondansepart in arkivmeldingJournalpost.Korrespondansepart)
             {

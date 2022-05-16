@@ -51,6 +51,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
                 if (xmlValidationErrorOccured) // Ugyldig forespørsel
                 {
+                    Log.Information($"Xml validering feilet {validationResult}");
                     meldinger.Add(new Melding
                     {
                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
@@ -78,20 +79,45 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Lagre arkivmelding i "cache" hvis det er en testSessionId i headere
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                ArkivSimulator._arkivmeldingCache.Add(testSessionId, arkivmelding);
+                if (ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId))
+                {
+                    Arkivmelding lagretArkvivmelding;
+                    ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkvivmelding);
+                    
+                    if (arkivmelding.Registrering.Count >= 0)
+                    {
+                        foreach (var registrering in arkivmelding.Registrering)
+                        {
+                            if (registrering.ReferanseForelderMappe != null)
+                            {
+                                foreach (var lagretMappe in lagretArkvivmelding.Mappe)
+                                {
+                                    if (lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.Value)
+                                    {
+                                        lagretMappe.Registrering.Add(registrering);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    ArkivSimulator._arkivmeldingCache.Add(testSessionId, arkivmelding);
+                }
             }
             
             // Det skal sendes også en mottatt melding
             meldinger.Add(new Melding
             {
-                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingMottatt
+                MeldingsType = FiksArkivMeldingtype.ArkivmeldingMottatt
             });
             
             meldinger.Add(new Melding
             {
                 ResultatMelding = kvittering,
                 FileName = "arkivmelding-kvittering.xml",
-                MeldingsType = FiksArkivV1Meldingtype.ArkivmeldingKvittering
+                MeldingsType = FiksArkivMeldingtype.ArkivmeldingKvittering
             });
             
             return meldinger;

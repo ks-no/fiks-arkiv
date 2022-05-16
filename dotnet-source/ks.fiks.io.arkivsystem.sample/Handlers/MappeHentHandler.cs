@@ -61,7 +61,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 return new Melding
                 {
-                    ResultatMelding = "Kunne ikke finne noen mappe som tilsvarer det som er etterspurt i hentmelding",
+                    ResultatMelding = FeilmeldingGenerator.CreateIkkefunnetMelding("Kunne ikke finne noen mappe som tilsvarer det som er etterspurt i hentmelding"),
                     FileName = "payload.json",
                     MeldingsType = FeilmeldingType.Ikkefunnet,
                 };
@@ -73,7 +73,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ? MappeHentResultatGenerator.Create(hentMelding)
                     : MappeHentResultatGenerator.CreateFromCache(hentMelding, lagretArkivmelding),
                 FileName = "resultat.xml",
-                MeldingsType = FiksArkivV1Meldingtype.MappeHentResultat
+                MeldingsType = FiksArkivMeldingtype.MappeHentResultat
             };
         }
     }
