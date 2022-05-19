@@ -8,6 +8,7 @@ using System.Xml.Schema;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client.Models;
@@ -212,6 +213,28 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             else if (mappeOppdatering.SystemID != null && lagretMappe.SystemID != null)
             {
                 if (lagretMappe.SystemID == mappeOppdatering.SystemID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        protected static bool AreEqual(Mappe lagretMappe, MappeHent mappeHent)
+        {
+            if (mappeHent.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
+            {
+                if (lagretMappe.ReferanseEksternNoekkel.Fagsystem ==
+                    mappeHent.ReferanseEksternNoekkel.Fagsystem &&
+                    lagretMappe.ReferanseEksternNoekkel.Noekkel ==
+                    mappeHent.ReferanseEksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            }
+            else if (mappeHent.SystemID != null && lagretMappe.SystemID != null)
+            {
+                if (lagretMappe.SystemID == mappeHent.SystemID)
                 {
                     return true;
                 }

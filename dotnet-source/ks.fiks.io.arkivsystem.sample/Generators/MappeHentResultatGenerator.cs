@@ -1,9 +1,12 @@
 using System;
 using System.Linq;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
+using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
+using Saksmappe = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Saksmappe;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -20,19 +23,18 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         public static MappeHentResultat CreateFromCache(MappeHent mappeHent, Arkivmelding arkivmeldingFraCache)
         {
             var arkivmeldingMappe = arkivmeldingFraCache.Mappe.FirstOrDefault(mappeFraCache => AreEqual(mappeHent, mappeFraCache));
-            KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Mappe returnMappe;
             
-            if (arkivmeldingMappe is Saksmappe mappe)
+            if (arkivmeldingMappe is KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Saksmappe mappe)
             {
-                returnMappe = MapFromArkivmeldingMappe(mappe);
-            }
-            else
-            {
-                returnMappe = MapFromArkivmeldingMappe(arkivmeldingMappe);
+                return new MappeHentResultat
+                {
+                    Mappe = MapFromArkivmeldingMappe(mappe)
+                };
+                
             }
             return new MappeHentResultat
             {
-                Mappe = returnMappe
+                Mappe = MapFromArkivmeldingMappe(arkivmeldingMappe)
             };
         }
 
@@ -87,9 +89,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             return mappe;
         }
         
-        public static KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Saksmappe MapFromArkivmeldingMappe(Saksmappe arkivmeldingMappe)
+        public static Saksmappe MapFromArkivmeldingMappe(KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Saksmappe arkivmeldingMappe)
         {
-            var mappe = new KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Saksmappe()
+            var mappe = new Saksmappe()
             {
                 SystemID = arkivmeldingMappe.SystemID ?? new SystemID()
                 {
@@ -113,6 +115,24 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 Saksansvarlig = arkivmeldingMappe.Saksansvarlig ?? "Default Saksansvarlig",
                 
             };
+
+            if (arkivmeldingMappe.ReferanseForeldermappe != null)
+            {
+                mappe.ReferanseForeldermappe = new SystemID()
+                {
+                    Label = arkivmeldingMappe.ReferanseForeldermappe.Label,
+                    Value = arkivmeldingMappe.ReferanseForeldermappe.Value
+                };
+            }
+
+            if (arkivmeldingMappe.ReferanseEksternNoekkel != null)
+            {
+                mappe.ReferanseEksternNoekkel = new EksternNoekkel()
+                {
+                    Fagsystem = arkivmeldingMappe.ReferanseEksternNoekkel.Fagsystem,
+                    Noekkel = arkivmeldingMappe.ReferanseEksternNoekkel.Noekkel
+                };
+            }
 
             if (arkivmeldingMappe.Saksstatus != null)
             {

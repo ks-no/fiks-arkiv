@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
@@ -56,8 +59,8 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
 
             // Forsøk å hente arkivmelding fra lokal lagring
             var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
-
-            if (lagretArkivmelding != null && lagretArkivmelding.Mappe.Count <= 0)
+            
+            if (!HarMappe(lagretArkivmelding, hentMelding))
             {
                 return new Melding
                 {
@@ -66,7 +69,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     MeldingsType = FeilmeldingType.Ikkefunnet,
                 };
             }
-
+            
             return new Melding
             {
                 ResultatMelding = lagretArkivmelding == null
@@ -75,6 +78,26 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivMeldingtype.MappeHentResultat
             };
+        }
+        
+        private bool HarMappe(Arkivmelding lagretArkivmelding, MappeHent mappeHent)
+        {
+            if (lagretArkivmelding == null)
+            {
+                return false;
+            }
+            if (lagretArkivmelding.Mappe.Count >= 0)
+            {
+                foreach (var mappe in lagretArkivmelding.Mappe)
+                {
+                    if (AreEqual(mappe, mappeHent))
+                    {
+                        return true;
+                    }
+                    
+                }
+            }
+            return false;
         }
     }
 }
