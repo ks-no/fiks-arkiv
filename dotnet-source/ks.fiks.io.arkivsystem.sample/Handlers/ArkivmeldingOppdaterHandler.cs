@@ -10,7 +10,6 @@ using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -32,7 +31,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                             "ArkivmeldingOppdatering meldingen mangler innhold"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                    MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
@@ -46,7 +45,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                    MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
@@ -79,7 +78,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             FeilmeldingGenerator.CreateServerFeilMelding(
                                 $"Noe gikk galt: {e.Message}"),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingType.Serverfeil,
+                        MeldingsType = FiksArkivMeldingtype.Serverfeil,
                     });
                     return meldinger;
                 }
@@ -92,7 +91,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                         "ArkivmeldingOppdatering ikke gyldig. Kunne ikke finne noe registrert i arkivet med gitt id"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                    MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
@@ -142,7 +141,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                                 "Mangler enten ReferanseEksternNoekkel eller SystemID for enten lagret mappe i 'arkivet' eller innkommende oppdatering. Kunne ikke matche forespørsel."),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                        MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                     });
                 }
             }
@@ -191,7 +190,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                                 "Mangler enten ReferanseEksternNoekkel eller SystemID for enten lagret registrering i 'arkivet' eller innkommende oppdatering. Kunne ikke matche forespørsel."),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                        MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                     });
                 }
             }

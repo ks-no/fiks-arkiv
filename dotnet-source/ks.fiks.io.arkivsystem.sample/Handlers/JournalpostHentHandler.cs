@@ -10,7 +10,6 @@ using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -102,7 +101,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                    MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 };
             }
 
@@ -115,7 +114,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateIkkefunnetMelding("Kunne ikke finne noen journalpost som tilsvarer det som er etterspurt i hentmelding"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingType.Ikkefunnet,
+                    MeldingsType = FiksArkivMeldingtype.Ikkefunnet,
                 };
             }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using KS.Fiks.Protokoller.V1.Models.Feilmelding;
+using KS.Fiks.Arkiv.Models.V1.Feilmelding;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -16,9 +16,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             }
             return new Ugyldigforespoersel()
             {
-                ErrorId = Guid.NewGuid().ToString(),
+                FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = $"Feilmelding: {feilmelding}",
-                CorrelationId = Guid.NewGuid().ToString()
+                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
 
@@ -26,9 +26,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         {
             return new Ugyldigforespoersel()
             {
-                ErrorId = Guid.NewGuid().ToString(),
+                FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,
-                CorrelationId = Guid.NewGuid().ToString()
+                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
         
@@ -36,20 +36,20 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         {
             return new Ikkefunnet()
             {
-                ErrorId = Guid.NewGuid().ToString(),
+                FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,
-                CorrelationId = Guid.NewGuid().ToString()
+                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
 
         
-        public static ServerFeil CreateServerFeilMelding(string feilmelding)
+        public static Serverfeil CreateServerFeilMelding(string feilmelding)
         {
-            return new ServerFeil()
+            return new Serverfeil()
             {
-                ErrorId = Guid.NewGuid().ToString(),
+                FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,
-                CorrelationId = Guid.NewGuid().ToString()
+                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
     }

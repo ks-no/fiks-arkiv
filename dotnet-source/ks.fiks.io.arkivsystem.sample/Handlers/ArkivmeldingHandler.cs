@@ -8,7 +8,6 @@ using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
-using KS.Fiks.Protokoller.V1.Models.Feilmelding;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
@@ -56,7 +55,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     {
                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                         FileName = "payload.json",
-                        MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                        MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                     });
                     return meldinger;
                 }
@@ -68,7 +67,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ResultatMelding =
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Arkivmelding meldingen mangler innhold"),
                     FileName = "payload.json",
-                    MeldingsType = FeilmeldingType.Ugyldigforespørsel,
+                    MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 });
                 return meldinger;
             }
