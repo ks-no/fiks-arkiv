@@ -1,4 +1,5 @@
 using System;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using Dokumentbeskrivelse = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentbeskrivelse;
@@ -16,7 +17,10 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 OpprettetAv = "En brukerid",
                 ArkivertAv = "En brukerid",
-                ReferanseForelderMappe = new SystemID() { Label = "", Value = Guid.NewGuid().ToString() },
+                ReferanseForelderMappe = new ReferanseForelderMappe()
+                {
+                    SystemID = new SystemID() { Label = "", Value = Guid.NewGuid().ToString() }
+                },
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
                     Fagsystem = "Fagsystem X",
