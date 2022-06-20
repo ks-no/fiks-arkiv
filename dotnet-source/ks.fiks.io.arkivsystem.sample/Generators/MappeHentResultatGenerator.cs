@@ -120,8 +120,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 mappe.ReferanseForeldermappe = new SystemID()
                 {
-                    Label = arkivmeldingMappe.ReferanseForeldermappe.Label,
-                    Value = arkivmeldingMappe.ReferanseForeldermappe.Value
+                    Label = arkivmeldingMappe.ReferanseForeldermappe.SystemID.Label,
+                    Value = arkivmeldingMappe.ReferanseForeldermappe.SystemID.Value
                 };
             }
 

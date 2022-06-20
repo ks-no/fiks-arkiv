@@ -42,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 OpprettetDato = DateTime.Now,
                 Saksaar = DateTime.Now.Year.ToString(),
                 Sakssekvensnummer = new Random().Next().ToString(),
-                ReferanseForeldermappe = mappe.ReferanseForeldermappe,
+                ReferanseForeldermappe = mappe.ReferanseForeldermappe.SystemID,
                 ReferanseEksternNoekkel = mappe.ReferanseEksternNoekkel,
             };
             return mp;

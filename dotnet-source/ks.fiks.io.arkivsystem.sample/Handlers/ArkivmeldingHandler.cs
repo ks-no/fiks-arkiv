@@ -91,7 +91,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             {
                                 foreach (var lagretMappe in lagretArkvivmelding.Mappe)
                                 {
-                                    if (lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.Value)
+                                    if (lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.SystemID.Value)
                                     {
                                         lagretMappe.Registrering.Add(registrering);
                                     }

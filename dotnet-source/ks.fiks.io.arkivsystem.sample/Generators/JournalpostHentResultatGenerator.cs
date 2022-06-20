@@ -79,8 +79,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 jp.ReferanseForelderMappe = new SystemID()
                 {
-                    Label = arkivmeldingJournalpost.ReferanseForelderMappe.Label,
-                    Value = arkivmeldingJournalpost.ReferanseForelderMappe.Value
+                    Label = arkivmeldingJournalpost.ReferanseForelderMappe.SystemID.Label,
+                    Value = arkivmeldingJournalpost.ReferanseForelderMappe.SystemID.Value
                 };
             }
 
