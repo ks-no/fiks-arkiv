@@ -49,7 +49,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 return new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
-                    FileName = "payload.json",
+                    FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 };
             }
@@ -62,7 +62,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 return new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateIkkefunnetMelding("Kunne ikke finne noen mappe som tilsvarer det som er etterspurt i hentmelding"),
-                    FileName = "payload.json",
+                    FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ikkefunnet,
                 };
             }

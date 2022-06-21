@@ -8,7 +8,9 @@
     <systemID>6f358ced-036d-4c9b-b372-a2b7d83c5cc5</systemID>
     <opprettetAv>En brukerid</opprettetAv>
     <arkivertAv>En brukerid</arkivertAv>
-    <referanseForelderMappe label="">c43e18dc-0224-4fac-9f80-01709f906b3d</referanseForelderMappe>
+    <referanseForelderMappe>
+      <systemID>c43e18dc-0224-4fac-9f80-01709f906b3d</systemID>
+    </referanseForelderMappe>
     <dokumentbeskrivelse>
       <dokumenttype>
         <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">SØKNAD</kode>

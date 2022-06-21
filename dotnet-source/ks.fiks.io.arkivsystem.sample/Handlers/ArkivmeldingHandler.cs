@@ -54,7 +54,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     meldinger.Add(new Melding
                     {
                         ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
-                        FileName = "payload.json",
+                        FileName = "feilmelding.xml",
                         MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                     });
                     return meldinger;
@@ -66,7 +66,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     ResultatMelding =
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding("Arkivmelding meldingen mangler innhold"),
-                    FileName = "payload.json",
+                    FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 });
                 return meldinger;
