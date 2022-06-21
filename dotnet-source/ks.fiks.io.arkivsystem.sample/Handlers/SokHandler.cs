@@ -52,7 +52,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 return new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
-                    FileName = "payload.json",
+                    FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
                 };
             }
