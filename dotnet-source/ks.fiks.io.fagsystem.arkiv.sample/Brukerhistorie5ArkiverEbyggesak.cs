@@ -158,7 +158,14 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var gnr = new Klassifikasjon()
             {
                 KlasseID = "1234-12/1234",
-                Klassifikasjonssystem = "GNR"
+                Klassifikasjonssystem = new KlassifikasjonssystemMinimum()
+                {
+                    Klassifikasjonstype = new Klassifikasjonstype()
+                    {
+                        Beskrivelse = "beskrivelse", //TODO Hva skal inn her?
+                        KodeProperty = "kode" //TODO Hva skal inn her?
+                    }
+                }
             };
 
             var mn = new Matrikkelnummer

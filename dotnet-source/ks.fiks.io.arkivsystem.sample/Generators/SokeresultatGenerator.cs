@@ -42,10 +42,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
                         Tittel = "Test1",
-                        OpprettetDato = DateTime.Now,
-                        OpprettetAv = "Test",
-                        AvsluttetDato = DateTime.Now,
-                        AvsluttetAv = "Test",
                         Saksaar = DateTime.Now.Year.ToString(),
                         Sakssekvensnummer = "1",
                         Saksdato = DateTime.Now,
@@ -65,10 +61,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
                         Tittel = "Test2",
-                        OpprettetDato = DateTime.Now,
-                        OpprettetAv = "Test",
-                        AvsluttetDato = DateTime.Now,
-                        AvsluttetAv = "Test",
                         Saksaar = DateTime.Now.Year.ToString(),
                         Sakssekvensnummer = "1",
                         Saksdato = DateTime.Now,
@@ -92,10 +84,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
                         Tittel = "Test1",
-                        OpprettetDato = DateTime.Now,
-                        OpprettetAv = "Test",
-                        AvsluttetDato = DateTime.Now,
-                        AvsluttetAv = "Test",
                     }
                 });
             sokeresultatMinimum.ResultatListe.Add(
@@ -106,10 +94,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
                         Tittel = "Test2",
-                        OpprettetDato = DateTime.Now,
-                        OpprettetAv = "Test",
-                        AvsluttetDato = DateTime.Now,
-                        AvsluttetAv = "Test",
                     }
                 });
         }
