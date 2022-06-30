@@ -172,8 +172,32 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     {
                         if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
                         if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
-                        if(registreringOppdatering.Skjerming != null) { registrering.Skjerming = registreringOppdatering.Skjerming; }
-                        if(registreringOppdatering.Gradering != null) { registrering.Gradering = registreringOppdatering.Gradering; }
+
+                        if (registreringOppdatering.Skjerming != null)
+                        {
+                            registrering.Skjerming = new Skjerming()
+                            {
+                                Skjermingshjemmel = registreringOppdatering.Skjerming.Skjermingshjemmel,
+                                SkjermingOpphoererAksjon = registreringOppdatering.Skjerming.SkjermingOpphoererAksjon,
+                                SkjermingOpphoererDato = registreringOppdatering.Skjerming.SkjermingOpphoererDato,
+                                SkjermingOpphoererDatoSpecified = registreringOppdatering.Skjerming.SkjermingOpphoererDatoSpecified,
+                                Tilgangsrestriksjon = registreringOppdatering.Skjerming.Tilgangsrestriksjon
+                            };
+                        }
+
+                        if (registreringOppdatering.Gradering != null)
+                        {
+                            registrering.Gradering = new Gradering()
+                            {
+                                Grad = registreringOppdatering.Gradering.Grad,
+                                Graderingsdato = registreringOppdatering.Gradering.Graderingsdato,
+                                GradertAv = registreringOppdatering.Gradering.GradertAv,
+                                Nedgraderingsdato = registreringOppdatering.Gradering.Nedgraderingsdato,
+                                NedgraderingsdatoSpecified =
+                                    registreringOppdatering.Gradering.NedgraderingsdatoSpecified,
+                                NedgradertAv = registreringOppdatering.Gradering.NedgradertAv
+                            };
+                        }
                         
                         //TODO legge til de som mangler
                         

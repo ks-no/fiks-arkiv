@@ -61,9 +61,10 @@ namespace ks.fiks.io.arkivintegrasjon.common.FiksIOClient
 
             // Optional: Use custom amqp host (i.e. for connection to test queue)
             var amqp = new AmqpConfiguration(
-                host: appSettings.FiksIOConfig.AmqpHost, //"io.fiks.test.ks.no",
+                host: appSettings.FiksIOConfig.AmqpHost,
                 port: appSettings.FiksIOConfig.AmqpPort,
-                sslOption1);
+                sslOption1, "Fiks-Arkiv simulator");
+            
 
             // Combine all configurations
             var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);

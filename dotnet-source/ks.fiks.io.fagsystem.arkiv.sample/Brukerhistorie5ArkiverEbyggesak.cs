@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
+using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client;
@@ -17,11 +18,16 @@ using Ks.Fiks.Maskinporten.Client;
 using Microsoft.Extensions.Configuration;
 using Dokumentbeskrivelse = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentbeskrivelse;
 using Dokumentobjekt = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentobjekt;
+using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel;
 using Journalpost = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost;
+using Klassifikasjon = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Klassifikasjon;
+using Klassifikasjonssystem = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Klassifikasjonssystem;
 using Korrespondansepart = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Korrespondansepart;
+using Merknad = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Merknad;
 using Part = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Part;
 using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
 using Saksmappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Saksmappe;
+using Skjerming = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Skjerming;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
@@ -158,14 +164,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var gnr = new Klassifikasjon()
             {
                 KlasseID = "1234-12/1234",
-                Klassifikasjonssystem = new KlassifikasjonssystemMinimum()
-                {
-                    Klassifikasjonstype = new Klassifikasjonstype()
-                    {
-                        Beskrivelse = "beskrivelse", //TODO Hva skal inn her?
-                        KodeProperty = "kode" //TODO Hva skal inn her?
-                    }
-                }
+                Klassifikasjonssystem = "" //TODO legg inn noe fornuftig. Burde det være en kode?
             };
 
             var mn = new Matrikkelnummer
