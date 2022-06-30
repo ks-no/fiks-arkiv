@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <VersionPrefix>1.0.19</VersionPrefix>
+        <VersionPrefix>1.0.20</VersionPrefix>
     </PropertyGroup>
 
     <ItemGroup>
