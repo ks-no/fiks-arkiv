@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
-using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
+using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
+using Gradering = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Gradering;
 using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
 using Saksmappe = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Saksmappe;
+using Skjerming = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Skjerming;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -69,8 +71,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 Tittel = arkivmeldingMappe.Tittel,
                 OffentligTittel = arkivmeldingMappe.OffentligTittel,
                 Beskrivelse = arkivmeldingMappe.Beskrivelse,
-                Skjerming = arkivmeldingMappe.Skjerming,
-                Gradering = arkivmeldingMappe.Gradering,
+                Skjerming = arkivmeldingMappe.Skjerming != null ? mapToSkjerming(arkivmeldingMappe) : null,
+                Gradering = arkivmeldingMappe.Gradering != null ? mapToGradering(arkivmeldingMappe) : null,
                 AvsluttetAv = arkivmeldingMappe.AvsluttetAv ?? "Avsluttet Av",
                 AvsluttetDato = arkivmeldingMappe.AvsluttetDato,
                 OpprettetAv = arkivmeldingMappe.OpprettetAv ?? "Opprettet Av",
@@ -88,7 +90,32 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
 
             return mappe;
         }
-        
+
+        private static Gradering mapToGradering(Mappe arkivmeldingMappe)
+        {
+            return new Gradering()
+            {
+                Grad  = arkivmeldingMappe.Gradering.Grad,
+                Graderingsdato = arkivmeldingMappe.Gradering.Graderingsdato,
+                GradertAv = arkivmeldingMappe.Gradering.GradertAv,
+                Nedgraderingsdato = arkivmeldingMappe.Gradering.Nedgraderingsdato,
+                NedgraderingsdatoSpecified = arkivmeldingMappe.Gradering.NedgraderingsdatoSpecified,
+                NedgradertAv = arkivmeldingMappe.Gradering.NedgradertAv
+            };
+        }
+
+        private static Skjerming mapToSkjerming(Mappe arkivmeldingMappe)
+        {
+            return new Skjerming()
+            {
+                SkjermingOpphoererAksjon = arkivmeldingMappe.Skjerming.SkjermingOpphoererAksjon,
+                SkjermingOpphoererDato = arkivmeldingMappe.Skjerming.SkjermingOpphoererDato,
+                SkjermingOpphoererDatoSpecified = arkivmeldingMappe.Skjerming.SkjermingOpphoererDatoSpecified,
+                Skjermingshjemmel = arkivmeldingMappe.Skjerming.Skjermingshjemmel,
+                Tilgangsrestriksjon = arkivmeldingMappe.Skjerming.Tilgangsrestriksjon
+            };
+        }
+
         public static Saksmappe MapFromArkivmeldingMappe(KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Saksmappe arkivmeldingMappe)
         {
             var mappe = new Saksmappe()
@@ -101,8 +128,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 Tittel = arkivmeldingMappe.Tittel,
                 OffentligTittel = arkivmeldingMappe.OffentligTittel,
                 Beskrivelse = arkivmeldingMappe.Beskrivelse,
-                Skjerming = arkivmeldingMappe.Skjerming,
-                Gradering = arkivmeldingMappe.Gradering,
+                Skjerming = arkivmeldingMappe.Skjerming != null ? mapToSkjerming(arkivmeldingMappe) : null,
+                Gradering = arkivmeldingMappe.Gradering != null ? mapToGradering(arkivmeldingMappe) : null,
                 AvsluttetAv = arkivmeldingMappe.AvsluttetAv ?? "Avsluttet Av",
                 AvsluttetDato = arkivmeldingMappe.AvsluttetDato,
                 OpprettetAv = arkivmeldingMappe.OpprettetAv ?? "Opprettet Av",

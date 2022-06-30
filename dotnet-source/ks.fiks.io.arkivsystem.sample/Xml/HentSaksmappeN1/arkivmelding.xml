@@ -7,12 +7,12 @@
 	<mappe xsi:type="saksmappe">
 		<tittel>Test</tittel>
 		<klassifikasjon>
-			<klassifikasjonssystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Personnummer</klassifikasjonssystem>
-			<klasseID xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">19085830948</klasseID>
+			<klassifikasjonssystem>Personnummer</klassifikasjonssystem>
+			<klasseID>19085830948</klasseID>
 		</klassifikasjon>
 		<referanseEksternNoekkel>
-			<fagsystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Fiks protokoll validator</fagsystem>
-			<noekkel xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">45d947ed-8455-46e2-a04f-ee18da433fe0</noekkel>
+			<fagsystem>Fiks protokoll validator</fagsystem>
+			<noekkel>45d947ed-8455-46e2-a04f-ee18da433fe0</noekkel>
 		</referanseEksternNoekkel>
 	</mappe>
 </arkivmelding>

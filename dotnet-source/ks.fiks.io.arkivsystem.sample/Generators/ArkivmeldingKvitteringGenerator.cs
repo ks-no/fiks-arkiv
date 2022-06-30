@@ -1,6 +1,10 @@
 using System;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
+using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
+using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
+using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -43,7 +47,11 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 Saksaar = DateTime.Now.Year.ToString(),
                 Sakssekvensnummer = new Random().Next().ToString(),
                 ReferanseForeldermappe = mappe.ReferanseForeldermappe?.SystemID,
-                ReferanseEksternNoekkel = mappe.ReferanseEksternNoekkel,
+                ReferanseEksternNoekkel = new EksternNoekkel()
+                {
+                    Fagsystem = mappe.ReferanseEksternNoekkel.Fagsystem,
+                    Noekkel = mappe.ReferanseEksternNoekkel.Noekkel
+                }
             };
             return mp;
         }
@@ -56,7 +64,11 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 Journalaar = DateTime.Now.Year.ToString(),
                 Journalsekvensnummer = new Random().Next().ToString(),
                 Journalpostnummer = new Random().Next(1, 100).ToString(),
-                ReferanseEksternNoekkel = journalpost.ReferanseEksternNoekkel,
+                ReferanseEksternNoekkel = new EksternNoekkel()
+                {
+                    Fagsystem = journalpost.ReferanseEksternNoekkel.Fagsystem,
+                    Noekkel = journalpost.ReferanseEksternNoekkel.Noekkel
+                }
             };
             return jp;
         }

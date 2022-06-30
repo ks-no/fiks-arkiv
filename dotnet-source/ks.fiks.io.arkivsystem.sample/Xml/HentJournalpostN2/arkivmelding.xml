@@ -44,8 +44,8 @@
       <saksbehandler>Ingrid Mottaker</saksbehandler>
     </korrespondansepart>
     <referanseEksternNoekkel>
-      <fagsystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Fiks protokoll validator</fagsystem>
-      <noekkel xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">86af5c8f-e06e-4c5c-b49b-97ccb1ce68a2</noekkel>
+      <fagsystem>Fiks protokoll validator</fagsystem>
+      <noekkel>86af5c8f-e06e-4c5c-b49b-97ccb1ce68a2</noekkel>
     </referanseEksternNoekkel>
     <journalposttype>
       <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">X</kode>

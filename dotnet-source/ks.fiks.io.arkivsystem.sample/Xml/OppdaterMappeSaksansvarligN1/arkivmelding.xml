@@ -7,8 +7,8 @@
     <mappe xsi:type="saksmappe">
         <tittel>En ny saksmappe fra integrasjonstest</tittel>
         <referanseEksternNoekkel>
-            <fagsystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Fiks protokoll validator</fagsystem>
-            <noekkel xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">ca3ce092-0bfa-46bb-ad18-b00a340cdd8c</noekkel>
+            <fagsystem>Fiks protokoll validator</fagsystem>
+            <noekkel>ca3ce092-0bfa-46bb-ad18-b00a340cdd8c</noekkel>
         </referanseEksternNoekkel>
         <registrering xsi:type="journalpost">
             <opprettetAv>En brukerid</opprettetAv>
@@ -47,8 +47,8 @@
                 <saksbehandler>Ingrid Mottaker</saksbehandler>
             </korrespondansepart>
             <referanseEksternNoekkel>
-                <fagsystem xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">Fagsystem X</fagsystem>
-                <noekkel xmlns="http://www.arkivverket.no/standarder/noark5/arkivstruktur">
+                <fagsystem>Fagsystem X</fagsystem>
+                <noekkel>
                     6ea38455-48b1-4a94-9881-3cc2a065f04d
                 </noekkel>
             </referanseEksternNoekkel>

@@ -1,7 +1,10 @@
 using System;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Minimum;
+using KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Noekler;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
+using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample.Helpers
 {
