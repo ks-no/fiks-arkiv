@@ -1,21 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
-using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
-using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
-using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
@@ -192,6 +188,28 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             else if (systemId != null && lagretRegistrering.SystemID != null)
             {
                 if (lagretRegistrering.SystemID.Value == systemId.Value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        protected static bool AreEqual(Registrering lagretRegistrering,  KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering.EksternNoekkel eksternNoekkel, SystemID registreringOppdateringSystemId)
+        {
+            if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
+            {
+                if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
+                    eksternNoekkel.Fagsystem &&
+                    lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
+                    eksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            }
+            else if (registreringOppdateringSystemId != null && lagretRegistrering.SystemID != null)
+            {
+                if (lagretRegistrering.SystemID.Value == registreringOppdateringSystemId.Value)
                 {
                     return true;
                 }
