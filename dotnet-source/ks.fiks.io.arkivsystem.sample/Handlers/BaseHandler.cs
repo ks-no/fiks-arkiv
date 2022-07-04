@@ -195,7 +195,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return false;
         }
         
-        protected static bool AreEqual(Registrering lagretRegistrering,  KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering.EksternNoekkel eksternNoekkel, SystemID registreringOppdateringSystemId)
+        protected static bool AreEqual(Registrering lagretRegistrering,  KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel eksternNoekkel, SystemID systemId)
         {
             if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
             {
@@ -207,9 +207,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     return true;
                 }
             }
-            else if (registreringOppdateringSystemId != null && lagretRegistrering.SystemID != null)
+            else if (systemId != null && lagretRegistrering.SystemID != null)
             {
-                if (lagretRegistrering.SystemID.Value == registreringOppdateringSystemId.Value)
+                if (lagretRegistrering.SystemID.Value == systemId.Value)
                 {
                     return true;
                 }
