@@ -44,8 +44,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 SystemID = mappe.SystemID,
                 OpprettetDato = DateTime.Now,
-                Saksaar = DateTime.Now.Year.ToString(),
-                Sakssekvensnummer = new Random().Next().ToString(),
+                Saksaar = DateTime.Now.Year,
+                Sakssekvensnummer = new Random().Next(),
                 ReferanseForeldermappe = mappe.ReferanseForeldermappe?.SystemID,
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
@@ -61,9 +61,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             var jp = new JournalpostKvittering
             {
                 SystemID = journalpost.SystemID,
-                Journalaar = DateTime.Now.Year.ToString(),
-                Journalsekvensnummer = new Random().Next().ToString(),
-                Journalpostnummer = new Random().Next(1, 100).ToString(),
+                Journalaar = DateTime.Now.Year,
+                Journalsekvensnummer = new Random().Next(),
+                Journalpostnummer = new Random().Next(1, 100),
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
                     Fagsystem = journalpost.ReferanseEksternNoekkel.Fagsystem,

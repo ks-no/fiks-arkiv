@@ -135,9 +135,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 OpprettetAv = arkivmeldingMappe.OpprettetAv ?? "Opprettet Av",
                 OpprettetDato = arkivmeldingMappe.OpprettetDato,
                 //Kassasjon = arkivmeldingMappe //TODO mangler i arkivstruktur
-                Saksaar = arkivmeldingMappe.Saksaar ?? DateTime.Now.Year.ToString(),
+                Saksaar = arkivmeldingMappe.Saksaar,
                 Saksdato = arkivmeldingMappe.Saksdato,
-                Sakssekvensnummer = arkivmeldingMappe.Sakssekvensnummer ?? "1",
+                Sakssekvensnummer = arkivmeldingMappe.Sakssekvensnummer,
                 AdministrativEnhet = arkivmeldingMappe.AdministrativEnhet ?? "Administrativ enhet",
                 Saksansvarlig = arkivmeldingMappe.Saksansvarlig ?? "Default Saksansvarlig",
                 
