@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<arkivmelding xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.arkivverket.no/standarder/noark5/arkivmelding/v2">
+<arkivmelding xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/v1">
   <system>Fiks arkiv simulator</system>
   <meldingId>ccf92bd1-d23c-4bba-9df8-a236c88c2844</meldingId>
   <tidspunkt>0001-01-01T00:00:00</tidspunkt>
@@ -13,22 +13,22 @@
     </referanseForelderMappe>
     <dokumentbeskrivelse>
       <dokumenttype>
-        <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">SØKNAD</kode>
+        <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">SØKNAD</kode>
       </dokumenttype>
       <dokumentstatus>
-        <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">F</kode>
+        <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">F</kode>
       </dokumentstatus>
       <tittel>Rekvisisjon av oppmålingsforretning</tittel>
       <tilknyttetRegistreringSom>
-        <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">H</kode>
+        <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">H</kode>
       </tilknyttetRegistreringSom>
       <dokumentobjekt>
         <versjonsnummer>1</versjonsnummer>
         <variantformat>
-          <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">P</kode>
+          <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">P</kode>
         </variantformat>
         <format>
-          <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">PDF</kode>
+          <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">PDF</kode>
         </format>
         <filnavn>rekvisjon.pdf</filnavn>
         <referanseDokumentfil>rekvisisjon.pdf</referanseDokumentfil>
@@ -37,7 +37,7 @@
     <tittel>Internt notat</tittel>
     <korrespondansepart>
       <korrespondanseparttype>
-        <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">IM</kode>
+        <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">IM</kode>
       </korrespondanseparttype>
       <korrespondansepartNavn>Oppmålingsetaten</korrespondansepartNavn>
       <administrativEnhet>Oppmålingsetaten</administrativEnhet>
@@ -48,10 +48,10 @@
       <noekkel>86af5c8f-e06e-4c5c-b49b-97ccb1ce68a2</noekkel>
     </referanseEksternNoekkel>
     <journalposttype>
-      <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">X</kode>
+      <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">X</kode>
     </journalposttype>
     <journalstatus>
-      <kode xmlns="http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2">F</kode>
+      <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">F</kode>
     </journalstatus>
   </registrering>
 </arkivmelding>

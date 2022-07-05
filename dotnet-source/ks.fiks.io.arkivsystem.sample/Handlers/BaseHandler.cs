@@ -26,58 +26,58 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             var arkivModelsAssembly = Assembly.Load("KS.Fiks.Arkiv.Models.V1");
             
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmelding.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.arkivering.arkivmelding.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmelding/v2",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/v1",
                         schemaReader);
                 }
             }
             
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivmeldingOppdatering.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.arkivering.arkivmelding.oppdater.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivmeldingoppdatering/v2",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmeldingoppdatering/v1",
                         schemaReader);
                 }
             }
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.dokumentfilHent.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.innsyn.dokumentfil.hent.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/dokumentfil/hent/v2",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/dokumentfil/hent/v1",
                         schemaReader);
                 }
             }
             
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.journalpostHent.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.innsyn.jounalpost.hent.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/journalpost/hent/v2",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/journalpost/hent/v1",
                         schemaReader);
                 }
             }
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.mappeHent.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.innsyn.mappe.hent.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/mappe/hent/v2",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/mappe/hent/v1",
                         schemaReader);
                 }
             }
-            using (var schemaStream = arkivModelsAssembly?.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.sok.xsd"))
+            using (var schemaStream = arkivModelsAssembly?.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.innsyn.sok.xsd"))
             {
                 if (schemaStream != null)
                 {
                     using var schemaReader = XmlReader.Create(schemaStream);
-                    XmlSchemaSet.Add("http://www.ks.no/standarder/fiks/arkiv/sok/v1", schemaReader);
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/sok/v1", schemaReader);
                 }
             }
             using (var schemaStream = arkivModelsAssembly?.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.arkivstruktur.xsd"))
@@ -85,7 +85,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 if (schemaStream != null)
                 {
                     using var schemaReader = XmlReader.Create(schemaStream);
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/arkivstruktur",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivstruktur/v1",
                         schemaReader);
                 }
             }
@@ -94,7 +94,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 if (schemaStream != null)
                 {
                     using var schemaReader = XmlReader.Create(schemaStream);
-                    XmlSchemaSet.Add("http://www.arkivverket.no/standarder/noark5/metadatakatalog/v2",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1",
                         schemaReader);
                 }
             }
@@ -195,7 +195,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return false;
         }
         
-        protected static bool AreEqual(Registrering lagretRegistrering,  KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering.EksternNoekkel eksternNoekkel, SystemID registreringOppdateringSystemId)
+        protected static bool AreEqual(Registrering lagretRegistrering,  KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel eksternNoekkel, SystemID systemId)
         {
             if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
             {
@@ -207,9 +207,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     return true;
                 }
             }
-            else if (registreringOppdateringSystemId != null && lagretRegistrering.SystemID != null)
+            else if (systemId != null && lagretRegistrering.SystemID != null)
             {
-                if (lagretRegistrering.SystemID.Value == registreringOppdateringSystemId.Value)
+                if (lagretRegistrering.SystemID.Value == systemId.Value)
                 {
                     return true;
                 }

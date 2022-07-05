@@ -155,7 +155,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         ReferanseDokumentfil = dokumentobjekt.ReferanseDokumentfil,
                         Sjekksum = dokumentobjekt.Sjekksum ?? DokumentobjektSjekksumDefault,
                         SjekksumAlgoritme = dokumentobjekt.SjekksumAlgoritme ?? DokumentobjektSjekksumAlgoritmeDefault,
-                        Filstoerrelse = dokumentobjekt.Filstoerrelse ?? DokumentobjektFilstoerrelseDefault
+                        Filstoerrelse = dokumentobjekt.Filstoerrelse ?? DokumentobjektFilstoerrelseDefault 
                     });
                 }
                 jp.Dokumentbeskrivelse.Add(nyDokumentbeskrivelse);
@@ -240,7 +240,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 },
                 Journalaar = DateTime.Now.Year.ToString(),
                 Journalsekvensnummer = "1",
-                Journalpostnummer = DateTime.Now.Year + DateTime.Now.Millisecond.ToString(),
+                Journalpostnummer = DateTime.Now.Year.ToString() + DateTime.Now.Millisecond.ToString(),
                 Journalposttype = new Journalposttype()
                 {
                     KodeProperty= "X"

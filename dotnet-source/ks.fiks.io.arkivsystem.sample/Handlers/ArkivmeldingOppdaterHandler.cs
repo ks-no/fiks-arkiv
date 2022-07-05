@@ -7,14 +7,10 @@ using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
-using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering.EksternNoekkel;
-using Gradering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Gradering;
-using Skjerming = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Skjerming;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {

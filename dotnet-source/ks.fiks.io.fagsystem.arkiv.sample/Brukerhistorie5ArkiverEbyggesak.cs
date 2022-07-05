@@ -125,7 +125,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             finnSak.Parameter.Add(
                     new Parameter
                     {
-                        Felt = SokFelt.MappePeriodEksternId,
+                        Felt = SokFelt.MappeEksternId,
                         Operator = OperatorType.Equal,
                         Parameterverdier = new Parameterverdier
                         {
