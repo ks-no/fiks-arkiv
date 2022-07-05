@@ -48,7 +48,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         {
                             new Dokumentobjekt()
                             {
-                                Versjonsnummer = 1,
+                                Versjonsnummer = "1",
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "P"

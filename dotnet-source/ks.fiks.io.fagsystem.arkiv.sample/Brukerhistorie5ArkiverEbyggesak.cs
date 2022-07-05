@@ -169,8 +169,8 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             var mn = new Matrikkelnummer
             {
-                Gardsnummer = 123,
-                Bruksnummer = 456
+                Gardsnummer = "123",
+                Bruksnummer = "456"
             };
 
             // TODO: Missing fields vs GI 1.1
@@ -321,7 +321,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             KodeProperty= "H"
                             
                         },    // Code object?
-                        Dokumentnummer = 1,   // Number, should be int
+                        Dokumentnummer = "1",   // Number, should be int
                         Dokumenttype = new Dokumenttype()
                         {
                             KodeProperty= "SØKNAD"
@@ -335,7 +335,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             new Dokumentobjekt
                             {
-                                Versjonsnummer = 1,   // Number!
+                                Versjonsnummer = "1",   // Number!
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "A"
@@ -355,7 +355,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             KodeProperty= "V"
                         },    // Code object?
-                        Dokumentnummer = 2,   // Number!
+                        Dokumentnummer = "2",   // Number!
                         Dokumenttype =  new Dokumenttype()
                         {
                             KodeProperty= "KART"
@@ -369,7 +369,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             new Dokumentobjekt
                             {
-                                Versjonsnummer = 1,   // Number!
+                                Versjonsnummer = "1",   // Number!
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "A"
@@ -389,7 +389,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             KodeProperty= "V"
                         },    // Code object?
-                        Dokumentnummer = 3,   // NUmber!
+                        Dokumentnummer = "3",   // NUmber!
                         Dokumenttype = new Dokumenttype()
                         {
                             KodeProperty= "TEGNING"
@@ -403,7 +403,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             new Dokumentobjekt
                             {
-                                Versjonsnummer = 1,   // Number!
+                                Versjonsnummer = "1",   // Number!
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "A"

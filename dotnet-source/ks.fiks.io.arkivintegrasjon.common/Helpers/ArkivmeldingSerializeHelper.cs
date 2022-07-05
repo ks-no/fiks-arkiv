@@ -24,6 +24,8 @@ namespace ks.fiks.io.arkivintegrasjon.common.Helpers
                 arkivmeldingDeserialized = (Arkivmelding) serializer.Deserialize(reader);
             }
 
+            Saksmappe saksmappe;
+
             return arkivmeldingDeserialized;
         }
     }

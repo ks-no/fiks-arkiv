@@ -17,7 +17,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         private const string DokumentobjektOpprettetAvDefault = "foo";
         private const string DokumentobjektSjekksumDefault = "foo";
         private const string DokumentobjektSjekksumAlgoritmeDefault = "MD5";
-        private const int DokumentobjektFilstoerrelseDefault = 100;
+        private const string DokumentobjektFilstoerrelseDefault = "100";
         private const string SaksbehandlerKorrespondansepartDefault = "Ingrid Mottaker";
 
         public static JournalpostHentResultat Create(JournalpostHent journalpostHent)
@@ -59,9 +59,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                     Noekkel = arkivmeldingJournalpost.ReferanseEksternNoekkel.Noekkel
                 },
                 Tittel = arkivmeldingJournalpost.Tittel,
-                Journalaar = DateTime.Now.Year,
-                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer,
-                Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer,
+                Journalaar = DateTime.Now.Year.ToString(),
+                Journalsekvensnummer = arkivmeldingJournalpost.Journalsekvensnummer ?? JournalsekvensnummerDefault,
+                Journalpostnummer = arkivmeldingJournalpost.Journalpostnummer ?? DateTime.Now.Year + DateTime.Now.Millisecond.ToString(),
                 Journalposttype = new Journalposttype()
                 {
                     KodeProperty = arkivmeldingJournalpost.Journalposttype.KodeProperty
@@ -128,7 +128,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                     {
                         KodeProperty = dokumentbeskrivelse.TilknyttetRegistreringSom.KodeProperty
                     },
-                    Dokumentnummer = dokumentbeskrivelse.Dokumentnummer,
+                    Dokumentnummer = dokumentbeskrivelse.Dokumentnummer ?? DokumentbeskrivelseDokumentnummerDefault,
                     TilknyttetDato = dokumentbeskrivelse.TilknyttetDato,
                     TilknyttetAv = dokumentbeskrivelse.TilknyttetAv ?? DokumentbeskrivelseTilknyttetAvDefault
                 };
@@ -155,7 +155,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         ReferanseDokumentfil = dokumentobjekt.ReferanseDokumentfil,
                         Sjekksum = dokumentobjekt.Sjekksum ?? DokumentobjektSjekksumDefault,
                         SjekksumAlgoritme = dokumentobjekt.SjekksumAlgoritme ?? DokumentobjektSjekksumAlgoritmeDefault,
-                        Filstoerrelse = dokumentobjekt.Filstoerrelse 
+                        Filstoerrelse = dokumentobjekt.Filstoerrelse ?? DokumentobjektFilstoerrelseDefault 
                     });
                 }
                 jp.Dokumentbeskrivelse.Add(nyDokumentbeskrivelse);
@@ -189,7 +189,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         {
                             KodeProperty= "F"
                         },
-                        Dokumentnummer = 1,
+                        Dokumentnummer = "1",
                         TilknyttetDato = new DateTime(),
                         TilknyttetAv = DokumentbeskrivelseTilknyttetAvDefault,
                         Tittel = "Rekvisisjon av oppmålingsforretning",
@@ -204,7 +204,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                             new Dokumentobjekt()
                             {
                                 SystemID = new SystemID() { Value = Guid.NewGuid().ToString() },
-                                Versjonsnummer = 1,
+                                Versjonsnummer = "1",
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty = VariantformatKoder.Arkivformat.Verdi
@@ -238,9 +238,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         Saksbehandler = SaksbehandlerKorrespondansepartDefault
                     }
                 },
-                Journalaar = DateTime.Now.Year,
-                Journalsekvensnummer = 1,
-                Journalpostnummer = DateTime.Now.Year + DateTime.Now.Millisecond,
+                Journalaar = DateTime.Now.Year.ToString(),
+                Journalsekvensnummer = "1",
+                Journalpostnummer = DateTime.Now.Year.ToString() + DateTime.Now.Millisecond.ToString(),
                 Journalposttype = new Journalposttype()
                 {
                     KodeProperty= "X"
