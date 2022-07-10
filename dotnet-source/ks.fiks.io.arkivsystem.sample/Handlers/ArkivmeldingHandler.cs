@@ -83,6 +83,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     Arkivmelding lagretArkvivmelding;
                     ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkvivmelding);
                     
+                    // Registrering som skal lagres?
                     if (arkivmelding.Registrering.Count >= 0)
                     {
                         foreach (var registrering in arkivmelding.Registrering)
@@ -91,7 +92,12 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                             {
                                 foreach (var lagretMappe in lagretArkvivmelding.Mappe)
                                 {
-                                    if (lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.SystemID.Value)
+                                    // 
+                                    if(registrering.ReferanseForelderMappe.SystemID != null && lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.SystemID.Value)
+                                    {
+                                        lagretMappe.Registrering.Add(registrering);
+                                    } 
+                                    else if(registrering.ReferanseForelderMappe.ReferanseEksternNoekkel != null && registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Fagsystem == lagretMappe.ReferanseEksternNoekkel.Fagsystem && registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Noekkel == lagretMappe.ReferanseEksternNoekkel.Noekkel) 
                                     {
                                         lagretMappe.Registrering.Add(registrering);
                                     }
