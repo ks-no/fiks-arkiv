@@ -77,11 +77,14 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
 
             if (arkivmeldingJournalpost.ReferanseForelderMappe != null)
             {
-                jp.ReferanseForelderMappe = new SystemID()
+                if (arkivmeldingJournalpost.ReferanseForelderMappe.SystemID != null)
                 {
-                    Label = arkivmeldingJournalpost.ReferanseForelderMappe.SystemID.Label,
-                    Value = arkivmeldingJournalpost.ReferanseForelderMappe.SystemID.Value
-                };
+                    jp.ReferanseForelderMappe = new SystemID()
+                    {
+                        Label = arkivmeldingJournalpost.ReferanseForelderMappe.SystemID.Label,
+                        Value = arkivmeldingJournalpost.ReferanseForelderMappe.SystemID.Value
+                    };
+                }
             }
 
             if (arkivmeldingJournalpost.Arkivdel != null)

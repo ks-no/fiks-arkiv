@@ -53,7 +53,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Melding er validert i henhold til xsd, vi sender tilbake mottatt melding
             meldinger.Add(new Melding
             {
-                MeldingsType = FiksArkivMeldingtype.ArkivmeldingMottatt,
+                MeldingsType = FiksArkivMeldingtype.ArkivmeldingOppdaterMottatt,
             });
 
             var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
