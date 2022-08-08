@@ -14,7 +14,6 @@ using ks.fiks.io.arkivintegrasjon.common.Helpers;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Handlers;
 using ks.fiks.io.arkivsystem.sample.Models;
-using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using Microsoft.Extensions.Hosting;
@@ -30,26 +29,24 @@ namespace ks.fiks.io.arkivsystem.sample
         private FiksIOClient client;
         private readonly AppSettings appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-        public static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
-        public static Dictionary<string, Arkivmelding> _arkivmeldingProtokollValidatorStorage;
-        private JournalpostHentHandler _journalpostHentHandler;
-        private MappeHentHandler _mappeHentHandler;
-        private SokHandler _sokHandler;
-        private ArkivmeldingHandler _arkivmeldingHandler;
-        private ArkivmeldingOppdaterHandler _arkivmeldingOppdaterHandler;
+        public static Dictionary<string, Arkivmelding> ArkivmeldingProtokollValidatorStorage;
+        private readonly JournalpostHentHandler _journalpostHentHandler;
+        private readonly MappeHentHandler _mappeHentHandler;
+        private readonly SokHandler _sokHandler;
+        private readonly ArkivmeldingHandler _arkivmeldingHandler;
+        private readonly ArkivmeldingOppdaterHandler _arkivmeldingOppdaterHandler;
 
-        public ArkivSimulator(AppSettings appSettings)
+        public ArkivSimulator(AppSettings appSettings, JournalpostHentHandler journalpostHentHandler, MappeHentHandler mappeHentHandler, SokHandler sokHandler, ArkivmeldingHandler arkivmeldingHandler, ArkivmeldingOppdaterHandler arkivmeldingOppdaterHandler)
         {
             this.appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem");
             client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
-            _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
-            _arkivmeldingProtokollValidatorStorage = new Dictionary<string, Arkivmelding>();
-            _journalpostHentHandler = new JournalpostHentHandler();
-            _mappeHentHandler = new MappeHentHandler();
-            _sokHandler = new SokHandler();
-            _arkivmeldingHandler = new ArkivmeldingHandler();
-            _arkivmeldingOppdaterHandler = new ArkivmeldingOppdaterHandler();
+            ArkivmeldingProtokollValidatorStorage = new Dictionary<string, Arkivmelding>();
+            _journalpostHentHandler = journalpostHentHandler;
+            _mappeHentHandler = mappeHentHandler;
+            _sokHandler = sokHandler;
+            _arkivmeldingHandler = arkivmeldingHandler;
+            _arkivmeldingOppdaterHandler = arkivmeldingOppdaterHandler;
             InitArkivmeldingStorage();
         }
 
@@ -67,7 +64,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 using TextReader reader = new StringReader(xml);
                 var arkivmelding = (Arkivmelding)serializer.Deserialize(reader);
                 var key = directoryName.Split(Path.DirectorySeparatorChar)[1];
-                _arkivmeldingProtokollValidatorStorage.Add(key, arkivmelding); // Innkommende meldingId er key
+                ArkivmeldingProtokollValidatorStorage.Add(key, arkivmelding); // Innkommende meldingId er key
             }
         }
 
@@ -108,11 +105,11 @@ namespace ks.fiks.io.arkivsystem.sample
         private void HandleInnsynMelding(MottattMeldingArgs mottatt)
         {
             var payloads = new List<IPayload>();
-            Melding melding;
+            var meldinger = new List<Melding>();
             
             try
             {
-                melding = mottatt.Melding.MeldingType switch
+                meldinger = mottatt.Melding.MeldingType switch
                 {
                     FiksArkivMeldingtype.Sok => _sokHandler.HandleMelding(mottatt),
                     FiksArkivMeldingtype.JournalpostHent => _journalpostHentHandler.HandleMelding(mottatt),
@@ -122,25 +119,33 @@ namespace ks.fiks.io.arkivsystem.sample
             }
             catch (Exception e)
             {
-                melding = new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding =
                         FeilmeldingGenerator.CreateUgyldigforespoerselMelding(
                             $"Klarte ikke håndtere innkommende melding. Feilmelding: {e.Message}"),
                     FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
-                };
+                });
             }
- 
-            payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
-                    melding.FileName));
 
-            mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+            foreach (var melding in meldinger)
+            {
+                if (melding.ResultatMelding != null)
+                {
+                    payloads.Add(new StringPayload(ArkivmeldingSerializeHelper.Serialize(melding.ResultatMelding),
+                        melding.FileName));
+                }
 
-            var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
-            Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt", sendtMelding.MeldingId,
-                sendtMelding.MeldingType);
-            Log.Information("Melding er ferdig håndtert i arkiv");
+                mottatt.SvarSender.Ack(); // Ack message to remove it from the queue
+
+                var sendtMelding = mottatt.SvarSender.Svar(melding.MeldingsType, payloads).Result;
+                Log.Information("Svarmelding meldingId {MeldingId}, meldingType {MeldingType} sendt",
+                    sendtMelding.MeldingId,
+                    sendtMelding.MeldingType);
+            }
+            
+            Log.Information($"Innkommende arkivmelding med id {mottatt.Melding.MeldingId} er ferdig håndtert i arkiv");
         }
 
         private void HandleArkiveringMelding(MottattMeldingArgs mottatt)

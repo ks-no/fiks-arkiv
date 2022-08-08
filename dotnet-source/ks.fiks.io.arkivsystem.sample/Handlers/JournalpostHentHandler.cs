@@ -9,14 +9,19 @@ using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
-    public class JournalpostHentHandler : BaseHandler
+    public class JournalpostHentHandler : BaseHandler, IMeldingHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+
+        public JournalpostHentHandler(IArkivmeldingCache arkivmeldingCache) : base(arkivmeldingCache)
+        {
+        }
         
         private JournalpostHent GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
@@ -40,26 +45,37 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
 
-        private bool HarJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
+        private Arkivmelding GetArkivmeldingMedJournalpost(List<Arkivmelding> lagretArkivmeldinger, JournalpostHent journalpostHent)
         {
-            if (lagretArkivmelding == null)
+            if (lagretArkivmeldinger == null)
             {
-                return false;
+                return null;
             }
-            if (lagretArkivmelding.Mappe.Count >= 0)
+
+            foreach (var lagretArkivmelding in lagretArkivmeldinger)
             {
-                foreach (var mappe in lagretArkivmelding.Mappe)
+                if (lagretArkivmelding.Mappe.Count >= 0)
                 {
-                    foreach (var registrering in mappe.Registrering)
+                    foreach (var mappe in lagretArkivmelding.Mappe)
                     {
-                        if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                        foreach (var registrering in mappe.Registrering)
                         {
-                            return true;
+                            if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel,
+                                    journalpostHent.SystemID))
+                            {
+                                return lagretArkivmelding;
+                            }
                         }
                     }
                 }
+
+                if(lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering =>
+                    AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID)))
+                {
+                    return lagretArkivmelding;
+                }
             }
-            return lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering => AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID));
+            return null;
         }
         
         private Journalpost GetJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
@@ -90,42 +106,49 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
 
-        public Melding HandleMelding(MottattMeldingArgs mottatt)
+        public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
+            var meldinger = new List<Melding>();
+            
             var hentMelding = GetPayload(mottatt, XmlSchemaSet,
                 out var xmlValidationErrorOccured, out var validationResult);
 
             if (xmlValidationErrorOccured)
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
-                };
+                });
+                return meldinger;
             }
 
             // Forsøk å hente arkivmelding fra lokal lagring
-            var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
+            var lagretArkivmeldinger = TryGetLagretArkivmeldinger(mottatt);
+            var lagretArkivmelding = GetArkivmeldingMedJournalpost(lagretArkivmeldinger, hentMelding);
             
-            if (!HarJournalpost(lagretArkivmelding, hentMelding))
+            if (lagretArkivmelding == null)
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateIkkefunnetMelding("Kunne ikke finne noen journalpost som tilsvarer det som er etterspurt i hentmelding"),
                     FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ikkefunnet,
-                };
+                });
+                return meldinger;
             }
 
-            return new Melding
+            meldinger.Add(new Melding
             {
                 ResultatMelding = lagretArkivmelding == null
                     ? JournalpostHentResultatGenerator.Create(hentMelding)
                     : JournalpostHentResultatGenerator.Create(hentMelding, JournalpostHentResultatGenerator.CreateHentJournalpostFraArkivmeldingJournalpost(GetJournalpost(lagretArkivmelding, hentMelding))),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivMeldingtype.JournalpostHentResultat
-            };
+            });
+
+            return meldinger;
         }
     }
 }

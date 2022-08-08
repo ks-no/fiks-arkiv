@@ -1,16 +1,22 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Minimum;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Noekler;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
+using Journalpost = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Journalpost;
+using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Mappe;
+using Saksmappe = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Saksmappe;
 
 namespace ks.fiks.io.arkivsystem.sample.Helpers
 {
     public class SokeresultatGenerator
     {
-        public static SokeresultatMinimum CreateSokeResultatMinimum(Respons sokRespons)
+        public SokeresultatMinimum CreateSokeResultatMinimum(Sok sok)
         {
             var sokeResultatMinimum = new SokeresultatMinimum()
             {
@@ -23,7 +29,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 
             };
             
-            switch (sokRespons)
+            switch (sok.Respons)
             {
                 case Respons.Mappe:
                     AddMappeResultatMinimum(sokeResultatMinimum);
@@ -35,7 +41,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
             return sokeResultatMinimum;
         }
 
-        private static void AddSaksmappeResultatMinimum(SokeresultatMinimum sokeresultatMinimum)
+        private void AddSaksmappeResultatMinimum(SokeresultatMinimum sokeresultatMinimum)
         {
             sokeresultatMinimum.ResultatListe.Add(
                 new ResultatMinimum()
@@ -77,7 +83,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 });
         }
 
-        private static void AddMappeResultatMinimum(SokeresultatMinimum sokeresultatMinimum)
+        private void AddMappeResultatMinimum(SokeresultatMinimum sokeresultatMinimum)
         {
             sokeresultatMinimum.ResultatListe.Add(
                 new ResultatMinimum()
@@ -101,7 +107,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 });
         }
 
-        public static Sokeresultat CreateSokeResultatUtvidet(Respons sokRespons)
+        public Sokeresultat CreateSokeResultatUtvidet(Sok sok, List<Arkivmelding> lagretArkivmeldinger)
         {
             var sokeResultatUtvidet = new Sokeresultat()
             {
@@ -113,19 +119,82 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 Tidspunkt = DateTime.Now
             };
             
-            switch (sokRespons)
+            switch (sok.Respons)
             {
                 case Respons.Mappe:
-                    AddMappeResultatUtvidet(sokeResultatUtvidet);
+                    AddMappeResultatUtvidet(sokeResultatUtvidet, lagretArkivmeldinger);
                     break;
                 case Respons.Saksmappe:
-                    AddSaksmappeResultatUtvidet(sokeResultatUtvidet);
+                    AddSaksmappeResultatUtvidet(sokeResultatUtvidet, lagretArkivmeldinger);
+                    break;
+                case Respons.Journalpost:
+                    AddJournalpostResultatUtvidet(sok, sokeResultatUtvidet, lagretArkivmeldinger);
                     break;
             }
             return sokeResultatUtvidet;
         }
 
-        private static void AddSaksmappeResultatUtvidet(Sokeresultat sokeResultatUtvidet)
+        private void AddJournalpostResultatUtvidet(Sok sok, Sokeresultat sokeResultatUtvidet,
+            List<Arkivmelding> lagretArkivmeldinger)
+        {
+            var count = 0;
+            if (lagretArkivmeldinger != null && lagretArkivmeldinger.Count > 0)
+            {
+                foreach (var parameter in sok.Parameter)
+                {
+                    if (parameter.Felt == SokFelt.RegistreringTittel)
+                    {
+                        foreach (var lagretArkivmelding in lagretArkivmeldinger)
+                        {
+                            foreach (var registrering in lagretArkivmelding.Registrering)
+                            {
+                                if (parameter.Operator == OperatorType.Equal)
+                                {
+                                    if (registrering.Tittel.ToLower().Contains(parameter.Parameterverdier.Stringvalues[0].ToLower().Replace("*", string.Empty)))
+                                    {
+                                        // Funnet!
+                                        Console.Out.WriteLineAsync("FUNNET!!!!!!!!!!!!!!!!!!!!");
+                                        count++;
+                                        var jp = (KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost) registrering;
+                                        sokeResultatUtvidet.ResultatListe.Add(new Resultat()
+                                        {
+                                            Journalpost = new Journalpost()
+                                            {
+                                                Arkivdel = jp.Arkivdel,
+                                                Tittel = jp.Tittel,
+                                                OpprettetDato = jp.OpprettetDato,
+                                                OpprettetAv = jp.OpprettetAv,
+                                                SystemID = jp.SystemID,
+                                                ArkivertAv = jp.ArkivertAv,
+                                                ArkivertDato = jp.ArkivertDato,
+                                                AntallVedlegg = jp.AntallVedlegg,
+                                                Journalstatus = new Journalstatus() { Beskrivelse = "", KodeProperty = ""},
+                                                Journalposttype = new Journalposttype() {Beskrivelse = "", KodeProperty = ""},
+                                                Journalpostnummer = jp.Journalpostnummer ?? "1",
+                                                Journalaar = jp.Journalaar ?? DateTime.Now.Year.ToString(),
+                                                Journalsekvensnummer = jp.Journalsekvensnummer ?? "1",
+                                                Journaldato = jp.Journaldato,
+                                                ReferanseEksternNoekkel = new EksternNoekkel()
+                                                {
+                                                    Fagsystem = jp.ReferanseEksternNoekkel.Fagsystem,
+                                                    Noekkel = jp.ReferanseEksternNoekkel.Noekkel
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            sokeResultatUtvidet.Count = count;
+        }
+        
+
+        private void AddSaksmappeResultatUtvidet(Sokeresultat sokeResultatUtvidet,
+            List<Arkivmelding> lagretArkivmeldinger)
         {
             sokeResultatUtvidet.ResultatListe.Add(
                 new Resultat()
@@ -176,7 +245,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 });
         }
 
-        private static void AddMappeResultatUtvidet(Sokeresultat sokeResultatUtvidet)
+        private void AddMappeResultatUtvidet(Sokeresultat sokeResultatUtvidet, List<Arkivmelding> lagretArkivmeldinger)
         {
             sokeResultatUtvidet.ResultatListe.Add(
                 new Resultat()
@@ -209,7 +278,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 });
         }
 
-        public static SokeresultatNoekler CreateSokeResultatNoekler()
+        public SokeresultatNoekler CreateSokeResultatNoekler()
         {
             var sokeResultatNoekler = new SokeresultatNoekler()
             {

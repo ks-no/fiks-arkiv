@@ -7,17 +7,21 @@ using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
-    public class SokHandler : BaseHandler
+    public class SokHandler : BaseHandler, IMeldingHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+
+        private SokGenerator _sokGenerator;
         
-        public SokHandler()
+        public SokHandler(IArkivmeldingCache arkivmeldingCache, SokGenerator sokGenerator) : base(arkivmeldingCache)
         {
+            this._sokGenerator = sokGenerator;
         }
 
         private Sok GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
@@ -42,22 +46,27 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
         
-        public Melding HandleMelding(MottattMeldingArgs mottatt)
+        public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
+            var meldinger = new List<Melding>();
+            
             var sok = GetPayload(mottatt, XmlSchemaSet, out var xmlValidationErrorOccured,
                 out var validationResult);
-
+            
             if (xmlValidationErrorOccured)
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
-                };
+                });
+                return meldinger;
             }
+            
+            var lagretArkivmeldinger = TryGetLagretArkivmeldinger(mottatt);
 
-            return SokGenerator.CreateSokResponseMelding(sok);
+            return _sokGenerator.CreateSokResponseMelding(sok, lagretArkivmeldinger);
         }
     }
 }

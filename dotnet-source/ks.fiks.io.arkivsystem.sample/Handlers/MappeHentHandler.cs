@@ -8,14 +8,19 @@ using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
-    public class MappeHentHandler : BaseHandler
+    public class MappeHentHandler : BaseHandler, IMeldingHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+        
+        public MappeHentHandler(IArkivmeldingCache arkivmeldingCache) : base(arkivmeldingCache)
+        {
+        }
         
         private MappeHent GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
@@ -39,62 +44,73 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
 
-        public Melding HandleMelding(MottattMeldingArgs mottatt)
+        public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
+            var meldinger = new List<Melding>();
+            
             var hentMelding = GetPayload(mottatt, XmlSchemaSet,
                 out var xmlValidationErrorOccured, out var validationResult);
 
             if (xmlValidationErrorOccured)
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateUgyldigforespoerselMelding(validationResult),
                     FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ugyldigforespørsel,
-                };
+                });
+                return meldinger;
             }
 
             // Forsøk å hente arkivmelding fra lokal lagring
-            var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
+            var lagretArkivmeldinger = TryGetLagretArkivmeldinger(mottatt);
+            var lagretArkivmelding = GetArkivmeldingMedMappe(lagretArkivmeldinger, hentMelding);
             
-            if (!HarMappe(lagretArkivmelding, hentMelding))
+            if (lagretArkivmelding == null)
             {
-                return new Melding
+                meldinger.Add(new Melding
                 {
                     ResultatMelding = FeilmeldingGenerator.CreateIkkefunnetMelding("Kunne ikke finne noen mappe som tilsvarer det som er etterspurt i hentmelding"),
                     FileName = "feilmelding.xml",
                     MeldingsType = FiksArkivMeldingtype.Ikkefunnet,
-                };
+                });
+                return meldinger;
             }
             
-            return new Melding
+            meldinger.Add(new Melding
             {
                 ResultatMelding = lagretArkivmelding == null
                     ? MappeHentResultatGenerator.Create(hentMelding)
                     : MappeHentResultatGenerator.CreateFromCache(hentMelding, lagretArkivmelding),
                 FileName = "resultat.xml",
                 MeldingsType = FiksArkivMeldingtype.MappeHentResultat
-            };
+            });
+            return meldinger;
         }
         
-        private bool HarMappe(Arkivmelding lagretArkivmelding, MappeHent mappeHent)
+        private Arkivmelding GetArkivmeldingMedMappe(List<Arkivmelding> lagretArkivmeldinger, MappeHent mappeHent)
         {
-            if (lagretArkivmelding == null)
+            if (lagretArkivmeldinger == null)
             {
-                return false;
+                return null;
             }
-            if (lagretArkivmelding.Mappe.Count >= 0)
+
+            foreach (var lagretArkivmelding in lagretArkivmeldinger)
             {
-                foreach (var mappe in lagretArkivmelding.Mappe)
+                if (lagretArkivmelding.Mappe.Count >= 0)
                 {
-                    if (AreEqual(mappe, mappeHent))
+                    foreach (var mappe in lagretArkivmelding.Mappe)
                     {
-                        return true;
+                        if (AreEqual(mappe, mappeHent))
+                        {
+                            return lagretArkivmelding;
+                        }
+
                     }
-                    
                 }
             }
-            return false;
+
+            return null;
         }
     }
 }

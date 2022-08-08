@@ -7,14 +7,19 @@ using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
-    public class ArkivmeldingHandler : BaseHandler
+    public class ArkivmeldingHandler : BaseHandler, IMeldingHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
+
+        public ArkivmeldingHandler(IArkivmeldingCache arkivmeldingCache) : base(arkivmeldingCache)
+        {
+        }
         
         private Arkivmelding GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
@@ -78,37 +83,52 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Lagre arkivmelding i "cache" hvis det er en testSessionId i headere
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                if (ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId))
+                if (_arkivmeldingCache.HasArkivmeldinger(testSessionId))
                 {
-                    Arkivmelding lagretArkvivmelding;
-                    ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkvivmelding);
-                    
-                    // Registrering som skal lagres?
-                    if (arkivmelding.Registrering.Count >= 0)
+                    var found = false;
+                    var lagretArkvivmeldinger = _arkivmeldingCache.GetAll(testSessionId);
+                    foreach (var lagretArkivmelding in lagretArkvivmeldinger)
                     {
-                        foreach (var registrering in arkivmelding.Registrering)
+                        // Registrering som skal lagres?
+                        if (arkivmelding.Registrering.Count >= 0)
                         {
-                            if (registrering.ReferanseForelderMappe != null)
+                            foreach (var registrering in arkivmelding.Registrering)
                             {
-                                foreach (var lagretMappe in lagretArkvivmelding.Mappe)
+                                if (registrering.ReferanseForelderMappe != null)
                                 {
-                                    // 
-                                    if(registrering.ReferanseForelderMappe.SystemID != null && lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.SystemID.Value)
+                                    foreach (var lagretMappe in lagretArkivmelding.Mappe)
                                     {
-                                        lagretMappe.Registrering.Add(registrering);
-                                    } 
-                                    else if(registrering.ReferanseForelderMappe.ReferanseEksternNoekkel != null && registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Fagsystem == lagretMappe.ReferanseEksternNoekkel.Fagsystem && registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Noekkel == lagretMappe.ReferanseEksternNoekkel.Noekkel) 
-                                    {
-                                        lagretMappe.Registrering.Add(registrering);
+                                        // 
+                                        if (registrering.ReferanseForelderMappe.SystemID != null &&
+                                            lagretMappe.SystemID.Value ==
+                                            registrering.ReferanseForelderMappe.SystemID.Value)
+                                        {
+                                            lagretMappe.Registrering.Add(registrering);
+                                            found = true;
+                                        }
+                                        else if (registrering.ReferanseForelderMappe.ReferanseEksternNoekkel != null &&
+                                                 registrering.ReferanseForelderMappe.ReferanseEksternNoekkel
+                                                     .Fagsystem == lagretMappe.ReferanseEksternNoekkel.Fagsystem &&
+                                                 registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Noekkel ==
+                                                 lagretMappe.ReferanseEksternNoekkel.Noekkel)
+                                        {
+                                            lagretMappe.Registrering.Add(registrering);
+                                            found = true;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
+                    if (!found)
+                    {
+                        _arkivmeldingCache.Add(testSessionId, arkivmelding);
+                    }
                 }
                 else
                 {
-                    ArkivSimulator._arkivmeldingCache.Add(testSessionId, arkivmelding);
+                    _arkivmeldingCache.Add(testSessionId, arkivmelding);
                 }
             }
             

@@ -9,6 +9,7 @@ using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
@@ -19,9 +20,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     {
         private readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         protected readonly XmlSchemaSet XmlSchemaSet;
+        protected IArkivmeldingCache _arkivmeldingCache;
 
-        protected BaseHandler()
+        protected BaseHandler(IArkivmeldingCache arkivmeldingCache)
         {
+            _arkivmeldingCache = arkivmeldingCache;
             XmlSchemaSet = new XmlSchemaSet();
             var arkivModelsAssembly = Assembly.Load("KS.Fiks.Arkiv.Models.V1");
             
@@ -137,19 +140,23 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return string.Empty;
         }
 
-        protected Arkivmelding TryGetLagretArkivmelding(MottattMeldingArgs mottatt)
+        protected List<Arkivmelding> TryGetLagretArkivmeldinger(MottattMeldingArgs mottatt)
         {
-            
             // Er det en testSession fra integrasjonstester? 
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                return ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId) ? ArkivSimulator._arkivmeldingCache[testSessionId] : null;
+                return _arkivmeldingCache.HasArkivmeldinger(testSessionId) ? _arkivmeldingCache.GetAll(testSessionId) : null;
             }
 
             // Er det test fra protokoll-validator?
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
             {
-                return ArkivSimulator._arkivmeldingProtokollValidatorStorage.ContainsKey(testName) ? ArkivSimulator._arkivmeldingProtokollValidatorStorage[testName] : null;
+                if (ArkivSimulator.ArkivmeldingProtokollValidatorStorage.ContainsKey(testName))
+                {
+                    var liste = new List<Arkivmelding>();
+                    liste.Add(ArkivSimulator.ArkivmeldingProtokollValidatorStorage[testName]);
+                    return liste;
+                }
             }
 
             return null;
@@ -161,13 +168,13 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Er det en testSession fra integrasjonstester? 
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                return ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId) ? ArkivSimulator._arkivmeldingCache[testSessionId] : null;
+                return _arkivmeldingCache.HasArkivmeldinger(testSessionId) ? _arkivmeldingCache.GetFirst(testSessionId) : null;
             }
 
             // Er det test fra protokoll-validator?
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.ValidatorTestNameHeader, out var testName)) 
             {
-                return ArkivSimulator._arkivmeldingProtokollValidatorStorage.ContainsKey(testName) ? ArkivSimulator._arkivmeldingProtokollValidatorStorage[testName] : null;
+                return ArkivSimulator.ArkivmeldingProtokollValidatorStorage.ContainsKey(testName) ? ArkivSimulator.ArkivmeldingProtokollValidatorStorage[testName] : null;
             }
 
             return null;

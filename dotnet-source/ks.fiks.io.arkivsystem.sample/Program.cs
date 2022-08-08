@@ -1,7 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using ks.fiks.io.arkivintegrasjon.common.AppSettings;
+using ks.fiks.io.arkivsystem.sample.Generators;
+using ks.fiks.io.arkivsystem.sample.Handlers;
+using ks.fiks.io.arkivsystem.sample.Helpers;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,7 +35,15 @@ namespace ks.fiks.io.arkivsystem.sample
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton(AppSettingsBuilder.CreateAppSettings(hostContext.Configuration));
-                    services.AddHostedService<ArkivSimulator>();
+                    services.AddHostedService<ArkivSimulator>()
+                        .AddScoped<IArkivmeldingCache, ArkivmeldingCache>()
+                        .AddScoped<JournalpostHentHandler, JournalpostHentHandler>()
+                        .AddScoped<MappeHentHandler, MappeHentHandler>()
+                        .AddScoped<ArkivmeldingHandler, ArkivmeldingHandler>()
+                        .AddScoped<ArkivmeldingOppdaterHandler, ArkivmeldingOppdaterHandler>()
+                        .AddScoped<SokHandler, SokHandler>()
+                        .AddScoped<SokGenerator, SokGenerator>()
+                        .AddScoped<SokeresultatGenerator, SokeresultatGenerator>();
                 })
                 .RunConsoleAsync();
         }

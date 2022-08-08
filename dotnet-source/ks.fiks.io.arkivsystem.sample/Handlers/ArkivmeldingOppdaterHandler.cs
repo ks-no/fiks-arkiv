@@ -9,15 +9,20 @@ using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
+using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
-    public class ArkivmeldingOppdaterHandler : BaseHandler
+    public class ArkivmeldingOppdaterHandler : BaseHandler, IMeldingHandler
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
 
+        public ArkivmeldingOppdaterHandler(IArkivmeldingCache arkivmeldingCache) : base(arkivmeldingCache)
+        {
+        }
+        
         public List<Melding> HandleMelding(MottattMeldingArgs mottatt)
         {
             var meldinger = new List<Melding>();
@@ -56,31 +61,34 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 MeldingsType = FiksArkivMeldingtype.ArkivmeldingOppdaterMottatt,
             });
 
-            var lagretArkivmelding = TryGetLagretArkivmelding(mottatt);
+            var lagretArkivmeldinger = TryGetLagretArkivmeldinger(mottatt);
             
-            if(lagretArkivmelding != null) {
-                try
+            if(lagretArkivmeldinger != null) {
+                foreach (var lagretArkivmelding in lagretArkivmeldinger)
                 {
-                    if (arkivmeldingOppdatering.RegistreringOppdateringer.Count > 0)
+                    try
                     {
-                        meldinger.AddRange(OppdaterRegistreringer(arkivmeldingOppdatering, lagretArkivmelding));
+                        if (arkivmeldingOppdatering.RegistreringOppdateringer.Count > 0)
+                        {
+                            meldinger.AddRange(OppdaterRegistreringer(arkivmeldingOppdatering, lagretArkivmelding));
+                        }
+                        else if (arkivmeldingOppdatering.MappeOppdateringer.Count > 0) // Mappe oppdatering
+                        {
+                            meldinger.AddRange(OppdaterMapper(arkivmeldingOppdatering, lagretArkivmelding));
+                        }
                     }
-                    else if (arkivmeldingOppdatering.MappeOppdateringer.Count > 0) // Mappe oppdatering
+                    catch (Exception e)
                     {
-                        meldinger.AddRange(OppdaterMapper(arkivmeldingOppdatering, lagretArkivmelding));
+                        meldinger.Add(new Melding
+                        {
+                            ResultatMelding =
+                                FeilmeldingGenerator.CreateServerFeilMelding(
+                                    $"Noe gikk galt: {e.Message}"),
+                            FileName = "feilmelding.xml",
+                            MeldingsType = FiksArkivMeldingtype.Serverfeil,
+                        });
+                        return meldinger;
                     }
-                }
-                catch (Exception e)
-                {
-                    meldinger.Add(new Melding
-                    {
-                        ResultatMelding =
-                            FeilmeldingGenerator.CreateServerFeilMelding(
-                                $"Noe gikk galt: {e.Message}"),
-                        FileName = "feilmelding.xml",
-                        MeldingsType = FiksArkivMeldingtype.Serverfeil,
-                    });
-                    return meldinger;
                 }
             }
             else
