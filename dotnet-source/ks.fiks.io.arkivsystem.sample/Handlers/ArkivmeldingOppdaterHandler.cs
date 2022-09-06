@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
+using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
 using KS.Fiks.IO.Client.Models;
@@ -123,7 +124,13 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                         {
                             if (oppdatering.Saksansvarlig != null)
                             {
-                                ((Saksmappe)lagretMappe).Saksansvarlig = oppdatering.Saksansvarlig;
+                                ((Saksmappe)lagretMappe).Saksansvarlig = new Saksansvarlig()
+                                {
+                                    Navn = oppdatering.Saksansvarlig.Navn,
+                                    Epostadresse = oppdatering.Saksansvarlig.Epostadresse,
+                                    Identifikator = oppdatering.Saksansvarlig.Identifikator,
+                                    Initialer = oppdatering.Saksansvarlig.Initialer
+                                };
                             }
                             //TODO Etter hvert: legge til resten av oppdateringsmuligheter for Saksmappe
                         }
@@ -168,7 +175,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 var found = false;
                 foreach (var registrering in lagretArkivmelding.Registrering)
                 {
-                    if (AreEqual(registrering, registreringOppdatering.ReferanseEksternNoekkel, registreringOppdatering.SystemID))
+                    if (AreEqual(registrering, registreringOppdatering.ReferanseEksternNoekkel, registreringOppdatering.ReferanseTilRegistrering.SystemID))
                     {
                         if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
                         if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
@@ -180,7 +187,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                                 Skjermingshjemmel = registreringOppdatering.Skjerming.Skjermingshjemmel,
                                 SkjermingOpphoererAksjon = registreringOppdatering.Skjerming.SkjermingOpphoererAksjon,
                                 SkjermingOpphoererDato = registreringOppdatering.Skjerming.SkjermingOpphoererDato,
-                                SkjermingOpphoererDatoSpecified = registreringOppdatering.Skjerming.SkjermingOpphoererDatoSpecified,
+                                SkjermingOpphoererDatoValueSpecified = registreringOppdatering.Skjerming.SkjermingOpphoererDatoValueSpecified,
                                 Tilgangsrestriksjon = registreringOppdatering.Skjerming.Tilgangsrestriksjon
                             };
                         }
@@ -193,8 +200,8 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                                 Graderingsdato = registreringOppdatering.Gradering.Graderingsdato,
                                 GradertAv = registreringOppdatering.Gradering.GradertAv,
                                 Nedgraderingsdato = registreringOppdatering.Gradering.Nedgraderingsdato,
-                                NedgraderingsdatoSpecified =
-                                    registreringOppdatering.Gradering.NedgraderingsdatoSpecified,
+                                NedgraderingsdatoValueSpecified = 
+                                    registreringOppdatering.Gradering.NedgraderingsdatoValueSpecified,
                                 NedgradertAv = registreringOppdatering.Gradering.NedgradertAv
                             };
                         }

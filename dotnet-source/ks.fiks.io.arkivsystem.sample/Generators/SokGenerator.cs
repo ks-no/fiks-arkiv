@@ -9,35 +9,35 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
     public class SokGenerator
     {
         public static Melding CreateSokResponseMelding(Sok sok) =>
-            sok.ResponsType switch
+            sok.Sokdefinisjon.Responstype switch
             {
-                ResponsType.Minimum =>
+                Responstype.Minimum =>
                     new Melding
                     {
                         FileName = "resultat.xml",
                         MeldingsType = FiksArkivMeldingtype.SokResultatMinimum,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons)
+                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Sokdefinisjon)
                     },
-                ResponsType.Noekler =>
+                Responstype.Noekler =>
                     new Melding
                     {
                         FileName = "resultat.xml",
                         MeldingsType = FiksArkivMeldingtype.SokResultatNoekler,
                         ResultatMelding = SokeresultatGenerator.CreateSokeResultatNoekler(),
                     },
-                ResponsType.Utvidet =>
+                Responstype.Utvidet =>
                     new Melding
                     {
                         FileName = "resultat.xml",
                         MeldingsType = FiksArkivMeldingtype.SokResultatUtvidet,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatUtvidet(sok.Respons)
+                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatUtvidet(sok.Sokdefinisjon)
                     },
                 _ =>
                     new Melding
                     {
                         FileName = "resultat.xml",
                         MeldingsType = FiksArkivMeldingtype.SokResultatMinimum,
-                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Respons),
+                        ResultatMelding = SokeresultatGenerator.CreateSokeResultatMinimum(sok.Sokdefinisjon),
                     }
             };
 

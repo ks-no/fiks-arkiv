@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
-using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Journalpost;
+using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Registrering;
 using KS.Fiks.Arkiv.Models.V1.Meldingstyper;
 using ks.fiks.io.arkivsystem.sample.Generators;
 using ks.fiks.io.arkivsystem.sample.Models;
@@ -18,7 +18,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
     {
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         
-        private JournalpostHent GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
+        private RegistreringHent GetPayload(MottattMeldingArgs mottatt, XmlSchemaSet xmlSchemaSet,
             out bool xmlValidationErrorOccured, out List<List<string>> validationResult)
         {
             if (mottatt.Melding.HasPayload)
@@ -28,11 +28,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 Log.Information("Parsing journalpostHent: {Xml}", text);
                 if (string.IsNullOrEmpty(text))
                 {
-                    Log.Error("Tom journalpostHent? Xml: {Xml}", text);
+                    Log.Error("Tom registreringHent? Xml: {Xml}", text);
                 }
 
                 using var textReader = (TextReader)new StringReader(text);
-                return(JournalpostHent) new XmlSerializer(typeof(JournalpostHent)).Deserialize(textReader);
+                return(RegistreringHent) new XmlSerializer(typeof(RegistreringHent)).Deserialize(textReader);
             }
 
             xmlValidationErrorOccured = false;
@@ -40,7 +40,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
 
-        private bool HarJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
+        private bool HarJournalpost(Arkivmelding lagretArkivmelding, RegistreringHent registreringHent)
         {
             if (lagretArkivmelding == null)
             {
@@ -52,17 +52,17 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     foreach (var registrering in mappe.Registrering)
                     {
-                        if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                        if (AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID))
                         {
                             return true;
                         }
                     }
                 }
             }
-            return lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering => AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID));
+            return lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering => AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID));
         }
         
-        private Journalpost GetJournalpost(Arkivmelding lagretArkivmelding, JournalpostHent journalpostHent)
+        private Journalpost GetJournalpost(Arkivmelding lagretArkivmelding, RegistreringHent registreringHent)
         {
             if (lagretArkivmelding.Mappe.Count >= 0)
             {
@@ -70,7 +70,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 {
                     foreach (var registrering in mappe.Registrering)
                     {
-                        if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                        if (AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID))
                         {
                             return (Journalpost) registrering;
                         }
@@ -81,7 +81,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 foreach (var registrering in lagretArkivmelding.Registrering)
                 {
-                    if (AreEqual(registrering, journalpostHent.ReferanseEksternNoekkel, journalpostHent.SystemID))
+                    if (AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID))
                     {
                         return (Journalpost) registrering;
                     }
@@ -121,10 +121,10 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return new Melding
             {
                 ResultatMelding = lagretArkivmelding == null
-                    ? JournalpostHentResultatGenerator.Create(hentMelding)
-                    : JournalpostHentResultatGenerator.Create(hentMelding, JournalpostHentResultatGenerator.CreateHentJournalpostFraArkivmeldingJournalpost(GetJournalpost(lagretArkivmelding, hentMelding))),
+                    ? RegistreringHentResultatGenerator.Create(hentMelding)
+                    : RegistreringHentResultatGenerator.Create(hentMelding, RegistreringHentResultatGenerator.CreateHentJournalpostFraArkivmeldingJournalpost(GetJournalpost(lagretArkivmelding, hentMelding))),
                 FileName = "resultat.xml",
-                MeldingsType = FiksArkivMeldingtype.JournalpostHentResultat
+                MeldingsType = FiksArkivMeldingtype.RegistreringHentResultat
             };
         }
     }

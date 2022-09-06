@@ -11,7 +11,6 @@ using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client.Models;
 using Serilog;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample.Handlers
 {
@@ -55,11 +54,11 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             }
             
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.innsyn.journalpost.hent.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.innsyn.registrering.hent.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/journalpost/hent/v1",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/registrering/hent/v1",
                         schemaReader);
                 }
             }
@@ -195,43 +194,43 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return false;
         }
         
-        protected static bool AreEqual(Registrering lagretRegistrering,  KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel eksternNoekkel, SystemID systemId)
-        {
-            if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
-            {
-                if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
-                    eksternNoekkel.Fagsystem &&
-                    lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
-                    eksternNoekkel.Noekkel)
-                {
-                    return true;
-                }
-            }
-            else if (systemId != null && lagretRegistrering.SystemID != null)
-            {
-                if (lagretRegistrering.SystemID.Value == systemId.Value)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        // protected static bool AreEqual(Registrering lagretRegistrering, EksternNoekkel eksternNoekkel, SystemID systemId)
+        // {
+        //     if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
+        //     {
+        //         if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
+        //             eksternNoekkel.Fagsystem &&
+        //             lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
+        //             eksternNoekkel.Noekkel)
+        //         {
+        //             return true;
+        //         }
+        //     }
+        //     else if (systemId != null && lagretRegistrering.SystemID != null)
+        //     {
+        //         if (lagretRegistrering.SystemID.Value == systemId.Value)
+        //         {
+        //             return true;
+        //         }
+        //     }
+        //     return false;
+        // }
         
         protected static bool AreEqual(Mappe lagretMappe, MappeOppdatering mappeOppdatering)
         {
-            if (mappeOppdatering.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
+            if (mappeOppdatering.ReferanseTilMappe.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
             {
                 if (lagretMappe.ReferanseEksternNoekkel.Fagsystem ==
-                    mappeOppdatering.ReferanseEksternNoekkel.Fagsystem &&
+                    mappeOppdatering.ReferanseTilMappe.ReferanseEksternNoekkel.Fagsystem &&
                     lagretMappe.ReferanseEksternNoekkel.Noekkel ==
-                    mappeOppdatering.ReferanseEksternNoekkel.Noekkel)
+                    mappeOppdatering.ReferanseTilMappe.ReferanseEksternNoekkel.Noekkel)
                 {
                     return true;
                 }
             }
-            else if (mappeOppdatering.SystemID != null && lagretMappe.SystemID != null)
+            else if (mappeOppdatering.ReferanseTilMappe.SystemID != null && lagretMappe.SystemID != null)
             {
-                if (lagretMappe.SystemID == mappeOppdatering.SystemID)
+                if (lagretMappe.SystemID == mappeOppdatering.ReferanseTilMappe.SystemID)
                 {
                     return true;
                 }
@@ -241,19 +240,19 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         
         protected static bool AreEqual(Mappe lagretMappe, MappeHent mappeHent)
         {
-            if (mappeHent.ReferanseEksternNoekkel != null && lagretMappe.ReferanseEksternNoekkel != null)
+            if (mappeHent.ReferanseTilMappe != null && lagretMappe.ReferanseEksternNoekkel != null)
             {
                 if (lagretMappe.ReferanseEksternNoekkel.Fagsystem ==
-                    mappeHent.ReferanseEksternNoekkel.Fagsystem &&
+                    mappeHent.ReferanseTilMappe.ReferanseEksternNoekkel.Fagsystem &&
                     lagretMappe.ReferanseEksternNoekkel.Noekkel ==
-                    mappeHent.ReferanseEksternNoekkel.Noekkel)
+                    mappeHent.ReferanseTilMappe.ReferanseEksternNoekkel.Noekkel)
                 {
                     return true;
                 }
             }
-            else if (mappeHent.SystemID != null && lagretMappe.SystemID != null)
+            else if (mappeHent.ReferanseTilMappe.SystemID != null && lagretMappe.SystemID != null)
             {
-                if (lagretMappe.SystemID == mappeHent.SystemID)
+                if (lagretMappe.SystemID == mappeHent.ReferanseTilMappe.SystemID)
                 {
                     return true;
                 }

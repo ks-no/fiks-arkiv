@@ -4,11 +4,7 @@ using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Hent.Mappe;
 using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
-using Gradering = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Gradering;
-using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
 using Saksmappe = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Saksmappe;
-using Skjerming = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Skjerming;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -42,13 +38,13 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
 
         private static bool AreEqual(MappeHent mappeHent, Mappe mappeFraCache)
         {
-            if (mappeHent.ReferanseEksternNoekkel != null && mappeFraCache.ReferanseEksternNoekkel != null &&
-                mappeHent.ReferanseEksternNoekkel.Noekkel == mappeFraCache.ReferanseEksternNoekkel.Noekkel)
+            if (mappeHent.ReferanseTilMappe.ReferanseEksternNoekkel != null && mappeFraCache.ReferanseEksternNoekkel != null &&
+                mappeHent.ReferanseTilMappe.ReferanseEksternNoekkel.Noekkel == mappeFraCache.ReferanseEksternNoekkel.Noekkel)
             {
                 return true;
             }
 
-            return mappeHent.SystemID != null && mappeFraCache.SystemID != null && mappeHent.SystemID == mappeFraCache.SystemID;
+            return mappeHent.ReferanseTilMappe.SystemID != null && mappeFraCache.SystemID != null && mappeHent.ReferanseTilMappe.SystemID == mappeFraCache.SystemID;
         }
 
         public static KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Mappe CreateMappe(MappeHent mappeHent)
@@ -76,7 +72,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 AvsluttetAv = arkivmeldingMappe.AvsluttetAv ?? "Avsluttet Av",
                 AvsluttetDato = arkivmeldingMappe.AvsluttetDato,
                 OpprettetAv = arkivmeldingMappe.OpprettetAv ?? "Opprettet Av",
-                OpprettetDato = arkivmeldingMappe.OpprettetDato
+                OpprettetDato = (DateTime) arkivmeldingMappe.OpprettetDato
                 //Kassasjon = arkivmeldingMappe //TODO mangler i arkivstruktur
             };
             if (arkivmeldingMappe.Dokumentmedium != null)
@@ -91,26 +87,26 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             return mappe;
         }
 
-        private static Gradering mapToGradering(Mappe arkivmeldingMappe)
+        private static KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Gradering mapToGradering(Mappe arkivmeldingMappe)
         {
-            return new Gradering()
+            return new KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Gradering()
             {
                 Grad  = arkivmeldingMappe.Gradering.Grad,
                 Graderingsdato = arkivmeldingMappe.Gradering.Graderingsdato,
                 GradertAv = arkivmeldingMappe.Gradering.GradertAv,
                 Nedgraderingsdato = arkivmeldingMappe.Gradering.Nedgraderingsdato,
-                NedgraderingsdatoSpecified = arkivmeldingMappe.Gradering.NedgraderingsdatoSpecified,
+                NedgraderingsdatoValueSpecified = arkivmeldingMappe.Gradering.NedgraderingsdatoValueSpecified,
                 NedgradertAv = arkivmeldingMappe.Gradering.NedgradertAv
             };
         }
 
-        private static Skjerming mapToSkjerming(Mappe arkivmeldingMappe)
+        private static KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Skjerming mapToSkjerming(Mappe arkivmeldingMappe)
         {
-            return new Skjerming()
+            return new KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Skjerming()
             {
                 SkjermingOpphoererAksjon = arkivmeldingMappe.Skjerming.SkjermingOpphoererAksjon,
                 SkjermingOpphoererDato = arkivmeldingMappe.Skjerming.SkjermingOpphoererDato,
-                SkjermingOpphoererDatoSpecified = arkivmeldingMappe.Skjerming.SkjermingOpphoererDatoSpecified,
+                SkjermingOpphoererDatoValueSpecified = arkivmeldingMappe.Skjerming.SkjermingOpphoererDatoValueSpecified,
                 Skjermingshjemmel = arkivmeldingMappe.Skjerming.Skjermingshjemmel,
                 Tilgangsrestriksjon = arkivmeldingMappe.Skjerming.Tilgangsrestriksjon
             };
@@ -133,22 +129,24 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 AvsluttetAv = arkivmeldingMappe.AvsluttetAv ?? "Avsluttet Av",
                 AvsluttetDato = arkivmeldingMappe.AvsluttetDato,
                 OpprettetAv = arkivmeldingMappe.OpprettetAv ?? "Opprettet Av",
-                OpprettetDato = arkivmeldingMappe.OpprettetDato,
+                OpprettetDato = arkivmeldingMappe.OpprettetDato ?? new DateTime(),
                 //Kassasjon = arkivmeldingMappe //TODO mangler i arkivstruktur
-                Saksaar = arkivmeldingMappe.Saksaar ?? DateTime.Now.Year.ToString(),
-                Saksdato = arkivmeldingMappe.Saksdato,
-                Sakssekvensnummer = arkivmeldingMappe.Sakssekvensnummer ?? "1",
-                AdministrativEnhet = arkivmeldingMappe.AdministrativEnhet ?? "Administrativ enhet",
-                Saksansvarlig = arkivmeldingMappe.Saksansvarlig ?? "Default Saksansvarlig",
+                Saksaar = arkivmeldingMappe.Saksaar ?? DateTime.Now.Year,
+                Saksdato = arkivmeldingMappe.Saksdato ?? new DateTime(),
+                Sakssekvensnummer = arkivmeldingMappe.Sakssekvensnummer ?? 1,
+                AdministrativEnhet = arkivmeldingMappe.AdministrativEnhet ?? new AdministrativEnhet() { Navn = "Administrativ enhet" },
+                Saksansvarlig = arkivmeldingMappe.Saksansvarlig ?? new Saksansvarlig() { Navn = "Default Saksansvarlig" },
                 
             };
 
             if (arkivmeldingMappe.ReferanseForeldermappe != null)
             {
-                mappe.ReferanseForeldermappe = new SystemID()
-                {
-                    Label = arkivmeldingMappe.ReferanseForeldermappe.SystemID.Label,
-                    Value = arkivmeldingMappe.ReferanseForeldermappe.SystemID.Value
+                mappe.ReferanseForeldermappe = new ReferanseTilMappe() {
+                    SystemID = new SystemID()
+                    {
+                        Label = arkivmeldingMappe.ReferanseForeldermappe.SystemID.Label,
+                        Value = arkivmeldingMappe.ReferanseForeldermappe.SystemID.Value
+                    }
                 };
             }
 

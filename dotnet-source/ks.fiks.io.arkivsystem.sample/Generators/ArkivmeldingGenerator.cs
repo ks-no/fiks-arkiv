@@ -1,12 +1,6 @@
 using System;
-using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
-using Dokumentbeskrivelse = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentbeskrivelse;
-using Dokumentobjekt = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentobjekt;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel;
-using Journalpost = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost;
-using Korrespondansepart = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Korrespondansepart;
-using ReferanseForelderMappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.ReferanseForelderMappe;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -48,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                         {
                             new Dokumentobjekt()
                             {
-                                Versjonsnummer = "1",
+                                Versjonsnummer = 1,
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "P"
@@ -73,8 +67,14 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                             KodeProperty= "IM"
                         },
                         KorrespondansepartNavn = "Oppmålingsetaten",
-                        AdministrativEnhet = "Oppmålingsetaten",
-                        Saksbehandler = "Ingrid Mottaker"
+                        AdministrativEnhet = new AdministrativEnhet()
+                        {
+                            Navn = "Oppmålingsetaten", 
+                        },
+                        Saksbehandler = new Saksbehandler()
+                        {
+                            Navn = "Ingrid Mottaker"
+                        }
                     }
                 },
                 Journalposttype = new Journalposttype()

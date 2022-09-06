@@ -8,7 +8,6 @@ using System.Xml.Serialization;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
-using KS.Fiks.Arkiv.Models.V1.Kodelister;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 using KS.Fiks.ASiC_E;
 using KS.Fiks.IO.Client;
@@ -18,10 +17,8 @@ using Ks.Fiks.Maskinporten.Client;
 using Microsoft.Extensions.Configuration;
 using Dokumentbeskrivelse = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentbeskrivelse;
 using Dokumentobjekt = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumentobjekt;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.EksternNoekkel;
 using Journalpost = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost;
 using Klassifikasjon = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Klassifikasjon;
-using Klassifikasjonssystem = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Klassifikasjonssystem;
 using Korrespondansepart = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Korrespondansepart;
 using Merknad = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Merknad;
 using Part = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Part;
@@ -114,25 +111,27 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // Existing case in the archive?
             var finnSak = new Sok
             {
-                Respons = Respons.Mappe,
+                Sokdefinisjon = new MappeSokdefinisjon()
+                {
+                    Parametere = { 
+                        new MappeParameter()
+                        {
+                            SokVerdier = new SokVerdier()
+                            {
+                                Stringvalues = {ekstsys, saksid}
+                            },
+                            Felt = MappeSokefelt.MappeEksternId,
+                            Operator = OperatorType.Equal
+                        } 
+                    },
+                    Responstype = Responstype.Utvidet
+                },
                 MeldingId = Guid.NewGuid().ToString(),
                 System = "eByggesak",
                 Tidspunkt = DateTime.Now,
                 Skip = 0,
                 Take = 2
             };
-
-            finnSak.Parameter.Add(
-                    new Parameter
-                    {
-                        Felt = SokFelt.MappeEksternId,
-                        Operator = OperatorType.Equal,
-                        Parameterverdier = new Parameterverdier
-                        {
-                            Stringvalues = {ekstsys, saksid}
-                        }
-                    });
-
 
             // TODO: Ensure search result as output from SendSok
             var payload = SendSok(finnSak);
@@ -164,13 +163,13 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             var gnr = new Klassifikasjon()
             {
                 KlasseID = "1234-12/1234",
-                Klassifikasjonssystem = "" //TODO legg inn noe fornuftig. Burde det være en kode?
+                KlassifikasjonssystemID = ""
             };
 
             var mn = new Matrikkelnummer
             {
-                Gardsnummer = "123",
-                Bruksnummer = "456"
+                Gardsnummer = 123,
+                Bruksnummer = 456
             };
 
             // TODO: Missing fields vs GI 1.1
@@ -178,8 +177,14 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             {
                 Tittel = "Byggesak 123",
                 OffentligTittel = "Byggesak 123",
-                AdministrativEnhet = "Byggesaksavdelingen",
-                Saksansvarlig = "Byggesaksbehandler",
+                AdministrativEnhet = new AdministrativEnhet()
+                {
+                    Navn = "Byggesaksavdelingen",
+                },
+                Saksansvarlig = new Saksansvarlig()
+                {
+                    Navn = "Byggesaksbehandler",
+                },
                 Saksdato = new DateTime(),
                 Saksstatus = new Saksstatus()
                 {
@@ -281,8 +286,14 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     },
                     new Korrespondansepart
                     {
-                        Saksbehandler = "SBBYGG",
-                        AdministrativEnhet = "BYGG"
+                        Saksbehandler = new Saksbehandler()
+                        {
+                            Navn = "SBBYGG",
+                        },
+                        AdministrativEnhet = new AdministrativEnhet()
+                        {
+                            Navn = "BYGG"
+                        },
                     }
                 },
                 Merknad =
@@ -321,7 +332,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             KodeProperty= "H"
                             
                         },    // Code object?
-                        Dokumentnummer = "1",   // Number, should be int
+                        Dokumentnummer = 1,   // Number, should be int
                         Dokumenttype = new Dokumenttype()
                         {
                             KodeProperty= "SØKNAD"
@@ -335,7 +346,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             new Dokumentobjekt
                             {
-                                Versjonsnummer = "1",   // Number!
+                                Versjonsnummer = 1,   // Number!
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "A"
@@ -355,7 +366,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             KodeProperty= "V"
                         },    // Code object?
-                        Dokumentnummer = "2",   // Number!
+                        Dokumentnummer = 2,   // Number!
                         Dokumenttype =  new Dokumenttype()
                         {
                             KodeProperty= "KART"
@@ -369,7 +380,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             new Dokumentobjekt
                             {
-                                Versjonsnummer = "1",   // Number!
+                                Versjonsnummer = 1,   // Number!
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "A"
@@ -389,7 +400,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             KodeProperty= "V"
                         },    // Code object?
-                        Dokumentnummer = "3",   // NUmber!
+                        Dokumentnummer = 3,   // NUmber!
                         Dokumenttype = new Dokumenttype()
                         {
                             KodeProperty= "TEGNING"
@@ -403,7 +414,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                         {
                             new Dokumentobjekt
                             {
-                                Versjonsnummer = "1",   // Number!
+                                Versjonsnummer = 1,   // Number!
                                 Variantformat = new Variantformat()
                                 {
                                     KodeProperty= "A"

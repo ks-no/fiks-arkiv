@@ -1,10 +1,7 @@
 using System;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmeldingkvittering;
-using KS.Fiks.Arkiv.Models.V1.Arkivstruktur;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
-using Mappe = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Mappe;
-using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
+using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
 {
@@ -44,8 +41,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 SystemID = mappe.SystemID,
                 OpprettetDato = DateTime.Now,
-                Saksaar = DateTime.Now.Year.ToString(),
-                Sakssekvensnummer = new Random().Next().ToString(),
+                Saksaar = DateTime.Now.Year,
+                Sakssekvensnummer = new Random().Next(),
                 ReferanseForeldermappe = mappe.ReferanseForeldermappe?.SystemID,
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
@@ -61,9 +58,9 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             var jp = new JournalpostKvittering
             {
                 SystemID = journalpost.SystemID,
-                Journalaar = DateTime.Now.Year.ToString(),
-                Journalsekvensnummer = new Random().Next().ToString(),
-                Journalpostnummer = new Random().Next(1, 100).ToString(),
+                Journalaar = DateTime.Now.Year,
+                Journalsekvensnummer = new Random().Next(),
+                Journalpostnummer = new Random().Next(1, 100),
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
                     Fagsystem = journalpost.ReferanseEksternNoekkel.Fagsystem,

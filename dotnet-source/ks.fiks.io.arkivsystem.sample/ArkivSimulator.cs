@@ -115,7 +115,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 melding = mottatt.Melding.MeldingType switch
                 {
                     FiksArkivMeldingtype.Sok => _sokHandler.HandleMelding(mottatt),
-                    FiksArkivMeldingtype.JournalpostHent => _journalpostHentHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.RegistreringHent => _journalpostHentHandler.HandleMelding(mottatt),
                     FiksArkivMeldingtype.MappeHent => _mappeHentHandler.HandleMelding(mottatt),
                     _ => throw new ArgumentException("Case not handled")
                 };

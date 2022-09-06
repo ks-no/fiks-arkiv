@@ -4,13 +4,12 @@ using KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Minimum;
 using KS.Fiks.Arkiv.Models.V1.Arkivstruktur.Noekler;
 using KS.Fiks.Arkiv.Models.V1.Innsyn.Sok;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
-using EksternNoekkel = KS.Fiks.Arkiv.Models.V1.Arkivstruktur.EksternNoekkel;
 
 namespace ks.fiks.io.arkivsystem.sample.Helpers
 {
     public class SokeresultatGenerator
     {
-        public static SokeresultatMinimum CreateSokeResultatMinimum(Respons sokRespons)
+        public static SokeresultatMinimum CreateSokeResultatMinimum(Sokdefinisjon sokeSokdefinisjon)
         {
             var sokeResultatMinimum = new SokeresultatMinimum()
             {
@@ -22,13 +21,13 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 Tidspunkt = DateTime.Now,
                 
             };
-            
-            switch (sokRespons)
+
+            switch (sokeSokdefinisjon)
             {
-                case Respons.Mappe:
+                case MappeSokdefinisjon:
                     AddMappeResultatMinimum(sokeResultatMinimum);
                     break;
-                case Respons.Saksmappe:
+                case SaksmappeSokdefinisjon:
                     AddSaksmappeResultatMinimum(sokeResultatMinimum);
                     break;
             }
@@ -45,11 +44,17 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
                         Tittel = "Test1",
-                        Saksaar = DateTime.Now.Year.ToString(),
-                        Sakssekvensnummer = "1",
+                        Saksaar = DateTime.Now.Year,
+                        Sakssekvensnummer = 1,
                         Saksdato = DateTime.Now,
-                        AdministrativEnhet = "Test",
-                        Saksansvarlig = "Test",
+                        AdministrativEnhet = new AdministrativEnhet()
+                        {
+                            Navn = "Test"
+                        },
+                        Saksansvarlig = new Saksansvarlig()
+                        {
+                            Navn = "Test"
+                        },
                         Saksstatus = new Saksstatus()
                         {
                             KodeProperty= "Test"
@@ -64,11 +69,16 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         SystemID = new SystemID() { Label = "", Value = "02379f7b-b99f-44e6-a711-822f00002587" },
                         MappeID = "Test",
                         Tittel = "Test2",
-                        Saksaar = DateTime.Now.Year.ToString(),
-                        Sakssekvensnummer = "1",
+                        Saksaar = DateTime.Now.Year,
+                        Sakssekvensnummer = 1,
                         Saksdato = DateTime.Now,
-                        AdministrativEnhet = "Test",
-                        Saksansvarlig = "Test",
+                        AdministrativEnhet = new AdministrativEnhet()
+                        {
+                            Navn = "Test"
+                        },
+                        Saksansvarlig = new Saksansvarlig() {
+                            Navn = "Test"
+                        },
                         Saksstatus = new Saksstatus()
                         {
                             KodeProperty= "Test"
@@ -101,7 +111,7 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 });
         }
 
-        public static Sokeresultat CreateSokeResultatUtvidet(Respons sokRespons)
+        public static Sokeresultat CreateSokeResultatUtvidet(Sokdefinisjon sokdefinisjon)
         {
             var sokeResultatUtvidet = new Sokeresultat()
             {
@@ -112,13 +122,13 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 Skip = 0,
                 Tidspunkt = DateTime.Now
             };
-            
-            switch (sokRespons)
+
+            switch (sokdefinisjon)
             {
-                case Respons.Mappe:
+                case MappeSokdefinisjon:
                     AddMappeResultatUtvidet(sokeResultatUtvidet);
                     break;
-                case Respons.Saksmappe:
+                case SaksmappeSokdefinisjon:
                     AddSaksmappeResultatUtvidet(sokeResultatUtvidet);
                     break;
             }
@@ -139,11 +149,17 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         OpprettetAv = "Test",
                         AvsluttetDato = DateTime.Now,
                         AvsluttetAv = "Test",
-                        Saksaar = DateTime.Now.Year.ToString(),
-                        Sakssekvensnummer = "1",
+                        Saksaar = DateTime.Now.Year,
+                        Sakssekvensnummer = 1,
                         Saksdato = DateTime.Now,
-                        AdministrativEnhet = "Test",
-                        Saksansvarlig = "Test",
+                        AdministrativEnhet = new AdministrativEnhet()
+                        {
+                            Navn = "Test"
+                        },
+                        Saksansvarlig = new Saksansvarlig()
+                            {
+                                Navn = "Test"
+                            },
                         Saksstatus = new Saksstatus()
                         {
                             KodeProperty= "Test"
@@ -163,11 +179,17 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                         OpprettetAv = "Test",
                         AvsluttetDato = DateTime.Now,
                         AvsluttetAv = "Test",
-                        Saksaar = DateTime.Now.Year.ToString(),
-                        Sakssekvensnummer = "2",
+                        Saksaar = DateTime.Now.Year,
+                        Sakssekvensnummer = 2,
                         Saksdato = DateTime.Now,
-                        AdministrativEnhet = "Test",
-                        Saksansvarlig = "Test",
+                        AdministrativEnhet = new AdministrativEnhet()
+                        {
+                            Navn = "Test"
+                        },
+                        Saksansvarlig = new Saksansvarlig()
+                        {
+                            Navn = "Test"
+                        },
                         Saksstatus = new Saksstatus()
                         {
                             KodeProperty= "Test"
