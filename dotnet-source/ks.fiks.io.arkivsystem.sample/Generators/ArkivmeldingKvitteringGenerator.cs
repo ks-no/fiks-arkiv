@@ -43,13 +43,20 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 OpprettetDato = DateTime.Now,
                 Saksaar = DateTime.Now.Year,
                 Sakssekvensnummer = new Random().Next(),
-                ReferanseForeldermappe = mappe.ReferanseForeldermappe?.SystemID,
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
                     Fagsystem = mappe.ReferanseEksternNoekkel.Fagsystem,
                     Noekkel = mappe.ReferanseEksternNoekkel.Noekkel
                 }
             };
+            if (mappe.ReferanseForeldermappe != null)
+            {
+                mp.ReferanseForeldermappe = new ReferanseTilMappe()
+                {
+                    SystemID = mappe.ReferanseForeldermappe?.SystemID,
+                };
+            }
+
             return mp;
         }
 

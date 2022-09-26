@@ -12,7 +12,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 OpprettetAv = "En brukerid",
                 ArkivertAv = "En brukerid",
-                ReferanseForelderMappe = new ReferanseForelderMappe()
+                ReferanseForelderMappe = new ReferanseTilMappe()
                 {
                     SystemID = new SystemID() { Label = "", Value = Guid.NewGuid().ToString() }
                 },
