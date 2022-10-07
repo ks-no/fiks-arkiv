@@ -42,7 +42,7 @@ namespace ks.fiks.io.arkivsystem.sample
         {
             this.appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem");
-            client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
+            
             _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
             _arkivmeldingProtokollValidatorStorage = new Dictionary<string, Arkivmelding>();
             _journalpostHentHandler = new JournalpostHentHandler();
@@ -51,6 +51,21 @@ namespace ks.fiks.io.arkivsystem.sample
             _arkivmeldingHandler = new ArkivmeldingHandler();
             _arkivmeldingOppdaterHandler = new ArkivmeldingOppdaterHandler();
             InitArkivmeldingStorage();
+            Initialization = InitializeAsync();
+        }
+        
+        public Task Initialization { get; private set; }
+        
+        private async Task InitializeAsync()
+        {
+            try
+            {
+                client = await FiksIOClientBuilder.CreateFiksIoClient(appSettings);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Startup failed create FiksIO Client: {e.Message}", e);
+            }
         }
 
         /*
@@ -73,6 +88,9 @@ namespace ks.fiks.io.arkivsystem.sample
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            // await FiksIOClient initialization
+            await Initialization;
+            
             Log.Information("ArkivSimulator is starting");
             SubscribeToFiksIOClient();
             await Task.CompletedTask;
