@@ -20,7 +20,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 {
     public class ArkiveringService : IHostedService, IDisposable
     {
-        private readonly FiksIOClient _client;
+        private FiksIOClient _client;
         private readonly AppSettings _appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
         private readonly ArkivmeldingFactory _arkivmeldingFactory;
@@ -29,15 +29,27 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         {
             this._appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem...");
-            _client = FiksIOClientBuilder.CreateFiksIoClient(appSettings);
             _arkivmeldingFactory = new ArkivmeldingFactory();
         }
+        
+        
+        public Task Initialization { get; private set; }
+        
+        private async Task InitializeAsync()
+        {
+            _client = await FiksIOClientBuilder.CreateFiksIoClient(_appSettings);
+        }
+
         public void Dispose()
         {
             _client.Dispose();
         }
-        public Task StartAsync(CancellationToken cancellationToken)
+        
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
+            // await FiksIOClient initialization
+            await Initialization;
+            
             Log.Information("Fagsystem Service is starting.");
 
             var accountId = _appSettings.FiksIOConfig.FiksIoAccountId;
@@ -54,7 +66,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             SendSok();
 
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         private void SendSok()

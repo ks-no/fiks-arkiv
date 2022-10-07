@@ -46,15 +46,15 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             client.Dispose();
         }
         
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task<Task> StartAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("Fagsystem Service is starting.");
 
             Console.WriteLine("Setter opp FIKS integrasjon for fagsystem...");
-            Guid accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
-            string privateKey = File.ReadAllText("privkey.pem"); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
-            Guid integrationId = Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
-            string integrationPassword = config["integrationPassword"];  /* Integration password */
+            var accountId = Guid.Parse(config["accountId"]);  /* Fiks IO accountId as Guid Banke kommune eByggesak konto*/
+            var privateKey = await File.ReadAllTextAsync("privkey.pem", cancellationToken); ; /* Private key for offentlig nøkkel supplied to Fiks IO account */
+            var integrationId = Guid.Parse(config["integrationId"]); /* Integration id as Guid eByggesak system X */
+            var integrationPassword = config["integrationPassword"];  /* Integration password */
 
             // Fiks IO account configuration
             var account = new KontoConfiguration(
@@ -87,7 +87,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
 
             // Combine all configurations
             var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
-            client = new FiksIOClient(configuration); // See setup of configuration below
+            client = await FiksIOClient.CreateAsync(configuration); // See setup of configuration below
 
             client.NewSubscription(OnReceivedMelding);
 

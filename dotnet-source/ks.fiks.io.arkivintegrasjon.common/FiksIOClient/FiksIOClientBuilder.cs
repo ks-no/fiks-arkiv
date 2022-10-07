@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using KS.Fiks.IO.Client.Configuration;
 using Ks.Fiks.Maskinporten.Client;
 using RabbitMQ.Client;
@@ -10,7 +11,7 @@ namespace ks.fiks.io.arkivintegrasjon.common.FiksIOClient
 {
     public static class FiksIOClientBuilder
     {
-        public static KS.Fiks.IO.Client.FiksIOClient CreateFiksIoClient(AppSettings.AppSettings appSettings)
+        public async static Task<KS.Fiks.IO.Client.FiksIOClient> CreateFiksIoClient(AppSettings.AppSettings appSettings)
         {
             var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
             var privateKey = File.ReadAllText(appSettings.FiksIOConfig.FiksIoPrivateKey);
@@ -68,7 +69,7 @@ namespace ks.fiks.io.arkivintegrasjon.common.FiksIOClient
 
             // Combine all configurations
             var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
-            return new KS.Fiks.IO.Client.FiksIOClient(configuration);
+            return await KS.Fiks.IO.Client.FiksIOClient.CreateAsync(configuration);
         }
         
         private static X509Certificate2 GetCertificate(AppSettings.AppSettings appSettings)
