@@ -126,7 +126,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     },
                     Responstype = Responstype.Utvidet
                 },
-                MeldingId = Guid.NewGuid().ToString(),
                 System = "eByggesak",
                 Tidspunkt = DateTime.Now,
                 Skip = 0,
@@ -651,7 +650,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // arkivmld.sluttbrukerIdentifikator = "Fagsystemets brukerid";
             arkivmld.AntallFiler = 0;
             arkivmld.System = saksmappe.ReferanseEksternNoekkel.Fagsystem;
-            arkivmld.MeldingId = saksmappe.ReferanseEksternNoekkel.Noekkel;
             arkivmld.Tidspunkt = DateTime.Now;
             arkivmld.Mappe.Add(saksmappe);
 
@@ -688,7 +686,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // arkivmld.sluttbrukerIdentifikator = "Fagsystemets brukerid";
             arkivmld.AntallFiler = 0;
             arkivmld.System = jp.ReferanseEksternNoekkel.Fagsystem;
-            arkivmld.MeldingId = jp.ReferanseEksternNoekkel.Noekkel;
             arkivmld.Tidspunkt = DateTime.Now;
             arkivmld.Registrering.Add(jp);
 

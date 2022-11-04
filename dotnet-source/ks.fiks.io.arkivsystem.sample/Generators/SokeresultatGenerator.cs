@@ -14,8 +14,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
             var sokeResultatMinimum = new SokeresultatMinimum()
             {
                 System = "",
-                MeldingId = "",
-                SvarPaMeldingId = "",
                 Take = 10,
                 Skip = 0,
                 Tidspunkt = DateTime.Now,
@@ -116,8 +114,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
             var sokeResultatUtvidet = new Sokeresultat()
             {
                 System = "",
-                MeldingId = "",
-                SvarPaMeldingId = "",
                 Take = 10,
                 Skip = 0,
                 Tidspunkt = DateTime.Now
@@ -236,8 +232,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
             var sokeResultatNoekler = new SokeresultatNoekler()
             {
                 System = "",
-                MeldingId = "",
-                SvarPaMeldingId = "",
                 Take = 10,
                 Skip = 0,
                 Tidspunkt = DateTime.Now, 
