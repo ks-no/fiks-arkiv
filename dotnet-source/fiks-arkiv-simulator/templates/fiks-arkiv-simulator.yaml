@@ -57,6 +57,12 @@ spec:
             - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
               readOnly: true
               mountPath: /etc/fiks/fiks-io
+            - name: fiks-arkiv-simulator-arkivsystem-fiks-io-asice-privatekey
+              readOnly: true
+              mountPath: /etc/fiks/fiks-io/asice/privatekey
+            - name: fiks-arkiv-simulator-arkivsystem-fiks-io-asice-publickey
+              readOnly: true
+              mountPath: /etc/fiks/fiks-io/asice/publickey
       volumes:
         - name: ks-virksomhetssertifikat-store
           secret:
@@ -64,3 +70,9 @@ spec:
         - name: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
           secret:
             secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-kryptering
+        - name: fiks-arkiv-simulator-arkivsystem-fiks-io-asice-privatekey
+          secret:
+            secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-asice-privatekey
+        - name: fiks-arkiv-simulator-arkivsystem-fiks-io-asice-publickey
+          secret:
+            secretName: fiks-arkiv-simulator-arkivsystem-fiks-io-asice-publickey
