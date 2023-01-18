@@ -85,8 +85,10 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                             host: "io.fiks.test.ks.no",
                             port: 5671);
 
+            var asiceSigning = new AsiceSigningConfiguration("signing_publickey.pem","signing_privatekey.pem");
+
             // Combine all configurations
-            var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
+            var configuration = new FiksIOConfiguration(account, integration, maskinporten, asiceSigning, api, amqp);
             client = await FiksIOClient.CreateAsync(configuration); // See setup of configuration below
 
             client.NewSubscription(OnReceivedMelding);

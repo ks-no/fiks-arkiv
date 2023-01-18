@@ -65,10 +65,12 @@ namespace ks.fiks.io.arkivintegrasjon.common.FiksIOClient
                 host: appSettings.FiksIOConfig.AmqpHost,
                 port: appSettings.FiksIOConfig.AmqpPort,
                 sslOption1, "Fiks-Arkiv simulator");
-            
+
+            var asiceSigning = new AsiceSigningConfiguration(appSettings.FiksIOConfig.AsiceSigningPublicKey,
+                appSettings.FiksIOConfig.AsiceSigningPrivateKey);
 
             // Combine all configurations
-            var configuration = new FiksIOConfiguration(account, integration, maskinporten, api, amqp);
+            var configuration = new FiksIOConfiguration(account, integration, maskinporten, asiceSigning, api, amqp);
             return await KS.Fiks.IO.Client.FiksIOClient.CreateAsync(configuration);
         }
         
