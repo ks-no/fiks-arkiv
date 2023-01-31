@@ -46,10 +46,10 @@
   <ItemGroup>
     <Content Include="etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\ks-certs\KS-virksomhetssertifikat-auth.p12')" />
     <Content Include="Xml\HentJournalpostN2\arkivmelding.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Xml\OppdaterMappeSaksansvarligN1\arkivmelding.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Remove="etc\fiks\fiks-io\privatekey.pem" />
     <Content Include="etc\fiks\fiks-io\development\privatekey.pem" Condition="Exists('etc\fiks\fiks-io\development\privatekey.pem')">
@@ -58,7 +58,7 @@
     <Content Include="etc\fiks\fiks-io\privatekey.pem" CopyToOutputDirectory="Always" Condition="Exists('etc\fiks\fiks-io\privatekey.pem')" />
     <None Remove="Xml\HentJournalpostN1\arkivmelding.xml" />
     <Content Include="Xml\HentJournalpostN1\arkivmelding.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Remove="Xml\HentSaksmappeN1\arkivmelding.xml" />
     <Content Include="Xml\HentSaksmappeN1\arkivmelding.xml">
