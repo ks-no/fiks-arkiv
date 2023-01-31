@@ -36,6 +36,7 @@
     </dokumentbeskrivelse>
     <tittel>Internt notat</tittel>
     <korrespondansepart>
+      <korrespondansepartID>ID</korrespondansepartID>
       <korrespondanseparttype>
         <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">IM</kode>
       </korrespondanseparttype>
@@ -44,8 +45,8 @@
       <saksbehandler>Ingrid Mottaker</saksbehandler>
     </korrespondansepart>
     <referanseEksternNoekkel>
-      <fagsystem>Fiks protokoll validator</fagsystem>
-      <noekkel>54834a29-517f-41a5-b562-0a5de5fcd27b</noekkel>
+      <fagsystem xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">Fiks protokoll validator</fagsystem>
+      <noekkel xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">54834a29-517f-41a5-b562-0a5de5fcd27b</noekkel>
     </referanseEksternNoekkel>
     <journalposttype>
       <kode xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">X</kode>

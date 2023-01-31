@@ -11,8 +11,8 @@
 			<klasseID>19085830948</klasseID>
 		</klassifikasjon>
 		<referanseEksternNoekkel>
-			<fagsystem>Fiks protokoll validator</fagsystem>
-			<noekkel>45d947ed-8455-46e2-a04f-ee18da433fe0</noekkel>
+			<fagsystem xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">Fiks protokoll validator</fagsystem>
+			<noekkel xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/metadatakatalog/v1">45d947ed-8455-46e2-a04f-ee18da433fe0</noekkel>
 		</referanseEksternNoekkel>
 	</mappe>
 </arkivmelding>

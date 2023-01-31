@@ -54,8 +54,8 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                 ArkivertAv = arkivmeldingJournalpost.ArkivertAv,
                 ReferanseEksternNoekkel = new EksternNoekkel()
                 {
-                    Fagsystem = arkivmeldingJournalpost.ReferanseEksternNoekkel.Fagsystem,
-                    Noekkel = arkivmeldingJournalpost.ReferanseEksternNoekkel.Noekkel
+                    Fagsystem = arkivmeldingJournalpost.ReferanseEksternNoekkel?.Fagsystem,
+                    Noekkel = arkivmeldingJournalpost.ReferanseEksternNoekkel?.Noekkel
                 },
                 Tittel = arkivmeldingJournalpost.Tittel,
                 Journalaar = DateTime.Now.Year,
@@ -103,6 +103,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 jp.Korrespondansepart.Add(new Korrespondansepart()
                 {
+                    KorrespondansepartID = korrespondansepart.KorrespondansepartID,
                     Korrespondanseparttype = new Korrespondanseparttype()
                     {
                         KodeProperty = korrespondansepart.Korrespondanseparttype.KodeProperty
