@@ -172,6 +172,28 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             return null;
         }
         
+        protected static bool AreEqual(Registrering lagretRegistrering, RegistreringOppdatering registreringOppdatering)
+        {
+            if (registreringOppdatering.ReferanseTilRegistrering.ReferanseEksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)
+            {
+                if (lagretRegistrering.ReferanseEksternNoekkel.Fagsystem ==
+                    registreringOppdatering.ReferanseTilRegistrering.ReferanseEksternNoekkel.Fagsystem &&
+                    lagretRegistrering.ReferanseEksternNoekkel.Noekkel ==
+                    registreringOppdatering.ReferanseTilRegistrering.ReferanseEksternNoekkel.Noekkel)
+                {
+                    return true;
+                }
+            } else if (registreringOppdatering.ReferanseTilRegistrering.SystemID != null)
+            {
+                if (registreringOppdatering.ReferanseTilRegistrering.SystemID == lagretRegistrering.SystemID)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         protected static bool AreEqual(Registrering lagretRegistrering, EksternNoekkel eksternNoekkel, SystemID systemId)
         {
             if (eksternNoekkel != null && lagretRegistrering.ReferanseEksternNoekkel != null)

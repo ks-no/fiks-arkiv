@@ -175,7 +175,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 var found = false;
                 foreach (var registrering in lagretArkivmelding.Registrering)
                 {
-                    if (AreEqual(registrering, registreringOppdatering.ReferanseEksternNoekkel, registreringOppdatering.ReferanseTilRegistrering.SystemID))
+                    if (AreEqual(registrering, registreringOppdatering))
                     {
                         if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
                         if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
