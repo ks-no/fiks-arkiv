@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="KS.Fiks.Arkiv.Models.V1" Version="0.9.10" />
+      <PackageReference Include="KS.Fiks.Arkiv.Models.V1" Version="0.9.13" />
       <PackageReference Include="KS.Fiks.ASiC-E" Version="1.0.5" />
       <PackageReference Include="KS.Fiks.IO.Client" Version="3.0.2" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />

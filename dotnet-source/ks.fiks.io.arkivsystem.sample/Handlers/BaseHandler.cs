@@ -25,11 +25,21 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             var arkivModelsAssembly = Assembly.Load("KS.Fiks.Arkiv.Models.V1");
             
             using (var schemaStream =
-                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.arkivering.arkivmelding.xsd"))
+                arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.arkivering.arkivmelding.opprett.xsd"))
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/v1",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/opprett/v1",
+                        schemaReader);
+                }
+            }
+            
+            using (var schemaStream =
+                   arkivModelsAssembly.GetManifestResourceStream("KS.Fiks.Arkiv.Models.V1.Schema.V1.no.ks.fiks.arkiv.v1.arkivering.dokumentobjekt.opprett.xsd"))
+            {
+                using (var schemaReader = XmlReader.Create(schemaStream))
+                {
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/dokumentobjekt/opprett/v1",
                         schemaReader);
                 }
             }
@@ -39,7 +49,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 using (var schemaReader = XmlReader.Create(schemaStream))
                 {
-                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmeldingoppdatering/v1",
+                    XmlSchemaSet.Add("https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/oppdater/v1",
                         schemaReader);
                 }
             }

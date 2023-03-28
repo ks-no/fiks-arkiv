@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<arkivmelding xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/v1">
+<arkivmelding xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="https://ks-no.github.io/standarder/fiks-protokoll/fiks-arkiv/arkivmelding/opprett/v1">
     <system>Fagsystem X</system>
     <meldingId>af8f08cc-9a9d-40ff-99e8-c3459170c3c9</meldingId>
     <tidspunkt>0001-01-01T00:00:00</tidspunkt>

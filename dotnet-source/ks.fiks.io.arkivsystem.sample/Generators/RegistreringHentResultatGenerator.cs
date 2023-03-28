@@ -147,7 +147,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
                     nyDokumentbeskrivelse.Dokumentobjekt.Add(new Dokumentobjekt()
                     {
                         SystemID = dokumentobjekt.SystemID ?? new SystemID() {Value = Guid.NewGuid().ToString()},
-                        Versjonsnummer = dokumentobjekt.Versjonsnummer,
+                        Versjonsnummer = dokumentobjekt.Versjonsnummer ?? 1,
                         Variantformat = new Variantformat()
                         {
                             KodeProperty = dokumentobjekt.Variantformat.KodeProperty

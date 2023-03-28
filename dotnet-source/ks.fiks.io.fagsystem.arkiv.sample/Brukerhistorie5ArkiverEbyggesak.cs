@@ -20,6 +20,7 @@ using Dokumentobjekt = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Dokumento
 using Journalpost = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Journalpost;
 using Klassifikasjon = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Klassifikasjon;
 using Korrespondansepart = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Korrespondansepart;
+using Matrikkelnummer = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Matrikkelnummer;
 using Merknad = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Merknad;
 using Part = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Part;
 using Registrering = KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Registrering;
