@@ -42,7 +42,7 @@ pipeline {
                 }
             }
         }
-        
+              
         stage("fiks-arkiv-simulator-arkivsystem: Build and publish docker image") {
             steps {
                 dir("dotnet-source") {
@@ -150,42 +150,6 @@ def getTimestamp() {
 }
 
 def buildAndPushDockerImageFiksArkiv(String imageName, dockerFile, List tags = [], List dockerArgs = [], boolean isRelease = false, String path = ".") {
-    def repo = isRelease ? DOCKER_REPO_RELEASE : DOCKER_REPO
-      dir("fiksarkiv") {
-        environment {
-          NUGET_CONF = credentials('nuget-config')
-        }
-        script {
-            wrap([$class: 'BuildUser']) {
-                env.user = sh ( script: 'echo "${BUILD_USER}"', returnStdout: true).trim()
-            }
-            env.GIT_SHA = sh(returnStdout: true, script: 'git rev-parse HEAD').substring(0, 7)
-            env.REPO_NAME = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
-            sh 'printenv'
-        }
-        script {
-          def customImage
-        
-          println("Building Fiks-Arkiv code ")
-          
-          
-          sh 'dotnet restore ks.fiks.io.arkivsystem.sample/ks.fiks.io.arkivsystem.sample.csproj --no-cache --force --verbosity detailed --configfile ${NUGET_CONF}'
-          sh 'dotnet build --configuration Release ks.fiks.io.arkivsystem.sample/ks.fiks.io.arkivsystem.sample.csproj'
-          sh 'dotnet publish --configuration Release ks.fiks.io.arkivsystem.sample/ks.fiks.io.arkivsystem.sample.csproj --no-build --no-restore --output published-app'
-
-          
-          
-          println("Building API image")
-          customImage = docker.build("${API_APP_NAME}:${FULL_VERSION}", ".")
-          
-          docker.withRegistry(repo, ARTIFACTORY_CREDENTIALS)
-          {
-            println("Publishing API image")
-            customImage.push()
-          }
-        }
-      }
-    
     script {
         println "imageName: ${imageName}"
         println "tags: ${tags}"
@@ -196,12 +160,6 @@ def buildAndPushDockerImageFiksArkiv(String imageName, dockerFile, List tags = [
         } else {
             repo = 'https://docker-local-snapshots.artifactory.fiks.ks.no'
         }
-        
-        docker.image('docker-all.artifactory.fiks.ks.no/dotnet/sdk:6.0').inside('-e DOTNET_CLI_HOME=/tmp -e XDG_DATA_HOME=/tmp') {
-                sh '''
-                    dotnet publish --configuration Release KS.FiksProtokollValidator.WebAPI/KS.FiksProtokollValidator.WebAPI.csproj --output published-api
-                '''
-              }
 
         docker.withRegistry(repo, 'artifactory-token-based') {
             def customImage = docker.build("${imageName}", "-f ${dockerFile}" + dockerArgs.collect { "--build-arg $it" }.join(' ') + " " + path)
