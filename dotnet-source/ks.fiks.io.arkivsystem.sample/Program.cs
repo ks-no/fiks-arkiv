@@ -5,6 +5,7 @@ using ks.fiks.io.arkivintegrasjon.common.AppSettings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
@@ -14,7 +15,7 @@ namespace ks.fiks.io.arkivsystem.sample
     {
         static async Task Main(string[] args)
         {
-            InitSerilogConfiguration();
+            var loggerFactory = InitSerilogConfiguration();
             await new HostBuilder()
                 .ConfigureHostConfiguration((configHost) =>
                 {
@@ -29,13 +30,14 @@ namespace ks.fiks.io.arkivsystem.sample
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddSingleton(loggerFactory);
                     services.AddSingleton(AppSettingsBuilder.CreateAppSettings(hostContext.Configuration));
                     services.AddHostedService<ArkivSimulator>();
                 })
                 .RunConsoleAsync();
         }
 
-        private static void InitSerilogConfiguration()
+        private static ILoggerFactory InitSerilogConfiguration()
         {
             var aspnetcoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var logstashDestination = Environment.GetEnvironmentVariable("LOGSTASH_DESTINATION");
@@ -44,7 +46,7 @@ namespace ks.fiks.io.arkivsystem.sample
             var environment = Environment.GetEnvironmentVariable("ENVIRONMENT");
             
             var loggerConfiguration = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.AspNetCore.Localization", LogEventLevel.Error)
                 .Enrich.FromLogContext()
@@ -54,7 +56,8 @@ namespace ks.fiks.io.arkivsystem.sample
                 .Enrich.WithProperty("node", kubernetesNode)
                 .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level}] [{RequestId}] [{requestid}] - {Message} {NewLine} {Exception}");
 
-            Log.Logger = loggerConfiguration.CreateLogger();
+            var logger = loggerConfiguration.CreateLogger();
+            Log.Logger = logger;
 
             Log.Information("Starting host with env variables:");
             Log.Information("ASPNETCORE_ENVIRONMENT: {AspnetcoreEnvironment}", aspnetcoreEnvironment);
@@ -63,6 +66,8 @@ namespace ks.fiks.io.arkivsystem.sample
             Log.Information("ENVIRONMENT: {Environment}",environment);
             Log.Information("LOGSTASH_DESTINATION: {LogstashDestination}", logstashDestination);
             Log.Information("Path.PathSeparator: {PathSeparator}", Path.PathSeparator);
+            
+            return LoggerFactory.Create(logging => logging.AddSerilog(logger));            
         }
     }
 }

@@ -18,8 +18,9 @@ using ks.fiks.io.arkivsystem.sample.Storage;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace ks.fiks.io.arkivsystem.sample
 {
@@ -27,40 +28,40 @@ namespace ks.fiks.io.arkivsystem.sample
     {
         public const string TestSessionIdHeader = "testSessionId";
         public const string ValidatorTestNameHeader = "protokollValidatorTestName";
-        private FiksIOClient client;
-        private readonly AppSettings appSettings;
+        private FiksIOClient _client;
+        private readonly AppSettings _appSettings;
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType);
-        public static SizedDictionary<string, Arkivmelding> _arkivmeldingCache;
-        public static Dictionary<string, Arkivmelding> _arkivmeldingProtokollValidatorStorage;
-        private JournalpostHentHandler _journalpostHentHandler;
-        private MappeHentHandler _mappeHentHandler;
-        private SokHandler _sokHandler;
-        private ArkivmeldingHandler _arkivmeldingHandler;
-        private ArkivmeldingOppdaterHandler _arkivmeldingOppdaterHandler;
+        public static SizedDictionary<string, Arkivmelding> ArkivmeldingCache;
+        public static Dictionary<string, Arkivmelding> ArkivmeldingProtokollValidatorStorage;
+        private readonly JournalpostHentHandler _journalpostHentHandler;
+        private readonly MappeHentHandler _mappeHentHandler;
+        private readonly SokHandler _sokHandler;
+        private readonly ArkivmeldingHandler _arkivmeldingHandler;
+        private readonly ArkivmeldingOppdaterHandler _arkivmeldingOppdaterHandler;
 
-        public ArkivSimulator(AppSettings appSettings)
+        public ArkivSimulator(AppSettings appSettings, ILoggerFactory loggerFactory)
         {
-            this.appSettings = appSettings;
+            _appSettings = appSettings;
             Log.Information("Setter opp FIKS integrasjon for arkivsystem");
             
-            _arkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
-            _arkivmeldingProtokollValidatorStorage = new Dictionary<string, Arkivmelding>();
+            ArkivmeldingCache = new SizedDictionary<string, Arkivmelding>(100);
+            ArkivmeldingProtokollValidatorStorage = new Dictionary<string, Arkivmelding>();
             _journalpostHentHandler = new JournalpostHentHandler();
             _mappeHentHandler = new MappeHentHandler();
             _sokHandler = new SokHandler();
             _arkivmeldingHandler = new ArkivmeldingHandler();
             _arkivmeldingOppdaterHandler = new ArkivmeldingOppdaterHandler();
             InitArkivmeldingStorage();
-            Initialization = InitializeAsync();
+            Initialization = InitializeAsync(loggerFactory);
         }
         
         public Task Initialization { get; private set; }
         
-        private async Task InitializeAsync()
+        private async Task InitializeAsync(ILoggerFactory loggerFactory)
         {
             try
             {
-                client = await FiksIOClientBuilder.CreateFiksIoClient(appSettings);
+                _client = await FiksIOClientBuilder.CreateFiksIoClient(_appSettings, loggerFactory).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -82,7 +83,7 @@ namespace ks.fiks.io.arkivsystem.sample
                 using TextReader reader = new StringReader(xml);
                 var arkivmelding = (Arkivmelding)serializer.Deserialize(reader);
                 var key = directoryName.Split(Path.DirectorySeparatorChar)[1];
-                _arkivmeldingProtokollValidatorStorage.Add(key, arkivmelding); // Innkommende meldingId er key
+                ArkivmeldingProtokollValidatorStorage.Add(key, arkivmelding); // Innkommende meldingId er key
             }
         }
 
@@ -207,8 +208,8 @@ namespace ks.fiks.io.arkivsystem.sample
         private void SubscribeToFiksIOClient()
         {
             Log.Information("Starter abonnement for FIKS integrasjon for arkivsystem...");
-            var accountId = appSettings.FiksIOConfig.FiksIoAccountId;
-            client.NewSubscription(OnReceivedMelding);
+            var accountId = _appSettings.FiksIOConfig.FiksIoAccountId;
+            _client.NewSubscription(OnReceivedMelding);
             Log.Information("Abonnerer på meldinger på konto " + accountId + " ...");
         }
     }

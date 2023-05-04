@@ -14,7 +14,8 @@ using ks.fiks.io.arkivintegrasjon.common.Helpers;
 using KS.Fiks.IO.Client;
 using KS.Fiks.IO.Client.Models;
 using Microsoft.Extensions.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
+using ILogger = Serilog.ILogger;
 
 namespace ks.fiks.io.fagsystem.arkiv.sample
 {
@@ -37,7 +38,7 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
         
         private async Task InitializeAsync()
         {
-            _client = await FiksIOClientBuilder.CreateFiksIoClient(_appSettings);
+            _client = await FiksIOClientBuilder.CreateFiksIoClient(_appSettings, new LoggerFactory());
         }
 
         public void Dispose()

@@ -78,10 +78,10 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Lagre arkivmelding i "cache" hvis det er en testSessionId i headere
             if (mottatt.Melding.Headere.TryGetValue(ArkivSimulator.TestSessionIdHeader, out var testSessionId))
             {
-                if (ArkivSimulator._arkivmeldingCache.ContainsKey(testSessionId))
+                if (ArkivSimulator.ArkivmeldingCache.ContainsKey(testSessionId))
                 {
                     Arkivmelding lagretArkvivmelding;
-                    ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkvivmelding);
+                    ArkivSimulator.ArkivmeldingCache.TryGetValue(testSessionId, out lagretArkvivmelding);
                     
                     // Registrering som skal lagres?
                     if (arkivmelding.Registrering != null)
@@ -91,7 +91,7 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                 }
                 else
                 {
-                    ArkivSimulator._arkivmeldingCache.Add(testSessionId, arkivmelding);
+                    ArkivSimulator.ArkivmeldingCache.Add(testSessionId, arkivmelding);
                 }
             }
             
