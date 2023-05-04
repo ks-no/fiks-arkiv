@@ -13,23 +13,17 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 Tidspunkt = DateTime.Now
             };
-            var isMappe = arkivmelding?.Mappe?.Count > 0;
+            
 
-            if (isMappe)
+            if (arkivmelding?.Mappe != null)
             {
-                foreach (var mappe in arkivmelding.Mappe)
-                {
-                    kvittering.MappeKvittering.Add(CreateSaksmappeKvittering(mappe));
-                }
+                
+                kvittering.MappeKvittering.Add(CreateSaksmappeKvittering(arkivmelding.Mappe));
                 
             }
             else
             {
-                foreach (var registrering in arkivmelding.Registrering)
-                {
-                    kvittering.RegistreringKvittering.Add(CreateJournalpostKvittering(registrering));    
-                }
-                
+                kvittering.RegistreringKvittering.Add(CreateJournalpostKvittering(arkivmelding.Registrering));    
             }
 
             return kvittering;

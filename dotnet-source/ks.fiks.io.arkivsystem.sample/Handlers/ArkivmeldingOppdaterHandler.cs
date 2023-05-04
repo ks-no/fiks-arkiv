@@ -108,36 +108,36 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             var success = false;
             foreach (var mappeOppdatering in arkivmeldingOppdatering.MappeOppdateringer)
             {
-                foreach (var lagretMappe in lagretArkivmelding.Mappe)
+                var lagretMappe = lagretArkivmelding.Mappe;
+                
+                if(AreEqual(lagretMappe, mappeOppdatering))
                 {
-                    if(AreEqual(lagretMappe, mappeOppdatering))
+                    if(mappeOppdatering.Tittel != null) { lagretMappe.Tittel = mappeOppdatering.Tittel; }
+                    if(mappeOppdatering.OffentligTittel != null) { lagretMappe.OffentligTittel = mappeOppdatering.OffentligTittel; }
+                    if(mappeOppdatering.Beskrivelse != null) { lagretMappe.Beskrivelse = mappeOppdatering.Beskrivelse; }
+                    
+                    //TODO Etter hvert: legge til mulighet for å kunne oppdatere virksomhetsspesifikkeMetadata og partOppdatering + evt andre som mangler her
+                    
+                    found = true;
+                    
+                    if (mappeOppdatering is SaksmappeOppdatering oppdatering)
                     {
-                        if(mappeOppdatering.Tittel != null) { lagretMappe.Tittel = mappeOppdatering.Tittel; }
-                        if(mappeOppdatering.OffentligTittel != null) { lagretMappe.OffentligTittel = mappeOppdatering.OffentligTittel; }
-                        if(mappeOppdatering.Beskrivelse != null) { lagretMappe.Beskrivelse = mappeOppdatering.Beskrivelse; }
-                        
-                        //TODO Etter hvert: legge til mulighet for å kunne oppdatere virksomhetsspesifikkeMetadata og partOppdatering + evt andre som mangler her
-                        
-                        found = true;
-                        
-                        if (mappeOppdatering is SaksmappeOppdatering oppdatering)
+                        if (oppdatering.Saksansvarlig != null)
                         {
-                            if (oppdatering.Saksansvarlig != null)
+                            ((Saksmappe)lagretMappe).Saksansvarlig = new Saksansvarlig()
                             {
-                                ((Saksmappe)lagretMappe).Saksansvarlig = new Saksansvarlig()
-                                {
-                                    Navn = oppdatering.Saksansvarlig.Navn,
-                                    Epostadresse = oppdatering.Saksansvarlig.Epostadresse,
-                                    Identifikator = oppdatering.Saksansvarlig.Identifikator,
-                                    Initialer = oppdatering.Saksansvarlig.Initialer
-                                };
-                            }
-                            //TODO Etter hvert: legge til resten av oppdateringsmuligheter for Saksmappe
+                                Navn = oppdatering.Saksansvarlig.Navn,
+                                Epostadresse = oppdatering.Saksansvarlig.Epostadresse,
+                                Identifikator = oppdatering.Saksansvarlig.Identifikator,
+                                Initialer = oppdatering.Saksansvarlig.Initialer
+                            };
                         }
-
-                        success = true;
+                        //TODO Etter hvert: legge til resten av oppdateringsmuligheter for Saksmappe
                     }
+
+                    success = true;
                 }
+                
 
                 if (!found)
                 {
@@ -173,45 +173,44 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             foreach (var registreringOppdatering in arkivmeldingOppdatering.RegistreringOppdateringer)
             {
                 var found = false;
-                foreach (var registrering in lagretArkivmelding.Registrering)
+                var registrering = lagretArkivmelding.Registrering;
+                
+                if (AreEqual(registrering, registreringOppdatering))
                 {
-                    if (AreEqual(registrering, registreringOppdatering))
+                    if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
+                    if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
+
+                    if (registreringOppdatering.Skjerming != null)
                     {
-                        if(registreringOppdatering.Tittel != null) { registrering.Tittel = registreringOppdatering.Tittel; }
-                        if(registreringOppdatering.OffentligTittel != null) { registrering.OffentligTittel = registreringOppdatering.OffentligTittel; }
-
-                        if (registreringOppdatering.Skjerming != null)
+                        registrering.Skjerming = new Skjerming()
                         {
-                            registrering.Skjerming = new Skjerming()
-                            {
-                                Skjermingshjemmel = registreringOppdatering.Skjerming.Skjermingshjemmel,
-                                SkjermingOpphoererAksjon = registreringOppdatering.Skjerming.SkjermingOpphoererAksjon,
-                                SkjermingOpphoererDato = registreringOppdatering.Skjerming.SkjermingOpphoererDato,
-                                SkjermingOpphoererDatoValueSpecified = registreringOppdatering.Skjerming.SkjermingOpphoererDatoValueSpecified,
-                                Tilgangsrestriksjon = registreringOppdatering.Skjerming.Tilgangsrestriksjon
-                            };
-                        }
+                            Skjermingshjemmel = registreringOppdatering.Skjerming.Skjermingshjemmel,
+                            SkjermingOpphoererAksjon = registreringOppdatering.Skjerming.SkjermingOpphoererAksjon,
+                            SkjermingOpphoererDato = registreringOppdatering.Skjerming.SkjermingOpphoererDato,
+                            SkjermingOpphoererDatoValueSpecified = registreringOppdatering.Skjerming.SkjermingOpphoererDatoValueSpecified,
+                            Tilgangsrestriksjon = registreringOppdatering.Skjerming.Tilgangsrestriksjon
+                        };
+                    }
 
-                        if (registreringOppdatering.Gradering != null)
+                    if (registreringOppdatering.Gradering != null)
+                    {
+                        registrering.Gradering = new Gradering()
                         {
-                            registrering.Gradering = new Gradering()
-                            {
-                                Grad = registreringOppdatering.Gradering.Grad,
-                                Graderingsdato = registreringOppdatering.Gradering.Graderingsdato,
-                                GradertAv = registreringOppdatering.Gradering.GradertAv,
-                                Nedgraderingsdato = registreringOppdatering.Gradering.Nedgraderingsdato,
-                                NedgraderingsdatoValueSpecified = 
-                                    registreringOppdatering.Gradering.NedgraderingsdatoValueSpecified,
-                                NedgradertAv = registreringOppdatering.Gradering.NedgradertAv
-                            };
-                        }
-                        
-                        //TODO legge til de som mangler
-                        
-                        found = true;
-                        success = true;
-                    }   
-                }
+                            Grad = registreringOppdatering.Gradering.Grad,
+                            Graderingsdato = registreringOppdatering.Gradering.Graderingsdato,
+                            GradertAv = registreringOppdatering.Gradering.GradertAv,
+                            Nedgraderingsdato = registreringOppdatering.Gradering.Nedgraderingsdato,
+                            NedgraderingsdatoValueSpecified = 
+                                registreringOppdatering.Gradering.NedgraderingsdatoValueSpecified,
+                            NedgradertAv = registreringOppdatering.Gradering.NedgradertAv
+                        };
+                    }
+                    
+                    //TODO legge til de som mangler
+                    
+                    found = true;
+                    success = true;
+                }   
 
                 if (!found)
                 {

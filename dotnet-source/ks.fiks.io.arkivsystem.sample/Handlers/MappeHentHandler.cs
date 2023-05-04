@@ -83,16 +83,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 return false;
             }
-            if (lagretArkivmelding.Mappe.Count >= 0)
+            if (lagretArkivmelding.Mappe != null && AreEqual(lagretArkivmelding.Mappe, mappeHent))
             {
-                foreach (var mappe in lagretArkivmelding.Mappe)
-                {
-                    if (AreEqual(mappe, mappeHent))
-                    {
-                        return true;
-                    }
-                    
-                }
+                return true;
             }
             return false;
         }

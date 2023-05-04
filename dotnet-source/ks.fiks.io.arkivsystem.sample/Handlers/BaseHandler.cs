@@ -294,20 +294,15 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
         
         protected static void SetMissingSystemID(Arkivmelding arkivmelding)
         {
-            foreach (var registrering in arkivmelding.Registrering)
+           
+            if (arkivmelding.Registrering != null && arkivmelding.Registrering.SystemID?.Value == null)
             {
-                if (registrering.SystemID?.Value == null)
-                {
-                    registrering.SystemID = new SystemID() { Value = Guid.NewGuid().ToString() };
-                }
+                arkivmelding.Registrering.SystemID = new SystemID() { Value = Guid.NewGuid().ToString() };
             }
-
-            foreach (var mappe in arkivmelding.Mappe)
+            
+            if (arkivmelding.Mappe != null && arkivmelding.Mappe.SystemID?.Value == null)
             {
-                if (mappe.SystemID?.Value == null)
-                {
-                    mappe.SystemID = new SystemID() { Value = Guid.NewGuid().ToString() };
-                }
+                arkivmelding.Mappe.SystemID = new SystemID() { Value = Guid.NewGuid().ToString() };
             }
         }
 

@@ -84,26 +84,9 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
                     ArkivSimulator._arkivmeldingCache.TryGetValue(testSessionId, out lagretArkvivmelding);
                     
                     // Registrering som skal lagres?
-                    if (arkivmelding.Registrering.Count >= 0)
+                    if (arkivmelding.Registrering != null)
                     {
-                        foreach (var registrering in arkivmelding.Registrering)
-                        {
-                            if (registrering.ReferanseForelderMappe != null)
-                            {
-                                foreach (var lagretMappe in lagretArkvivmelding.Mappe)
-                                {
-                                    // 
-                                    if(registrering.ReferanseForelderMappe.SystemID != null && lagretMappe.SystemID.Value == registrering.ReferanseForelderMappe.SystemID.Value)
-                                    {
-                                        lagretMappe.Registrering.Add(registrering);
-                                    } 
-                                    else if(registrering.ReferanseForelderMappe.ReferanseEksternNoekkel != null && registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Fagsystem == lagretMappe.ReferanseEksternNoekkel.Fagsystem && registrering.ReferanseForelderMappe.ReferanseEksternNoekkel.Noekkel == lagretMappe.ReferanseEksternNoekkel.Noekkel) 
-                                    {
-                                        lagretMappe.Registrering.Add(registrering);
-                                    }
-                                }
-                            }
-                        }
+                        //TODO Vi kan ikke lenger lagre til mappe.registrering. Må ha egen storage for dette da
                     }
                 }
                 else

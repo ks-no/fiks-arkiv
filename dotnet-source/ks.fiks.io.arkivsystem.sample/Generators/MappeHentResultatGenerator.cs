@@ -20,7 +20,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         
         public static MappeHentResultat CreateFromCache(MappeHent mappeHent, Arkivmelding arkivmeldingFraCache)
         {
-            var arkivmeldingMappe = arkivmeldingFraCache.Mappe.FirstOrDefault(mappeFraCache => AreEqual(mappeHent, mappeFraCache));
+            var arkivmeldingMappe = arkivmeldingFraCache.Mappe;
             
             if (arkivmeldingMappe is KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Saksmappe mappe)
             {

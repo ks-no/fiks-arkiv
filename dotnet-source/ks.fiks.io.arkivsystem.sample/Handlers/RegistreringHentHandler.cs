@@ -46,45 +46,28 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             {
                 return false;
             }
-            if (lagretArkivmelding.Mappe.Count >= 0)
+
+            if (lagretArkivmelding.Registrering.ReferanseEksternNoekkel ==
+                registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel ||
+                lagretArkivmelding.Registrering.SystemID == registreringHent.ReferanseTilRegistrering.SystemID)
             {
-                foreach (var mappe in lagretArkivmelding.Mappe)
-                {
-                    foreach (var registrering in mappe.Registrering)
-                    {
-                        if (AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID))
-                        {
-                            return true;
-                        }
-                    }
-                }
+                return true;
             }
-            return lagretArkivmelding.Registrering.OfType<Journalpost>().Any(registrering => AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID));
+
+            return false;
         }
         
         private Journalpost GetJournalpost(Arkivmelding lagretArkivmelding, RegistreringHent registreringHent)
         {
-            if (lagretArkivmelding.Mappe.Count >= 0)
+            if (lagretArkivmelding.Mappe != null)
             {
-                foreach (var mappe in lagretArkivmelding.Mappe)
-                {
-                    foreach (var registrering in mappe.Registrering)
-                    {
-                        if (AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID))
-                        {
-                            return (Journalpost) registrering;
-                        }
-                    }
-                }
+                return null;
             }
-            if (lagretArkivmelding.Registrering.Count >= 0)
+
+            if (lagretArkivmelding.Registrering != null)
             {
-                foreach (var registrering in lagretArkivmelding.Registrering)
-                {
-                    if (AreEqual(registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID))
-                    {
-                        return (Journalpost) registrering;
-                    }
+                if(AreEqual(lagretArkivmelding.Registrering, registreringHent.ReferanseTilRegistrering.ReferanseEksternNoekkel, registreringHent.ReferanseTilRegistrering.SystemID)) {
+                    return (Journalpost) lagretArkivmelding.Registrering;
                 }
             }
             return null;
