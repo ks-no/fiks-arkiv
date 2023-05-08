@@ -8,7 +8,7 @@
     <ItemGroup>
       <PackageReference Include="KS.Fiks.Arkiv.Models.V1" Version="0.9.14" />
       <PackageReference Include="KS.Fiks.ASiC-E" Version="1.0.5" />
-      <PackageReference Include="KS.Fiks.IO.Client" Version="3.0.4" />
+      <PackageReference Include="KS.Fiks.IO.Client" Version="3.0.5" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
     </ItemGroup>
