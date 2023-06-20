@@ -98,14 +98,14 @@ namespace ks.fiks.io.arkivsystem.sample.Handlers
             // Det skal sendes også en mottatt melding
             meldinger.Add(new Melding
             {
-                MeldingsType = FiksArkivMeldingtype.ArkivmeldingMottatt
+                MeldingsType = FiksArkivMeldingtype.ArkivmeldingOpprettMottatt
             });
             
             meldinger.Add(new Melding
             {
                 ResultatMelding = kvittering,
                 FileName = "arkivmelding-kvittering.xml",
-                MeldingsType = FiksArkivMeldingtype.ArkivmeldingKvittering
+                MeldingsType = FiksArkivMeldingtype.ArkivmeldingOpprettKvittering
             });
             
             return meldinger;

@@ -171,7 +171,7 @@ namespace ks.fiks.io.arkivsystem.sample
             {
                 meldinger = mottatt.Melding.MeldingType switch
                 {
-                    FiksArkivMeldingtype.Arkivmelding => _arkivmeldingHandler.HandleMelding(mottatt),
+                    FiksArkivMeldingtype.ArkivmeldingOpprett => _arkivmeldingHandler.HandleMelding(mottatt),
                     FiksArkivMeldingtype.ArkivmeldingOppdater => _arkivmeldingOppdaterHandler.HandleMelding(mottatt),
                     _ => throw new ArgumentException("Case not handled")
                 };

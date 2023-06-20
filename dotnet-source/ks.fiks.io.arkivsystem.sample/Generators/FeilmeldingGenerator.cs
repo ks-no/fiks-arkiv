@@ -18,7 +18,6 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = $"Feilmelding: {feilmelding}",
-                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
 
@@ -28,7 +27,6 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,
-                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
         
@@ -38,7 +36,6 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,
-                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
 
@@ -49,7 +46,6 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
             {
                 FeilId = Guid.NewGuid().ToString(),
                 Feilmelding = feilmelding,
-                Korrelasjonsid = Guid.NewGuid().ToString()
             };
         }
     }
