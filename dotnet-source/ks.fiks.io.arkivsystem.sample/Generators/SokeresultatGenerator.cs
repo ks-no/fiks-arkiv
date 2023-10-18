@@ -16,7 +16,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 System = "",
                 Take = 10,
                 Skip = 0,
-                Tidspunkt = DateTime.Now,
                 
             };
 
@@ -116,7 +115,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 System = "",
                 Take = 10,
                 Skip = 0,
-                Tidspunkt = DateTime.Now
             };
 
             switch (sokdefinisjon)
@@ -234,7 +232,6 @@ namespace ks.fiks.io.arkivsystem.sample.Helpers
                 System = "",
                 Take = 10,
                 Skip = 0,
-                Tidspunkt = DateTime.Now, 
                 ResultatListe =
                 {
                     new ResultatNoekler()

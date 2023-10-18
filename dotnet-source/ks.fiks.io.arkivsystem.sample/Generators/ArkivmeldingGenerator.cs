@@ -1,5 +1,7 @@
 using System;
+using System.Collections.ObjectModel;
 using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding;
+using KS.Fiks.Arkiv.Models.V1.Arkivering.Arkivmelding.Oppdatering;
 using KS.Fiks.Arkiv.Models.V1.Metadatakatalog;
 
 namespace ks.fiks.io.arkivsystem.sample.Generators
@@ -8,6 +10,7 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
     {
         public static Journalpost CreateJournalpost()
         {
+            
             return new Journalpost()
             {
                 OpprettetAv = "En brukerid",

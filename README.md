@@ -44,7 +44,7 @@ Konto id man kan benytte:
 Man kan kjøre testene i *Fiks-protokoll-validator* [her.](https://forvaltning.fiks.test.ks.no/fiks-validator/#/)
 
 Konto id man kan benytte:
-- Arkivsystem: 8752e128-0e2b-494c-8fab-8e3577aca13d
+- Arkivsystem: b6062766-2a25-4e1c-ae66-f1256b9c449f
 - Fagsystem arkiv: 91307c59-0ddb-4212-bede-59f98e0edf77
 
 ### Requirements

@@ -11,7 +11,6 @@ namespace ks.fiks.io.arkivsystem.sample.Generators
         {
             var kvittering = new ArkivmeldingKvittering
             {
-                Tidspunkt = DateTime.Now
             };
             
 

@@ -130,7 +130,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
                     Responstype = Responstype.Utvidet
                 },
                 System = "eByggesak",
-                Tidspunkt = DateTime.Now,
                 Skip = 0,
                 Take = 2
             };
@@ -653,7 +652,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // arkivmld.sluttbrukerIdentifikator = "Fagsystemets brukerid";
             arkivmld.AntallFiler = 0;
             arkivmld.System = saksmappe.ReferanseEksternNoekkel.Fagsystem;
-            arkivmld.Tidspunkt = DateTime.Now;
             arkivmld.Mappe = saksmappe;
 
             string payload = Serialize(arkivmld);
@@ -689,7 +687,6 @@ namespace ks.fiks.io.fagsystem.arkiv.sample
             // arkivmld.sluttbrukerIdentifikator = "Fagsystemets brukerid";
             arkivmld.AntallFiler = 0;
             arkivmld.System = jp.ReferanseEksternNoekkel.Fagsystem;
-            arkivmld.Tidspunkt = DateTime.Now;
             arkivmld.Registrering = jp;
 
             string payload = Serialize(arkivmld);
