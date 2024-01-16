@@ -1,7 +1,13 @@
-# fiks-arkiv
+# fiks-arkiv (deprecated)
+
+OBS! Dette repository er ikke lenger oppdatert.
+
+Skjemafiler, dokumentasjon og Wiki er nå flyttet til eget repository [fiks-arkiv-specification](https://github.com/ks-no/fiks-arkiv-specification)
+
+Eksempel applikasjon er erstattet med integrasjonstester i [fiks-arkiv-integration-tests-dotnet](https://github.com/ks-no/fiks-arkiv-integration-tests-dotnet) prosjektet
 
 ## Hva er dette?
-Dette repositoriet inneholder dokumentasjon, eksempler og brukerhistorier for **fiks-arkiv**, samt applikasjonene **Arkiv simulator** (arkivsystem.sample) og **Fagsystem simulator** (fagsystem.arkiv.sample) som er kjørbare eksempler på implementasjon av Fiks-Arkiv protokollen med Fiks-IO integrasjon.
+Dette repositoriet inneholdt dokumentasjon, eksempler og brukerhistorier for **fiks-arkiv**, samt applikasjonene **Arkiv simulator** (arkivsystem.sample) og **Fagsystem simulator** (fagsystem.arkiv.sample) som er kjørbare eksempler på implementasjon av Fiks-Arkiv protokollen med Fiks-IO integrasjon.
 
 Se [README.md](dotnet-source/README.md) under dotnet-source for mer informasjon om eksempel applikasjonene og dette arbeidet.
 
